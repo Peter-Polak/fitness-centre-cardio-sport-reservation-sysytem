@@ -25,7 +25,7 @@ function getSpreadsheet()
 
 function getForm()
 {
-    let formURL = SpreadsheetApp.getActiveSpreadsheet().getFormUrl();
+    let formURL = getSpreadsheet().getFormUrl();
     let form = FormApp.openByUrl(formURL);
     
     return form;

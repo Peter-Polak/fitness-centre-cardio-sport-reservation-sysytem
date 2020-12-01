@@ -2,7 +2,7 @@ function addNewSession(date, time, capacity)
 {
     // Session Sheet
     const sessionSheet = getSessionSheet();
-    const lastRow = sessionSheet.getDataRange().getLastRow();
+    const lastRow = sessionSheet.getLastRow();
     const lastColumn = 5;
     
     // Settings Sheet

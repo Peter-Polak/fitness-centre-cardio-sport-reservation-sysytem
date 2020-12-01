@@ -41,7 +41,6 @@ function showEmailExample()
     let sessionDays = [], sessionDates = [], sessionTimes = []
     for(var session of sessions)
     {
-        Logger.log(session);
         sessionDays.push(getDayOfWeekString(getEuropeDay(getSessionDates(session).start)));
         sessionDates.push(getSessionDate(session).text);
         sessionTimes.push(getSessionTime(session).text);
@@ -50,7 +49,7 @@ function showEmailExample()
     var template = HtmlService.createTemplateFromFile('form-confirmation-email');
     template.sessions = sessions;
     template.name = "Peter";
-    template.surname = "Polak";
+    template.surname = "Polák";
     template.sessionDays = sessionDays;
     template.sessionDates = sessionDates;
     template.sessionTimes = sessionTimes;

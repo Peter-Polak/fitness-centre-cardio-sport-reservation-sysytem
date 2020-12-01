@@ -3,7 +3,7 @@ function onFormSubmitInstallable(formResponseEvent)
     if(formResponseEvent === undefined) return;
     
     let data = formResponseEvent.values; // Form data in array, ordered as in sheet of responses
-    Logger.log(JSON.stringify(data));
+    
     if(data[0] === undefined || data[1] === undefined || data[2] === undefined || data[3] === undefined) return;
     
     let formResponse = 
@@ -26,8 +26,8 @@ function processFormResponse(formResponseObject)
     let formResponse = formResponseObject;
 
     let reservationSheet = getReservationSheet();
-    let lastColumn = reservationSheet.getDataRange().getLastColumn();
-    let lastRow = reservationSheet.getDataRange().getLastRow();
+    let lastColumn = reservationSheet.getLastColumn();
+    let lastRow = reservationSheet.getLastRow();
 
     const sourceRange = reservationSheet.getRange(2, 1, 1, lastColumn); // Template to copy (second row in reservations sheet)
     const targetRange = reservationSheet.getRange(lastRow + 1, 1, formResponse.sessions.length, lastColumn); // Last row of reservations sheet + rows after that based on number of reservations made
@@ -53,6 +53,7 @@ function updateForm()
 {
     // Session Sheet
     let sessionSheet = getSessionSheet();
+    if(sessionSheet === undefined) return;
     let cells = sessionSheet.getDataRange().getValues();
     
     // Form
@@ -65,18 +66,18 @@ function updateForm()
         let currentDate = new Date();
         let session = getSession(cells, n);
         
-        session.date.original.setHours(session.time.start.hours);
-        session.date.original.setMinutes(session.time.start.minutes);
+        session.date.original.setHours(session.time.end.hours);
+        session.date.original.setMinutes(session.time.end.minutes);
         session.date.original.setSeconds(0);
         
-        if(session.free > 0 && session.capacity && (currentDate.getTime() <= session.date.original.getTime())) // If there is free space and tha capacity isn't 0 and the session hasn't already started
+        if(session.free > 0 && session.capacity > 0 && (currentDate.getTime() <= session.date.original.getTime())) // If there is free space and tha capacity isn't 0 and the session hasn't already started
         {
             let checkboxChoice = session.date.formated + " " + session.time.text + " (" + session.free + "/" + session.capacity + ")";
             checkboxChoices.push(checkboxChoice);
         }
     }
     if(checkboxChoices.length == 0) checkboxChoices.push("Nie su žiadne volné terminy.");
-    checkbox.setChoiceValues(checkboxChoices);
+    if(checkboxChoices.length > 0) checkbox.setChoiceValues(checkboxChoices);
 }
 
 function sendConfirmationEmail(formResponseObject)

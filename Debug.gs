@@ -1,8 +1,14 @@
 var debugVariable = "";
 
-function debug()
+function addDebugString(string)
 {
+    debugVariable += string;
+}
+
+function debug(string)
+{
+    let debugString = string ? string : debugVariable;
     
-    var html = HtmlService.createHtmlOutput(debugVariable.toString()).setTitle('Dubugging');
+    var html = HtmlService.createHtmlOutput(debugString).setTitle('Dubugging');
     SpreadsheetApp.getUi().showSidebar(html);
 }

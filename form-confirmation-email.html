@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <base target="_top">
+        <meta http-equiv="Content-Type" content="text/html charset=UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <style type="text/css">
+          	.ExternalClass {width: 100%;}
+          	
+            #email
+            {
+                height: 900px;
+                width: 100%;
+                
+                background-color: #161616;
+                padding: 50px 20px;
+                
+                font-size: 1.6vh;
+            }
+            
+            #content
+            {
+                font-family: Arial;
+                color: #ececec;
+                background-color: #1f1f1f;
+                
+                height: 900px;;
+                width: 700px;
+                
+                border-radius: 30px;
+                border-collapse: collapse;
+            }
+
+            h1
+            {
+                font-size: 3vh;
+                font-family: Verdana;
+                font-weight: bold;
+                text-align: center;
+                color: #dbcb3b;
+            }
+            
+            img
+            {
+                object-fit: cover;
+                object-position: 10% 50%;
+                
+                height: 15%;
+                width: 90%;
+                
+                border-radius: 10px;
+            }
+            
+            #text
+            {
+                padding: 70px 50px;
+                vertical-align: top;
+            }
+            
+            #footer
+            {
+                padding: 20px;
+                text-align: center;
+                font-size: 10px;
+            }
+        </style>
+
+    </head>
+
+    <body>
+        <table id="email">
+            <tr>
+                <td>
+                    <table id="content" align="center" border="0" cellspacing="0" cellpadding="0">
+                        <tr style="height: 20%">
+                            <td align="center">
+                                <h1>
+                                    Fitness centrum Cardio Sport
+                                </h1>
+                            </td>
+                        </tr>
+                        
+                        <tr style="height: 15%">
+                            <td align="center">
+                                <img id="image "src="https://scontent.fksc1-1.fna.fbcdn.net/v/t1.0-9/101306775_10217291506580679_1877603244742541312_n.jpg?_nc_cat=111&ccb=2&_nc_sid=b9115d&_nc_ohc=iZ5UmpaHyW0AX8AExha&_nc_ht=scontent.fksc1-1.fna&oh=d13bac76cc52fc22cd66d4ce8072e0b7&oe=5FE2515D">
+                            </td>
+                        </tr>
+        
+                        <tr style="height: 55%">
+                            <td id="text">
+                                Vašu rezerváciu vstupu do fitness centra Cardio Sport sme úspešne prijali na meno <?= name ?>  <?= surname ?> a na <? if(sessions.length > 1){?>termíny<?} else{?>termín<?}?>:
+                                    <ul>
+                                    <? for (var i = 0; i < sessions.length; i++) { ?>
+                                        <li>
+                                            <?= sessionDays[i] ?>, <?= sessions[i] ?>
+                                        </li>
+                                        <? } ?>
+                                    </ul>
+                                Ak si želáte zrušiť túto rezerváciu, odpovedzte na tento e-mail alebo kontaktujte pána Žigalu s vašou požiadavkou o zrušenie rezervácie.
+                            </td>
+                        </tr>
+                        
+                        <tr style="height: 10%">
+                            <td align="center">
+                                <span id="footer">
+                                    Tento e-mail bol vygenerovaný automaticky.
+                                </span>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </body>
+
+</html>

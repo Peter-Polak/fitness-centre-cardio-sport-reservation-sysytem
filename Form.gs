@@ -1,6 +1,6 @@
 function onFormSubmitInstallable(formResponseEvent)
 {
-    if(!formResponseEvent) return;
+    if(formResponseEvent === undefined) return;
     
     let data = formResponseEvent.values; // Form data in array, ordered as in sheet of responses
     Logger.log(JSON.stringify(data));

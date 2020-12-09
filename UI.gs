@@ -9,6 +9,7 @@ function renderUI()
     var ui = SpreadsheetApp.getUi();
     
     ui.createMenu('Rezervačný systém')
+    .addSubMenu(ui.createMenu('Rezervácie').addItem("Skryť staré rezervácie", 'hideOldReservations'))
     .addSubMenu(ui.createMenu('Termíny').addItem("Vypísať termíny podľa rozvrhu", "addNewSessions").addItem("Archívovať staré termíny", "archiveOldSessions")/*.addItem("Vypísať termín/y", "")*/
                 .addSubMenu(ui.createMenu('Deň').addItem("Pondelok", 'addMonday').addItem("Utorok", 'addTuesday').addItem("Streda", 'addWednesday').addItem("Štvrtok", 'addThursday').addItem("Piatok", 'addFriday').addItem("Sobota", 'addSaturday').addItem("Nedeľa", 'addSunday')))
     .addSubMenu(ui.createMenu('Formulár').addItem("Aktualizovať formúlar", "updateForm").addItem("Zobraziť formulár", 'showFormDialog'))

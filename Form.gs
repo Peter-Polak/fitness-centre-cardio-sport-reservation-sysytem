@@ -76,7 +76,7 @@ function updateForm()
             checkboxChoices.push(checkboxChoice);
         }
     }
-    if(checkboxChoices.length == 0) checkboxChoices.push("Nie su žiadne volné terminy.");
+    if(checkboxChoices.length == 0) checkboxChoices.push("Nie sú žiadne voľné termíny.");
     if(checkboxChoices.length > 0) checkbox.setChoiceValues(checkboxChoices);
 }
 

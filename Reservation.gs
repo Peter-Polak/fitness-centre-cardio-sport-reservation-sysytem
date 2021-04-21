@@ -8,6 +8,8 @@
  */
 function hideOldReservations()
 {
+    //#region Reservation sheet variables
+    
     const reservationSheet = getReservationSheet();
     const lastRow = reservationSheet.getLastRow();
     
@@ -23,6 +25,10 @@ function hideOldReservations()
     const now = new Date();
     const nowTime = now.getTime()
     
+    //#endregion
+    
+    //#region Loop through all rows in reservations sheet and hide all reservations for old sessions
+    
     for(let row = 0; row < data.length; row++)
     {
         session = data[row][0];
@@ -34,4 +40,6 @@ function hideOldReservations()
             reservationSheet.hideRows(startingRow + row);
         }
     }
+    
+    //#endregion
 }

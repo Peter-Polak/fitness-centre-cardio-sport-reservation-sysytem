@@ -1,3 +1,11 @@
+/**
+ * Scripts for Reservations sheet.
+ */
+
+
+/**
+ * Hides all rows with old reservations in it.
+ */
 function hideOldReservations()
 {
     const reservationSheet = getReservationSheet();

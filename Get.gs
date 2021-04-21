@@ -1,3 +1,10 @@
+/**
+ * Helper scripts.
+ */
+
+/**
+ * Names of all sheets.
+ */
 const Sheets = 
 {
     Reservations : 
@@ -18,11 +25,19 @@ const Sheets =
     }
 };
 
+//#region Google service getters
+
+/**
+ * Get spreadsheet associated with this script.
+ */
 function getSpreadsheet()
 {
     return SpreadsheetApp.getActive();
 }
 
+/**
+ * Get form associated with this script.
+ */
 function getForm()
 {
     let formURL = getSpreadsheet().getFormUrl();
@@ -31,32 +46,60 @@ function getForm()
     return form;
 }
 
+//#endregion
+
+//#region Sheet getters.
+
+/**
+ * Get reservations sheet.
+ */
 function getReservationSheet()
 {
     return getSpreadsheet().getSheetByName(Sheets.Reservations.Name);
 }
 
+/**
+ * Get sessions sheet.
+ */
 function getSessionSheet()
 {
     return getSpreadsheet().getSheetByName(Sheets.Session.Name);
 }
 
+/**
+ * Get settings sheet.
+ */
 function getSettingsSheet()
 {
     return getSpreadsheet().getSheetByName(Sheets.Settings.Name);
 }
 
+/**
+ * Get archive sheet.
+ */
 function getArchiveSheet()
 {
     return getSpreadsheet().getSheetByName(Sheets.Archive.Name);
 }
 
-// Get day in week that starts with Monday(1 -> 0) instead of Sunday (0 -> 6)
+//#endregion
+
+//#region Helper functions
+
+/**
+ * Get day in week that starts with Monday(change 1 -> 0) instead of Sunday (change 0 -> 6)
+ * @param date Date of the day.
+ */
 function getEuropeDay(date)
 {
     return (date.getDay() + 6) % 7;
 }
 
+/**
+ * Get session object from the sessions sheet at specified row.
+ * @param cells All cells in the sessions sheet.
+ * @param index Row index.
+ */
 function getSession(cells, index)
 {
     let session =
@@ -88,6 +131,10 @@ function getSession(cells, index)
     return session;
 }
 
+/**
+ * I think this is copy-pasted code from StackOverflow.
+ * @param x 
+ */
 function getNextDay(x)
 {
     var now = new Date();    
@@ -97,6 +144,10 @@ function getNextDay(x)
     return dateFormated;
 }
 
+/**
+ * Get string representation of the day in the week based on number index.
+ * @param day Number index of the day in the week.
+ */
 function getDayOfWeekString(day)
 {
     const dayOfWeek = 
@@ -107,6 +158,10 @@ function getDayOfWeekString(day)
     return dayOfWeek[day];
 }
 
+/**
+ * Get session start and end dates (date + time) from form string.
+ * @param sessionString Session in form of a string from form.
+ */
 function getSessionDates(sessionString)
 {
     
@@ -122,6 +177,10 @@ function getSessionDates(sessionString)
     return sessionDates;
 }
 
+/**
+ * Get session date from form string.
+ * @param sessionString Session in form of a string from form.
+ */
 function getSessionDate(sessionString)
 {
     let date = 
@@ -135,6 +194,10 @@ function getSessionDate(sessionString)
     return date;
 }
 
+/**
+ * Get session time from form string.
+ * @param sessionString Session in form of a string from form.
+ */
 function getSessionTime(sessionString)
 {
     let time = 
@@ -154,3 +217,5 @@ function getSessionTime(sessionString)
     
     return time;
 }
+
+//#endregion

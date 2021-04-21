@@ -1,3 +1,10 @@
+/**
+ * Scripts for handling triggers.
+ */
+
+/**
+ * Creates all necessary triggers for the project. Use only for first time setup or if you have deleted all the triggers before!
+ */
 function addProjectTriggers()
 {
     let spreadsheet = getSpreadsheet();
@@ -36,6 +43,9 @@ function addProjectTriggers()
     .create();
 }
 
+/**
+ * Removes all active triggers from the project.
+ */
 function deleteAllTriggers()
 {
     var triggers = ScriptApp.getProjectTriggers();

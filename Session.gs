@@ -71,6 +71,8 @@ function addNewSessions()
     
     //#endregion
     
+    //if(capacity == 0) throw new Error("Capacity is set to zero."); // Return doesn't work.
+    
     //#region Get schedule object for adding new sessions 
     
     // eg. newSessionsSchedule[6] (Sunday) = nextDays : [1, 1, 0, 0, 0, 0, 0], times : ["16:00 - 18:00", "18:00 - 20:00", "20:00 - 22:00"]
@@ -100,7 +102,7 @@ function addNewSessions()
     {
         //#region If there are supposed to be added new sessions today for that day in week, add them
         
-        if(newSessionsSchedule[todayDay].nextDays[day])
+        if(newSessionsSchedule[todayDay].nextDays[day] && capacity > 0)
         {
             let daysFromToday = day - todayDay > 0 ? day - todayDay : day - todayDay + 7; // How many days from today
             let newSessiondDate = new Date(today);

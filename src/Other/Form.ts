@@ -2,11 +2,20 @@
  * Scripts for form handling.
  */
 
+interface FormResponse
+{
+    timestamp : string
+    name : string
+    surname : string
+    sessions : Array<string>
+    emailAdress : string
+}
+
 /**
  * Even handler for event on form submit.
  * @param formResponseEvent Form submit event arguments.
  */
-function onFormSubmitInstallable(formResponseEvent)
+function onFormSubmitInstallable(formResponseEvent : GoogleAppsScript.Events.SheetsOnFormSubmit)
 {
     //#region Check form response structure
     
@@ -20,7 +29,7 @@ function onFormSubmitInstallable(formResponseEvent)
     
     //#region Create form response object
     
-    let formResponse = 
+    let formResponse : FormResponse = 
     {
         timestamp : data[0],
         name : data[1],
@@ -42,16 +51,17 @@ function onFormSubmitInstallable(formResponseEvent)
 
 /**
  * Process form response and add it to reservations sheet.
- * @param formResponseObject Form object.
+ * @param {FormResponse} formResponse Form object.
  */
-function processFormResponse(formResponseObject)
+function processFormResponse(formResponse : FormResponse)
 {
     //#region Reservation sheet variables
     
-    if(!formResponseObject) return;
-    let formResponse = formResponseObject;
+    if(!formResponse) return;
 
-    let reservationSheet = getReservationSheet();
+    let reservationSheet = getReservationSheet(); 
+    if(reservationSheet == null) return;
+    
     let lastColumn = reservationSheet.getLastColumn();
     let lastRow = reservationSheet.getLastRow();
 
@@ -93,7 +103,7 @@ function updateForm()
     //#region Session Sheet
     
     let sessionSheet = getSessionSheet();
-    if(sessionSheet === undefined) return;
+    if(sessionSheet == null) return;
     let sessionSheetCells = sessionSheet.getDataRange().getValues();
     
     //#endregion
@@ -136,13 +146,12 @@ function updateForm()
 
 /**
  * Sends a confirmation e-mail about the reservation to the customer.
- * @param formResponseObject Normalized form response from a user in object.
+ * @param {FormResponse} formResponse Normalized form response from a user in object.
  */
-function sendConfirmationEmail(formResponseObject)
+function sendConfirmationEmail(formResponse : FormResponse)
 {
     //#region Process form data and prepare it for injecting it in e-mail template
     
-    let formResponse = formResponseObject;
     let sessionDays = [], sessionDates = [], sessionTimes = [];
     
     for(var index = 0; index < formResponse.sessions.length; index++)

@@ -5,15 +5,17 @@
 
 /**
  * Adds new session to sessions sheet.
- * @param date Date of new the new session.
- * @param time Time of the new session.
- * @param capacity Capacity
+ * @param {Date} date Date of new the new session.
+ * @param {string} time Time of the new session.
+ * @param {string} capacity Capacity
  */
-function addNewSession(date, time, capacity)
+function addNewSession(date : Date, time : string, capacity : string)
 {
     //#region Session Sheet info
     
     const sessionSheet = getSessionSheet();
+    if(sessionSheet == null) return;
+    
     const lastRow = sessionSheet.getLastRow();
     const lastColumn = 5;
     
@@ -22,6 +24,7 @@ function addNewSession(date, time, capacity)
     //#region Settings Sheet
     
     const settingsSheet = getSettingsSheet();
+    if(settingsSheet == null) return;
     
     //#endregion
     
@@ -60,7 +63,7 @@ function addNewSessions()
     
     const sessionSheet = getSessionSheet();
     const settingsSheet = getSettingsSheet();
-    
+    if(sessionSheet == null || settingsSheet == null) return;
     //#endregion
     
     //#region Get settings from settings sheet
@@ -68,6 +71,7 @@ function addNewSessions()
     var times = settingsSheet.getRange(4, 3, 10, 7).getValues(); // Get all possible session times for each day in week
     var days = settingsSheet.getRange("N4:T10").getValues(); // Get schedule for adding new sessions to the session table
     var capacity = settingsSheet.getRange(4, 11, 1, 1).getValues(); // Get max capacity
+    if(typeof capacity !== "number") return;
     
     //#endregion
     
@@ -76,7 +80,7 @@ function addNewSessions()
     //#region Get schedule object for adding new sessions 
     
     // eg. newSessionsSchedule[6] (Sunday) = nextDays : [1, 1, 0, 0, 0, 0, 0], times : ["16:00 - 18:00", "18:00 - 20:00", "20:00 - 22:00"]
-    var newSessionsSchedule = {};
+    var newSessionsSchedule : [{ nextDays : Array<number>, times : Array<string>}] = [{ nextDays : [], times : []}];
     for(var day = 0; day < 7; day++)
     {
         newSessionsSchedule[day] = 
@@ -105,7 +109,7 @@ function addNewSessions()
         if(newSessionsSchedule[todayDay].nextDays[day] && capacity > 0)
         {
             let daysFromToday = day - todayDay > 0 ? day - todayDay : day - todayDay + 7; // How many days from today
-            let newSessiondDate = new Date(today);
+            let newSessiondDate = new Date(today.getVarDate());
             newSessiondDate.setDate(newSessiondDate.getDate() + daysFromToday);
             let newSessionDay = getEuropeDay(newSessiondDate); // Get day of week for the new sessions
             
@@ -143,6 +147,7 @@ function archiveOldSessions()
     
     const sessionSheet = getSessionSheet();
     const archiveSheet = getArchiveSheet();
+    if(sessionSheet == null || archiveSheet == null) return;
     
     //#endregion
     

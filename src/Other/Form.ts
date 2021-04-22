@@ -2,15 +2,6 @@
  * Scripts for form handling.
  */
 
-interface FormResponse
-{
-    timestamp : string
-    name : string
-    surname : string
-    sessions : Array<string>
-    emailAdress : string
-}
-
 /**
  * Even handler for event on form submit.
  * @param formResponseEvent Form submit event arguments.

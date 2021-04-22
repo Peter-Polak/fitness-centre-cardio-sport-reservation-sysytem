@@ -8,7 +8,8 @@
 const htmlFiles =
 {
     form : "form-html",
-    sidebar : "Sidebar"
+    sidebar : "Sidebar",
+    settings : "settings"
 };
 
 /**
@@ -25,6 +26,7 @@ function renderUI()
     .addSubMenu(ui.createMenu("Formulár").addItem("Aktualizovať formúlar", "updateForm").addItem("Zobraziť formulár", "showFormDialog"))
     .addSubMenu(ui.createMenu("E-mail").addItem("Ukázať príklad e-mailu", "showEmailExample").addItem("Poslať príklad e-mailu", "sendTestEmail"))
     .addSubMenu(ui.createMenu("Developer").addItem("Debug code", "debug"))
+    .addItem("Settings", "showSettingsSidebar")
     .addToUi();
 }
 
@@ -125,4 +127,21 @@ function sendTestEmail()
     {
         
     }
+}
+
+function showSettingsSidebar()
+{
+    let property = getPropertyScript("times");
+    if(property == null) return;
+    
+    let times : Array<Session> = JSON.parse(property);
+    
+    var template = HtmlService.createTemplateFromFile(htmlFiles.settings); // Create template
+     
+    template.times = times;
+     
+    let htmlBody = template.evaluate().getContent(); // Evaluate template and get HTML content
+    
+    var html = HtmlService.createHtmlOutput(htmlBody).setTitle('Settings').setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
+    SpreadsheetApp.getUi().showSidebar(html);
 }

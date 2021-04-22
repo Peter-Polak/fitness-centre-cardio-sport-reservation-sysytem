@@ -9,6 +9,8 @@ enum PropertiesType
     USER
 }
 
+//#region Interfaces
+
 interface Time
 {
     hours : number,
@@ -61,6 +63,8 @@ interface AppSettings
     capacity : number
     scheduleOfNewSessions : WeekSchedule
 }
+
+//#endregion
 
 //#region Properties getters
 
@@ -236,15 +240,52 @@ function setPropertyDocument(key : string, value : string)
     documentProperties.setProperty(key, value);
 }
 
+function setPropertyScript(key : string, value : string)
+{
+    const scriptProperties = getPropertiesScript();
+    scriptProperties.setProperty(key, value);
+    
+}
+
 //#endregion
 
-function addSessionTime(time : Session)
+//#region Property getters
+
+function getPropertyScript(name : string)
 {
-    let times : Array<Session> = settingsToJson(getSettingsDocument()["time"]);
-    times.push(time);
-    let timesString : string = settingsToString(times);
+    const scriptProperties = getPropertiesScript();
+    return scriptProperties.getProperty(name);
+}
+
+//#endregion
+
+function addToArrayProperty(key : string, value : object)
+{
+    let property = getPropertyScript(key);
+    if(property == null) return;
     
-    setPropertyDocument("time", timesString);
+    let currentValues : Array<object> = propertyToJson(property);
+    currentValues.push(value);
+    let newValuesString : string = propertyToString(currentValues);
+    
+    setPropertyScript(key, newValuesString);
+    
+    return currentValues;
+}
+
+function removeFromArrayProperty(key : string, index : number)
+{
+    let property = getPropertyScript(key);
+    if(property == null) return;
+    
+    let currentValues : Array<object> = propertyToJson(property);
+    
+    currentValues.splice(index, 1);
+    let newValuesString : string = propertyToString(currentValues);
+    
+    setPropertyScript(key, newValuesString);
+    
+    return currentValues;
 }
 
 
@@ -254,7 +295,7 @@ function addSessionTime(time : Session)
  * Converts JSON object to string. Used for saving objects as a value to properties.
  * @param settings Settings object to convert.
  */
-function settingsToString(settings : any)
+function propertyToString(settings : any)
 {
     return JSON.stringify(settings);
 }
@@ -263,7 +304,7 @@ function settingsToString(settings : any)
  * Converts string representation of JSON object to proper JSON object. Used for retrieving JSON objects from properties values.
  * @param settings Settings object to convert.
  */
-function settingsToJson(settings : string)
+function propertyToJson(settings : string)
 {
     return JSON.parse(settings);
 }

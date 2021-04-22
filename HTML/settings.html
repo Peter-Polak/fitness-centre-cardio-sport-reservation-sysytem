@@ -67,12 +67,9 @@
             }
                      
             google.script.run.withSuccessHandler(
-                () =>
+                (sessions) =>
                 {
-                    let list = document.getElementById("times");
-                    let child = document.createElement("li");
-                    child.append(`${session.start.hours}:${session.start.minutes} - ${session.end.hours}:${session.end.minutes}`);
-                    list.appendChild(child);
+                    updateList(sessions);
                 }
             )
             .addToArrayProperty("times", session);
@@ -85,22 +82,53 @@
             let indexNum = parseInt(index);
             
             google.script.run.withSuccessHandler(
-                () =>
+                (sessions) =>
                 {
-                    let list = document.getElementById("times");
-                    let children = list.getElementsByTagName('li');
-                    let child = children[indexNum];
-                    
-                    console.log(children);
-                    console.log(child);
-                    console.log(indexNum);
-                    
-                    children.removeChild(child);
+                    updateList(sessions);
                 }
             )
             .removeFromArrayProperty("times", indexNum);
+        }
+        
+        function getSessionsAsItems(items)
+        {
+            let sessions = [];
+                    
+            items.forEach(
+                (session, index) => 
+                {
+                    let child = document.createElement("li");
+                    let text = document.createTextNode(`${session.start.hours}:${session.start.minutes} - ${session.end.hours}:${session.end.minutes}`)
+                    let button = document.createElement("button");
+                    button.onclick = () => removeSessionTime(index);
+                    button.innerText = "Delete";
+                    child.appendChild(text);
+                    child.appendChild(button);
+                    
+                    sessions.push(child);
+                }
+            );
             
+            return sessions;
+        }
+        
+        function updateList(sessions)
+        {
+            let list = document.getElementById("times");
+                    
+            while (list.firstChild)
+            {
+                list.removeChild(list.lastChild);
+            }
             
+            let children = getSessionsAsItems(sessions);
+            
+            children.forEach(
+                (child) =>
+                {
+                    list.appendChild(child);
+                }
+            )
         }
         
         function isSessionTimeValid(sessionTime)

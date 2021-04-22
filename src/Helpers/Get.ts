@@ -5,6 +5,7 @@
 /**
  * Names of all sheets.
  */
+//@ts-ignore
 const Sheets = 
 {
     Reservations : 

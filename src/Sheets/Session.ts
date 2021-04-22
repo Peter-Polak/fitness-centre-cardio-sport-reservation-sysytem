@@ -71,7 +71,7 @@ function addNewSessions()
     var times = settingsSheet.getRange(4, 3, 10, 7).getValues(); // Get all possible session times for each day in week
     var days = settingsSheet.getRange("N4:T10").getValues(); // Get schedule for adding new sessions to the session table
     var capacity = settingsSheet.getRange(4, 11, 1, 1).getValues(); // Get max capacity
-    if(typeof capacity !== "number") return;
+    // if(typeof capacity !== "number") return;
     
     //#endregion
     
@@ -105,11 +105,12 @@ function addNewSessions()
     for(var day = 0; day < 7; day++)
     {
         //#region If there are supposed to be added new sessions today for that day in week, add them
-        
+        //@ts-ignore
         if(newSessionsSchedule[todayDay].nextDays[day] && capacity > 0)
         {
             let daysFromToday = day - todayDay > 0 ? day - todayDay : day - todayDay + 7; // How many days from today
-            let newSessiondDate = new Date(today.getVarDate());
+            //@ts-ignore
+            let newSessiondDate = new Date(today);
             newSessiondDate.setDate(newSessiondDate.getDate() + daysFromToday);
             let newSessionDay = getEuropeDay(newSessiondDate); // Get day of week for the new sessions
             
@@ -118,6 +119,7 @@ function addNewSessions()
             let index = 0;
             while(newSessionsSchedule[newSessionDay].times[index] != "" && index < newSessionsSchedule[newSessionDay].times.length)
             {
+                //@ts-ignore
                 addNewSession(newSessiondDate, newSessionsSchedule[newSessionDay].times[index], capacity);
                 index++;
             }

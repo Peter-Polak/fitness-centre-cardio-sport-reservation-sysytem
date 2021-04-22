@@ -18,12 +18,13 @@ function renderUI()
 {
     var ui = SpreadsheetApp.getUi();
     
-    ui.createMenu('Rezervačný systém')
-    .addSubMenu(ui.createMenu('Rezervácie').addItem("Skryť staré rezervácie", 'hideOldReservations'))
-    .addSubMenu(ui.createMenu('Termíny').addItem("Vypísať termíny podľa rozvrhu", "addNewSessions").addItem("Archívovať staré termíny", "archiveOldSessions")/*.addItem("Vypísať termín/y", "")*/
-                .addSubMenu(ui.createMenu('Deň').addItem("Pondelok", 'addMonday').addItem("Utorok", 'addTuesday').addItem("Streda", 'addWednesday').addItem("Štvrtok", 'addThursday').addItem("Piatok", 'addFriday').addItem("Sobota", 'addSaturday').addItem("Nedeľa", 'addSunday')))
-    .addSubMenu(ui.createMenu('Formulár').addItem("Aktualizovať formúlar", "updateForm").addItem("Zobraziť formulár", 'showFormDialog'))
-    .addSubMenu(ui.createMenu('Developer').addItem("Debug code", 'debug').addItem("Show e-mail example", 'showEmailExample'))
+    ui.createMenu("Rezervačný systém")
+    .addSubMenu(ui.createMenu("Rezervácie").addItem("Skryť staré rezervácie", "hideOldReservations"))
+    .addSubMenu(ui.createMenu("Termíny").addItem("Vypísať termíny podľa rozvrhu", "addNewSessions").addItem("Archívovať staré termíny", "archiveOldSessions")
+                .addSubMenu(ui.createMenu("Deň").addItem("Pondelok", 'addMonday').addItem("Utorok", 'addTuesday').addItem("Streda", 'addWednesday').addItem("Štvrtok", 'addThursday').addItem("Piatok", 'addFriday').addItem("Sobota", 'addSaturday').addItem("Nedeľa", 'addSunday')))
+    .addSubMenu(ui.createMenu("Formulár").addItem("Aktualizovať formúlar", "updateForm").addItem("Zobraziť formulár", "showFormDialog"))
+    .addSubMenu(ui.createMenu("E-mail").addItem("Ukázať príklad e-mailu", "showEmailExample").addItem("Poslať príklad e-mailu", "sendTestEmail"))
+    .addSubMenu(ui.createMenu("Developer").addItem("Debug code", "debug"))
     .addToUi();
 }
 
@@ -76,19 +77,7 @@ function showEmailExample()
     
     //#endregion
     
-    //#region Create HTMl template from file, fill it with the information from the form and get HTML content
-    
-    var template = HtmlService.createTemplateFromFile('form-confirmation-email');
-    template.sessions = sessions;
-    template.name = name;
-    template.surname = surname;
-    template.sessionDays = sessionDays;
-    template.sessionDates = sessionDates;
-    template.sessionTimes = sessionTimes;
-    
-    let htmlBody = template.evaluate().getContent();
-    
-    //#endregion
+    let htmlBody = getEmailBodyReservations(name, surname, sessions, sessionDays); // Get HTML content
     
     //#region Show example e-mail
     
@@ -96,4 +85,44 @@ function showEmailExample()
     SpreadsheetApp.getUi().showDialog(html);
     
     //#endregion
+}
+
+function sendTestEmail()
+{
+    var ui = SpreadsheetApp.getUi();
+
+    var result = ui.prompt(
+        "Poslať ukážku e-mailu",
+        "E-mailová adresa:",
+        ui.ButtonSet.OK_CANCEL
+    );
+
+    // Process the user's response.
+    var selectedButton = result.getSelectedButton();
+    var emailAdress = result.getResponseText();
+    
+    if (selectedButton == ui.Button.OK) // User clicked "OK".
+    {
+        let htmlBody = getEmailBodyReservations("Peter", "Polák", ["01.01.1970 16:30 - 18:30"], ["Pondelok"]); // Get HTML content
+        
+        let mail = 
+        {
+            name: "Fitness centrum Cardio Sport", // Name shown as an author of the e-mail
+            to: emailAdress, // Recipient from dialog text
+            subject: "Potvrdenie rezervácie termínu vstupu do Fitness centra Cardio Sport",
+            htmlBody: htmlBody
+        };
+    
+        MailApp.sendEmail(mail);
+        
+        ui.alert(`E-mail bol zalaný na adresu ${emailAdress}.`);
+    }
+    else if (selectedButton == ui.Button.CANCEL) // User clicked "Cancel".
+    { 
+        
+    }
+    else if (selectedButton == ui.Button.CLOSE) // User clicked X in the title bar.
+    {
+        
+    }
 }

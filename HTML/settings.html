@@ -6,31 +6,123 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     
-    <script>
-        function addSession()
+    <style>
+        input
         {
+            width: 30px;
+            
+            border: 2px solid #dfdfdf71;
+            border-radius: 5px;
+            background-color: white;
+        }
+        
+        input:invalid
+        {
+            border: rgb(255, 215, 215) solid 3px;
+        }
+        
+        input:valid
+        {
+            border: #ddffdd solid 3px;
+        }
+    </style>
+    
+</head>
+<body>
+    <input id="sessionStartHours" type="text" pattern="([01][0-9])|(2[0-3])"> : <input id="sessionStartMinutes" type="text" pattern="([0-5][0-9])">
+     - 
+     <input id="sessionEndHours" type="text" pattern="([01][0-9])|(2[0-4])"> : <input id="sessionEndMinutes" type="text" pattern="([0-5][0-9])">
+    <button id="addSession" onclick="addSessionTime()">Add</button>
+    
+    <ul id="times">
+        <? for (var i = 0; i < times.length; i++) { ?>
+            <li>
+                <?= times[i].start.hours ?>:<?= times[i].start.minutes ?> - <?= times[i].end.hours ?>:<?= times[i].end.minutes ?><button onclick="removeSessionTime(<?= i ?>)"> Delete </button>
+            </li>
+        <? } ?>
+    </ul>
+    
+    <script>
+        function addSessionTime()
+        {
+            if(!isSessionTimeValid()) return;
+            
+            let sessionStartHours = document.getElementById("sessionStartHours");
+            let sessionStartMinutes = document.getElementById("sessionStartMinutes");
+            let sessionEndHours = document.getElementById("sessionEndHours");
+            let sessionEndMinutes = document.getElementById("sessionEndMinutes");
+            
             let session = 
             {
                 start :
                 {
-                    hours: document.getElementById("sessionStartHours").value,
-                    minutes: document.getElementById("sessionStartMinutes").value
+                    hours: sessionStartHours.value,
+                    minutes: sessionStartMinutes.value
                 },
                 end : 
                 {
-                    hours: document.getElementById("sessionEndHours").value,
-                    minutes: document.getElementById("sessionEndMinutes").value
+                    hours: sessionEndHours.value,
+                    minutes: sessionEndMinutes.value
                 }
             }
-
-            google.script.run.addSessionTime(session);
+                     
+            google.script.run.withSuccessHandler(
+                () =>
+                {
+                    let list = document.getElementById("times");
+                    let child = document.createElement("li");
+                    child.append(`${session.start.hours}:${session.start.minutes} - ${session.end.hours}:${session.end.minutes}`);
+                    list.appendChild(child);
+                }
+            )
+            .addToArrayProperty("times", session);
+            
             
         }
+        
+        function removeSessionTime(index)
+        {  
+            let indexNum = parseInt(index);
+            
+            google.script.run.withSuccessHandler(
+                () =>
+                {
+                    let list = document.getElementById("times");
+                    let children = list.getElementsByTagName('li');
+                    let child = children[indexNum];
+                    
+                    console.log(children);
+                    console.log(child);
+                    console.log(indexNum);
+                    
+                    children.removeChild(child);
+                }
+            )
+            .removeFromArrayProperty("times", indexNum);
+            
+            
+        }
+        
+        function isSessionTimeValid(sessionTime)
+        {
+            let sessionStartHours = document.getElementById("sessionStartHours");
+            let sessionStartMinutes = document.getElementById("sessionStartMinutes");
+            let sessionEndHours = document.getElementById("sessionEndHours");
+            let sessionEndMinutes = document.getElementById("sessionEndMinutes");
+            
+            if(
+                !sessionStartHours.checkValidity() || 
+                !sessionStartMinutes.checkValidity() || 
+                !sessionEndHours.checkValidity() || 
+                !sessionEndMinutes.checkValidity())
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
     </script>
-    
-</head>
-<body>
-    <input id="sessionStartHours" type="text"> : <input id="sessionStartMinutes" type="text"> - <input id="sessionEndHours" type="text"> : <input id="sessionEndMinutes" type="text">
-    <button id="addSession" onclick="addSession()">Add</button>
 </body>
 </html>

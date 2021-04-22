@@ -155,20 +155,8 @@ function sendConfirmationEmail(formResponseObject)
     }
     
     //#endregion
-    
-    //#region Create HTMl template from file, fill it with the information from the form and get HTML content
-    
-    var template = HtmlService.createTemplateFromFile('form-confirmation-email'); // Create template
-    
-    // Fill the template with the information from the form
-    template.name = formResponse.name;
-    template.surname = formResponse.surname;
-    template.sessions = formResponse.sessions;
-    template.sessionDays = sessionDays;
-    
-    let htmlBody = template.evaluate().getContent(); // Evaluate template and get HTML content
 
-    //#endregion
+    let htmlBody = getEmailBodyReservations(formResponse.name, formResponse.surname, formResponse.sessions, sessionDays); // Get HTML content
     
     //#region Prepare e-mail object and send it
     

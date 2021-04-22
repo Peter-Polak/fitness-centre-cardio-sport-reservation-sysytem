@@ -7,37 +7,62 @@
     <title>Document</title>
     
     <style>
+        button
+        {
+            padding: 5px 10px;
+            margin-left: 5px;
+            
+            color: white;
+            
+            border: none;
+            border-radius: 3px;
+            outline: none;
+            
+            background-color: #6ab96a;
+        }
+        
         input
         {
             width: 30px;
             
-            border: 2px solid #dfdfdf71;
-            border-radius: 5px;
+            border: 1px solid #dfdfdf71;
+            outline: none;
+            
             background-color: white;
+        }
+        
+        li
+        {
+            margin-bottom: 5px;
         }
         
         input:invalid
         {
-            border: rgb(255, 215, 215) solid 3px;
+            border: 2px solid #ffd7d7;
         }
         
         input:valid
         {
-            border: #ddffdd solid 3px;
+            border: 2px solid #ddffdd;
+        }
+        
+        button.delete
+        {
+            background-color: #b96a6a;
         }
     </style>
     
 </head>
 <body>
-    <input id="sessionStartHours" type="text" pattern="([01][0-9])|(2[0-3])"> : <input id="sessionStartMinutes" type="text" pattern="([0-5][0-9])">
+    <input id="sessionStartHours" type="text" pattern="([01][0-9])|(2[0-3])" required > : <input id="sessionStartMinutes" type="text" pattern="([0-5][0-9])" required >
      - 
-     <input id="sessionEndHours" type="text" pattern="([01][0-9])|(2[0-4])"> : <input id="sessionEndMinutes" type="text" pattern="([0-5][0-9])">
+     <input id="sessionEndHours" type="text" pattern="([01][0-9])|(2[0-4])" required > : <input id="sessionEndMinutes" type="text" pattern="([0-5][0-9])" required >
     <button id="addSession" onclick="addSessionTime()">Add</button>
     
     <ul id="times">
         <? for (var i = 0; i < times.length; i++) { ?>
             <li>
-                <?= times[i].start.hours ?>:<?= times[i].start.minutes ?> - <?= times[i].end.hours ?>:<?= times[i].end.minutes ?><button onclick="removeSessionTime(<?= i ?>)"> Delete </button>
+                <?= times[i].start.hours ?>:<?= times[i].start.minutes ?> - <?= times[i].end.hours ?>:<?= times[i].end.minutes ?><button class="delete" onclick="removeSessionTime(<?= i ?>)"> X </button>
             </li>
         <? } ?>
     </ul>
@@ -100,8 +125,11 @@
                     let child = document.createElement("li");
                     let text = document.createTextNode(`${session.start.hours}:${session.start.minutes} - ${session.end.hours}:${session.end.minutes}`)
                     let button = document.createElement("button");
+                    
+                    button.className = "delete";
                     button.onclick = () => removeSessionTime(index);
-                    button.innerText = "Delete";
+                    button.innerText = "X";
+                    
                     child.appendChild(text);
                     child.appendChild(button);
                     

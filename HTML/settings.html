@@ -97,7 +97,7 @@
                     updateList(sessions);
                 }
             )
-            .addToArrayProperty("times", session);
+            .addToArrayProperty("times", session, sortSessionTimes);
             
             
         }
@@ -112,7 +112,7 @@
                     updateList(sessions);
                 }
             )
-            .removeFromArrayProperty("times", indexNum);
+            .removeFromArrayProperty("times", indexNum, sortSessionTimes);
         }
         
         function getSessionsAsItems(items)

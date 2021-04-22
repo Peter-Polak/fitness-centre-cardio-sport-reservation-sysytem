@@ -207,13 +207,16 @@ function getPropertyScript(key : string)
 
 //#endregion
 
-function addToArrayProperty(key : string, value : object)
+function addToArrayProperty(key : string, value : object, sortFunc? : ((property : Array<object>) => Array<object>))
 {
     let property = getPropertyScript(key);
     if(property == null) return;
     
     let currentValues : Array<object> = propertyToJson(property);
+    
     currentValues.push(value);
+    if(sortFunc != undefined) sortFunc(currentValues);
+    
     let newValuesString : string = propertyToString(currentValues);
     
     setPropertyScript(key, newValuesString);
@@ -221,7 +224,7 @@ function addToArrayProperty(key : string, value : object)
     return currentValues;
 }
 
-function removeFromArrayProperty(key : string, index : number)
+function removeFromArrayProperty(key : string, index : number, sortFunc? : ((property : Array<object>) => Array<object>))
 {
     let property = getPropertyScript(key);
     if(property == null) return;
@@ -229,6 +232,8 @@ function removeFromArrayProperty(key : string, index : number)
     let currentValues : Array<object> = propertyToJson(property);
     
     currentValues.splice(index, 1);
+    if(sortFunc != undefined) sortFunc(currentValues);
+    
     let newValuesString : string = propertyToString(currentValues);
     
     setPropertyScript(key, newValuesString);
@@ -236,6 +241,24 @@ function removeFromArrayProperty(key : string, index : number)
     return currentValues;
 }
 
+function sortSessionTimes(sessionTimes : Array<SessionTime>)
+{
+    let sortedSessionTimes = sessionTimes.sort(
+        (a, b) =>
+        {
+            let date1 : Date = new Date(2000, 1, 1, a.start.hours, a.start.minutes);
+            let date2 : Date = new Date(2000, 1, 1, b.start.hours, b.start.minutes);
+            
+            if(date1 < date2) return -1;
+            else if(date1 == date2) return 0;
+            else if(date1 > date2) return 1;
+            
+            return 0;
+        }
+    );
+    
+    return sortedSessionTimes;
+}
 
 //#region Object settings helpers
 

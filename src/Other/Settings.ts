@@ -187,17 +187,22 @@ function setPropertyScript(key : string, value : string)
 {
     const scriptProperties = getPropertiesScript();
     scriptProperties.setProperty(key, value);
-    
+}
+
+function setPropertyUser(key : string, value : string)
+{
+    const userProperties = getPropertiesUser();
+    userProperties.setProperty(key, value);
 }
 
 //#endregion
 
 //#region Property getters
 
-function getPropertyScript(name : string)
+function getPropertyScript(key : string)
 {
     const scriptProperties = getPropertiesScript();
-    return scriptProperties.getProperty(name);
+    return scriptProperties.getProperty(key);
 }
 
 //#endregion

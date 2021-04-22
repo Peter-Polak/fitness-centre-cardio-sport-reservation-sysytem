@@ -238,6 +238,16 @@ function setPropertyDocument(key : string, value : string)
 
 //#endregion
 
+function addSessionTime(time : Session)
+{
+    let times : Array<Session> = settingsToJson(getSettingsDocument()["time"]);
+    times.push(time);
+    let timesString : string = settingsToString(times);
+    
+    setPropertyDocument("time", timesString);
+}
+
+
 //#region Object settings helpers
 
 /**

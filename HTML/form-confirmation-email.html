@@ -8,15 +8,22 @@
         <style type="text/css">
           	.ExternalClass {width: 100%;}
           	
+            body
+            {
+                margin: unset;
+            }
+              
             #email
             {
+                margin: unset;
+                padding: 50px 20px;
+                
                 height: 900px;
                 width: 100%;
                 
-                background-color: #161616;
-                padding: 50px 20px;
+                font-size: 1em;
                 
-                font-size: 1.6vh;
+                background-color: #161616;
             }
             
             #content
@@ -32,27 +39,31 @@
                 border-collapse: collapse;
             }
 
-            h1
+            h1, #header
             {
-                font-size: 3vh;
-                font-family: Verdana;
-                font-weight: bold;
+                margin: 50px;
+                
                 text-align: center;
                 color: #dbcb3b;
+                font-size: 2em;
+                font-family: Verdana;
+                font-weight: bold;
             }
             
-            img
+            img, #image
             {
                 object-fit: cover;
                 object-position: 10% 50%;
                 
-                height: 15%;
+                height: 150px;
                 width: 90%;
+                
+                /* margin: 0 auto; */
                 
                 border-radius: 10px;
             }
             
-            #text
+            footer, #text
             {
                 padding: 70px 50px;
                 vertical-align: top;
@@ -60,8 +71,10 @@
             
             #footer
             {
-                padding: 20px;
+                margin: 20px;
+                
                 text-align: center;
+                color: #ececec;
                 font-size: 10px;
             }
         </style>
@@ -73,21 +86,21 @@
             <tr>
                 <td>
                     <table id="content" align="center" border="0" cellspacing="0" cellpadding="0">
-                        <tr style="height: 20%">
+                        <tr style="height: 20%;">
                             <td align="center">
-                                <h1>
+                                <h1 id="header">
                                     Fitness centrum Cardio Sport
                                 </h1>
                             </td>
                         </tr>
                         
-                        <tr style="height: 15%">
+                        <tr style="height: 15%;">
                             <td align="center">
-                                <img id="image "src="https://i.imgur.com/W4Ve8Fe.jpg">
+                                <img id="image" src="https://i.imgur.com/6DMtFhc.png">
                             </td>
                         </tr>
         
-                        <tr style="height: 55%">
+                        <tr style="height: 55%;">
                             <td id="text">
                                 Vašu rezerváciu vstupu do fitness centra Cardio Sport sme úspešne prijali na meno <?= name ?>  <?= surname ?> a na <? if(sessions.length > 1){?>termíny<?} else{?>termín<?}?>:
                                     <ul>
@@ -101,11 +114,11 @@
                             </td>
                         </tr>
                         
-                        <tr style="height: 10%">
+                        <tr style="height: 10%;">
                             <td align="center">
-                                <span id="footer">
+                                <footer id="footer">
                                     Tento e-mail bol vygenerovaný automaticky.
-                                </span>
+                                </footer>
                             </td>
                         </tr>
                     </table>

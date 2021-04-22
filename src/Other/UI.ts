@@ -134,7 +134,7 @@ function showSettingsSidebar()
     let property = getPropertyScript("times");
     if(property == null) return;
     
-    let times : Array<Session> = JSON.parse(property);
+    let times : Array<SessionTime> = JSON.parse(property);
     
     var template = HtmlService.createTemplateFromFile(htmlFiles.settings); // Create template
      

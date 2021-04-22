@@ -17,7 +17,7 @@ interface Time
     minutes : number
 }
 
-interface Session
+interface SessionTime
 {
     start : Time
     end : Time
@@ -25,13 +25,13 @@ interface Session
 
 interface Timetable
 { 
-    monday : Array<Session>, 
-    tuesday : Array<Session>, 
-    wednesday : Array<Session>, 
-    thursday : Array<Session>, 
-    friday : Array<Session>, 
-    saturday : Array<Session>, 
-    sunday : Array<Session>
+    monday : Array<SessionTime>, 
+    tuesday : Array<SessionTime>, 
+    wednesday : Array<SessionTime>, 
+    thursday : Array<SessionTime>, 
+    friday : Array<SessionTime>, 
+    saturday : Array<SessionTime>, 
+    sunday : Array<SessionTime>
 }
 
 interface DaySchedule
@@ -58,7 +58,7 @@ interface WeekSchedule
 
 interface AppSettings
 {
-    times : Array<Session>
+    times : Array<SessionTime>
     timetable : Timetable
     capacity : number
     scheduleOfNewSessions : WeekSchedule

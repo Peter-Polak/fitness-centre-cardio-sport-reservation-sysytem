@@ -41,6 +41,8 @@ function getSpreadsheet()
 function getForm()
 {
     let formURL = getSpreadsheet().getFormUrl();
+    if(formURL == null) return;
+    
     let form = FormApp.openByUrl(formURL);
     
     return form;
@@ -90,7 +92,7 @@ function getArchiveSheet()
  * Get day in week that starts with Monday(change 1 -> 0) instead of Sunday (change 0 -> 6)
  * @param date Date of the day.
  */
-function getEuropeDay(date)
+function getEuropeDay(date : Date)
 {
     return (date.getDay() + 6) % 7;
 }
@@ -100,7 +102,7 @@ function getEuropeDay(date)
  * @param cells All cells in the sessions sheet.
  * @param index Row index.
  */
-function getSession(cells, index)
+function getSession(cells : any, index : number)
 {
     let session =
         {
@@ -135,7 +137,7 @@ function getSession(cells, index)
  * I think this is copy-pasted code from StackOverflow.
  * @param x 
  */
-function getNextDay(x)
+function getNextDay(x : number)
 {
     var now = new Date();    
     now.setDate(now.getDate() + (x+(7-now.getDay())) % 7);
@@ -148,7 +150,7 @@ function getNextDay(x)
  * Get string representation of the day in the week based on number index.
  * @param day Number index of the day in the week.
  */
-function getDayOfWeekString(day)
+function getDayOfWeekString(day : number)
 {
     const dayOfWeek = 
     [
@@ -160,9 +162,9 @@ function getDayOfWeekString(day)
 
 /**
  * Get session start and end dates (date + time) from form string.
- * @param sessionString Session in form of a string from form.
+ * @param {string} sessionString Session in form of a string from form.
  */
-function getSessionDates(sessionString)
+function getSessionDates(sessionString : string)
 {
     
     let date = getSessionDate(sessionString);
@@ -179,16 +181,16 @@ function getSessionDates(sessionString)
 
 /**
  * Get session date from form string.
- * @param sessionString Session in form of a string from form.
+ * @param {string} sessionString Session in form of a string from form.
  */
-function getSessionDate(sessionString)
+function getSessionDate(sessionString : string)
 {
     let date = 
     {
         text: sessionString.substr(0, 10),
-        day : sessionString.substr(0, 2),
-        month : sessionString.substr(3, 2),
-        year : sessionString.substr(6, 4)
+        day : parseInt(sessionString.substr(0, 2)),
+        month : parseInt(sessionString.substr(3, 2)),
+        year : parseInt(sessionString.substr(6, 4))
     }
     
     return date;
@@ -196,22 +198,22 @@ function getSessionDate(sessionString)
 
 /**
  * Get session time from form string.
- * @param sessionString Session in form of a string from form.
+ * @param {string} sessionString Session in form of a string from form.
  */
-function getSessionTime(sessionString)
+function getSessionTime(sessionString : string)
 {
     let time = 
     {
         text: sessionString.substr(11, 13),
         start :
         {
-            hours: sessionString.substr(11, 2),
-            minutes: sessionString.substr(14, 2)
+            hours: parseInt(sessionString.substr(11, 2)),
+            minutes: parseInt(sessionString.substr(14, 2))
         },
         end :
         {
-            hours: sessionString.substr(19, 2),
-            minutes: sessionString.substr(22, 2)
+            hours: parseInt(sessionString.substr(19, 2)),
+            minutes: parseInt(sessionString.substr(22, 2))
         }
     }
     

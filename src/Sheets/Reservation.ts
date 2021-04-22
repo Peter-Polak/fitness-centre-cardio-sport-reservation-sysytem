@@ -11,6 +11,8 @@ function hideOldReservations()
     //#region Reservation sheet variables
     
     const reservationSheet = getReservationSheet();
+    if(reservationSheet == null) return;
+    
     const lastRow = reservationSheet.getLastRow();
     
     const numOfFrozenRows = 3;

@@ -111,6 +111,8 @@ function updateForm()
     //#region Form
     
     let form = getForm();
+    if(form == undefined) return;
+    
     let freeSessionCheckboxes = form.getItems(FormApp.ItemType.CHECKBOX)[0].asCheckboxItem();
     let newFreeSessions = [];
     

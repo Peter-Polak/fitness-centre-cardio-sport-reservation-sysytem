@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    
+    <script>
+        function addSession()
+        {
+            let session = 
+            {
+                start :
+                {
+                    hours: document.getElementById("sessionStartHours").value,
+                    minutes: document.getElementById("sessionStartMinutes").value
+                },
+                end : 
+                {
+                    hours: document.getElementById("sessionEndHours").value,
+                    minutes: document.getElementById("sessionEndMinutes").value
+                }
+            }
+
+            google.script.run.addSessionTime(session);
+            
+        }
+    </script>
+    
+</head>
+<body>
+    <input id="sessionStartHours" type="text"> : <input id="sessionStartMinutes" type="text"> - <input id="sessionEndHours" type="text"> : <input id="sessionEndMinutes" type="text">
+    <button id="addSession" onclick="addSession()">Add</button>
+</body>
+</html>

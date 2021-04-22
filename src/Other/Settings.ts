@@ -215,7 +215,7 @@ function addToArrayProperty(key : string, value : object, sortFunc? : ((property
     let currentValues : Array<object> = propertyToJson(property);
     
     currentValues.push(value);
-    if(sortFunc != undefined) sortFunc(currentValues);
+    if(sortFunc != undefined) currentValues = sortFunc(currentValues);
     
     let newValuesString : string = propertyToString(currentValues);
     
@@ -232,7 +232,7 @@ function removeFromArrayProperty(key : string, index : number, sortFunc? : ((pro
     let currentValues : Array<object> = propertyToJson(property);
     
     currentValues.splice(index, 1);
-    if(sortFunc != undefined) sortFunc(currentValues);
+    if(sortFunc != undefined) currentValues = sortFunc(currentValues);
     
     let newValuesString : string = propertyToString(currentValues);
     

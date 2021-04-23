@@ -125,11 +125,19 @@ function getDayOfWeekString(day : number)
     return dayOfWeek[day];
 }
 
+/**
+ * Get a string representation of a number.
+ * @param number Number to convert.
+ */
 function getNumberString(number : number) : string
 {
     return number < 10 ? '0' + number : '' + number;
 }
 
+/**
+ * Get a string representation of a date in the format "dd.mm.yyyy".
+ * @param date Date to convert.
+ */
 function getDateString(date : Date)
 {
     let day = `${getNumberString(date.getDate())}`;

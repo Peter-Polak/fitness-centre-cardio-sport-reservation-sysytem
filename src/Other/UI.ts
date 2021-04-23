@@ -5,11 +5,10 @@
 /**
  * HTML file names.
  */
-const htmlFiles =
+enum HtmlFiles
 {
-    form : "form-html",
-    sidebar : "Sidebar",
-    settings : "settings"
+    FORM = "form-html",
+    SETTINGS =  "settings"
 };
 
 /**
@@ -31,29 +30,11 @@ function renderUI()
 }
 
 /**
- * Show Sidebar.html file in sidebar.
- */
-function showSidebar()
-{
-    var html = HtmlService.createHtmlOutputFromFile(htmlFiles.sidebar).setTitle('Sidebar').setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
-    SpreadsheetApp.getUi().showSidebar(html); // Or DocumentApp or SlidesApp or FormApp.
-}
-
-/**
- * Show reservation form in a sidebar.
- */
-function showFormSidebar()
-{
-    var html = HtmlService.createHtmlOutputFromFile(htmlFiles.form).setTitle('Formulár').setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
-    SpreadsheetApp.getUi().showSidebar(html); // Or DocumentApp or SlidesApp or FormApp.
-}
-
-/**
  * Show reservation form in a dialog.
  */
 function showFormDialog()
 {
-    var html = HtmlService.createHtmlOutputFromFile(htmlFiles.form).setWidth(1280).setHeight(720);
+    var html = HtmlService.createHtmlOutputFromFile(HtmlFiles.FORM).setWidth(1280).setHeight(720);
     SpreadsheetApp.getUi() // Or DocumentApp or SlidesApp or FormApp.
         .showModalDialog(html, 'Formulár na rezervovanie vstupu do fitness centra');
 }
@@ -136,9 +117,9 @@ function showSettingsSidebar()
     let property = getPropertyScript("times");
     if(property == null) return;
     
-    let times : Array<SessionTime> = JSON.parse(property);
+    let times : Array<SessionTime> = propertyToJson(property);
     
-    var template = HtmlService.createTemplateFromFile(htmlFiles.settings); // Create template
+    var template = HtmlService.createTemplateFromFile(HtmlFiles.SETTINGS); // Create template
      
     template.times = times;
      

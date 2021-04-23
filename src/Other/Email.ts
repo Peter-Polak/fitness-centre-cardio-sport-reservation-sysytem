@@ -11,7 +11,7 @@
  * @returns {string} HTML body of the e-mail.
  * @example getReservationEmailBody("Peter", "Polák", ["01.01.1970 08:00 - 09:00", ...], ["Pondelok", ...])
  */
- function getEmailBodyReservations(name : string, surname : string, sessions : Array<string>, sessionDays : Array<string>) : string
+ function getEmailBodyReservations(name : string, surname : string, sessions : Array<Session>, sessionDays : Array<string>) : string
  {
      var template = HtmlService.createTemplateFromFile('form-confirmation-email'); // Create template
      

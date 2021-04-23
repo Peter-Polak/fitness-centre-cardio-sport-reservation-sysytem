@@ -103,32 +103,72 @@ function getEuropeDay(date : Date)
  * @param cells All cells in the sessions sheet.
  * @param index Row index.
  */
-function getSession(cells : any, index : number)
+function getSessionFromSheet(cells : any, index : number) : Session
 {
-    let session =
+    
+    let date = 
+    {
+        day: cells[index][0].substr(0, 2),
+        month: cells[index][0].substr(3, 2) - 1, // January = 0
+        year : cells[index][0].substr(6, 4)
+    }
+    
+    let start = 
+    {
+        hours : cells[index][1].substr(0, 2),
+        minutes : cells[index][1].substr(3, 2)
+    };
+    
+    let startDate = new Date(date.year, date.month, date.day, start.hours, start.minutes, 0, 0);
+    
+    let end = 
+    {
+        hours : cells[index][1].substr(8, 2),
+        minutes : cells[index][1].substr(11, 2)
+    };
+    
+    let endDate = new Date(date.year, date.month, date.day, end.hours, end.minutes, 0, 0);
+    
+    console.log(new Date(cells[index][0]));
+    
+    let session : Session=
         {
-            date : 
-            {
-                original : new Date(cells[index][0]),
-                formated : Utilities.formatDate(new Date(cells[index][0]), "Europe/Bratislava", "dd.MM.yyyy")
-            },
-            time : 
-            {
-                text : cells[index][1],
-                start : 
-                {
-                    hours : cells[index][1].substr(0, 2),
-                    minutes : cells[index][1].substr(3, 2)
-                },
-                end : 
-                {
-                    hours : cells[index][1].substr(8, 2),
-                    minutes : cells[index][1].substr(11, 2)
-                }
-            },
-            capacity : cells[index][2],
-            reserved : cells[index][3],
-            free : cells[index][4]
+            start : startDate,
+            end: endDate
+        };
+    
+    return session;
+}
+
+function getSession(dateString : string, timeString : string) : Session
+{
+    let date = 
+    {
+        day: parseInt(dateString.substr(0, 2)),
+        month: parseInt(dateString.substr(3, 2)) - 1, // January = 0
+        year : parseInt(dateString.substr(6, 4))
+    }
+    
+    let start = 
+    {
+        hours : parseInt(timeString.substr(0, 2)),
+        minutes : parseInt(timeString.substr(3, 2))
+    };
+    
+    let startDate = new Date(date.year, date.month, date.day, start.hours, start.minutes, 0, 0);
+    
+    let end = 
+    {
+        hours : parseInt(timeString.substr(8, 2)),
+        minutes : parseInt(timeString.substr(11, 2))
+    };
+    
+    let endDate = new Date(date.year, date.month, date.day, end.hours, end.minutes, 0, 0);
+    
+    let session : Session=
+        {
+            start : startDate,
+            end: endDate
         };
     
     return session;

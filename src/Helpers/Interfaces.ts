@@ -2,12 +2,12 @@
  * Interfaces
  */
 
-interface FormResponse
+interface Reservation
 {
     timestamp : string
     name : string
     surname : string
-    sessions : Array<string>
+    sessions : Array<Session>
     emailAdress : string
 }
 
@@ -62,4 +62,22 @@ interface AppSettings
     timetable : Timetable
     capacity : number
     scheduleOfNewSessions : WeekSchedule
+}
+
+interface Session
+{
+    text?: 
+    {
+        date : string,
+        time : 
+        {
+            start : string,
+            end : string
+        }
+    },
+    start : Date,
+    end : Date,
+    capacity? : number,
+    reserved? : number,
+    free? : number
 }

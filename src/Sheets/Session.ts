@@ -167,16 +167,11 @@ function archiveOldSessions()
     for(var n = 4; n < rowCount; n++)
     {
         let currentDate = new Date(); // Used for comparison if the session is older than right now
-        
-        let session = getSession(cells, n);
-        // Set date object to session end hours and minutes (neede only for comparison with current date object)
-        session.date.original.setHours(session.time.end.hours);
-        session.date.original.setMinutes(session.time.end.minutes);
-        session.date.original.setSeconds(0);
+        let session = getSessionFromSheet(cells, n);
         
         //#region If the session has already finished, archive it
         
-        if(currentDate.getTime() >= session.date.original.getTime())
+        if(currentDate.getTime() >= session.end.getTime())
         {
             let archiveLastRow = archiveSheet.getLastRow();
             let rowToArchive = n - numOfArchivedRows + 1; // 1 is for index offset

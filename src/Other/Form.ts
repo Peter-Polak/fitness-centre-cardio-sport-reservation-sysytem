@@ -20,12 +20,36 @@ function onFormSubmitInstallable(formResponseEvent : GoogleAppsScript.Events.She
     
     //#region Create form response object
     
-    let formResponse : FormResponse = 
+    //"22.11.2020 15:00 - 16:00 (6/6), 23.11.2020 15:00 - 16:00 (6/6)"
+    let test = "22.11.2020 15:00 - 16:00 (6/6), 23.11.2020 15:00 - 16:00 (6/6)";
+    let sessionDateRegex = /(([0][1-9])|([12][0-9])|(3[0-1]))\.(([0][1-9])|([1][0-2]))\.([0-9]+)/;
+    let sessionTimeRegex = /(([01][0-9])|(2[0-3])):(([0-5][0-9])) - (([01][0-9])|(2[0-3])):(([0-5][0-9]))/;
+    
+    let sessions = test.split(', ');
+    let normSessions : Array<Session> = [];
+    
+    if(sessions == null) return;
+    
+    sessions.forEach(
+        (value) =>
+        {
+            let dateResult = sessionDateRegex.exec(value);
+            let timeResult = sessionTimeRegex.exec(value);
+            
+            if(dateResult == null || timeResult == null) return;
+            
+            let normSession : Session = getSession(dateResult[0], timeResult[0]);
+            
+            normSessions.push(normSession);
+        }
+    )
+    
+    let reservation : Reservation = 
     {
         timestamp : data[0],
         name : data[1],
         surname : data[2],
-        sessions : data[3].split(', '),
+        sessions : normSessions,
         emailAdress : data[4]
     };
     
@@ -33,18 +57,18 @@ function onFormSubmitInstallable(formResponseEvent : GoogleAppsScript.Events.She
     
     //#region Process the form response.
     
-    processFormResponse(formResponse); // Add the form response to the reservations sheet.
+    processFormResponse(reservation); // Add the form response to the reservations sheet.
     updateForm(); // Update the form.
-    if(formResponse.emailAdress != "") sendConfirmationEmail(formResponse); // Send a confirmation e-mail if the user specified it.
+    if(reservation.emailAdress != "") sendConfirmationEmail(reservation); // Send a confirmation e-mail if the user specified it.
     
     //#endregion
 }
 
 /**
  * Process form response and add it to reservations sheet.
- * @param {FormResponse} formResponse Form object.
+ * @param {Reservation} formResponse Form object.
  */
-function processFormResponse(formResponse : FormResponse)
+function processFormResponse(formResponse : Reservation)
 {
     //#region Reservation sheet variables
     
@@ -114,15 +138,13 @@ function updateForm()
     for(let n = 4; n < sessionSheetCells.length; n++)
     {
         let currentDate = new Date();
-        let session = getSession(sessionSheetCells, n);
+        let session = getSessionFromSheet(sessionSheetCells, n);
         
-        session.date.original.setHours(session.time.end.hours);
-        session.date.original.setMinutes(session.time.end.minutes);
-        session.date.original.setSeconds(0);
+        if(session.text == undefined || session.capacity == undefined || session.free == undefined || session.reserved == undefined) return;
         
-        if(session.free > 0 && session.capacity > 0 && (currentDate.getTime() <= session.date.original.getTime())) // If there is free space and tha capacity isn't 0 and the session hasn't already started
+        if(session.free > 0 && session.capacity > 0 && (currentDate.getTime() <= session.start.getTime())) // If there is free space and tha capacity isn't 0 and the session hasn't already started
         {
-            let checkboxChoice = session.date.formated + " " + session.time.text + " (" + session.free + "/" + session.capacity + ")";
+            let checkboxChoice = `${session.text?.date} ${session.text?.time.start} - ${session.text?.time.end} (${session.free}/${session.capacity})`;
             newFreeSessions.push(checkboxChoice);
         }
     }
@@ -139,9 +161,9 @@ function updateForm()
 
 /**
  * Sends a confirmation e-mail about the reservation to the customer.
- * @param {FormResponse} formResponse Normalized form response from a user in object.
+ * @param {Reservation} formResponse Normalized form response from a user in object.
  */
-function sendConfirmationEmail(formResponse : FormResponse)
+function sendConfirmationEmail(formResponse : Reservation)
 {
     //#region Process form data and prepare it for injecting it in e-mail template
     
@@ -149,9 +171,7 @@ function sendConfirmationEmail(formResponse : FormResponse)
     
     for(var index = 0; index < formResponse.sessions.length; index++)
     {
-        let session = formResponse.sessions[index];
-        formResponse.sessions[index] = session.slice(0, -5); // Remove free space and capacity from end of the string (eg. "(6/6)")
-        sessionDays.push(getDayOfWeekString(getEuropeDay(getSessionDates(session).start)));
+        sessionDays.push(getDayOfWeekString(getEuropeDay(formResponse.sessions[index].start)));
         // sessionDates.push(getSessionDate(session).text);
         // sessionTimes.push(getSessionTime(session).text);
     }

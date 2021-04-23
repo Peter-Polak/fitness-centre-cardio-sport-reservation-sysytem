@@ -68,13 +68,11 @@ function showEmailExample()
     
     const name = "Peter";
     const surname = "Polák";
-    const sessions = "26.11.2020 16:30 - 18:30, 27.11.2020 20:00 - 22:00".split(', ');
+    const sessions = [getSession("26.11.2020", "16:30 - 18:30"), getSession("27.11.2020", "20:00 - 22:00")];
     let sessionDays = [], sessionDates = [], sessionTimes = []
     for(var session of sessions)
     {
-        sessionDays.push(getDayOfWeekString(getEuropeDay(getSessionDates(session).start)));
-        sessionDates.push(getSessionDate(session).text);
-        sessionTimes.push(getSessionTime(session).text);
+        sessionDays.push(getDayOfWeekString(getEuropeDay(session.start)));
     }
     
     //#endregion
@@ -105,7 +103,7 @@ function sendTestEmail()
     
     if (selectedButton == ui.Button.OK) // User clicked "OK".
     {
-        let htmlBody = getEmailBodyReservations("Peter", "Polák", ["01.01.1970 16:30 - 18:30"], ["Pondelok"]); // Get HTML content
+        let htmlBody = getEmailBodyReservations("Peter", "Polák", [getSession("01.01.1970", "16:30 - 18:30")], ["Pondelok"]); // Get HTML content
         
         let mail = 
         {

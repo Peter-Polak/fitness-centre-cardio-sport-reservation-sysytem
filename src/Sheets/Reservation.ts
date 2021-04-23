@@ -22,8 +22,6 @@ function hideOldReservations()
     const data = reservationSheet.getRange(startingRow, sessionColumn, numOfRows).getValues();
     // let data = reservationSheet.getDataRange().getValues();
     
-    let session = "";
-    let sessionDate;
     const now = new Date();
     const nowTime = now.getTime()
     
@@ -33,11 +31,9 @@ function hideOldReservations()
     
     for(let row = 0; row < data.length; row++)
     {
-        session = data[row][0];
-        // session = data[row][3];
-        sessionDate = getSessionDates(session);
+        let session = getSessionFromSheet(data, row);
         
-        if(nowTime > sessionDate.end.getTime())
+        if(nowTime > session.end.getTime())
         {
             reservationSheet.hideRows(startingRow + row);
         }

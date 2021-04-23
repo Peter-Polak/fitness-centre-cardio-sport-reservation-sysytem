@@ -105,7 +105,6 @@ function getEuropeDay(date : Date)
  */
 function getSessionFromSheet(cells : any, index : number) : Session
 {
-    
     let date = 
     {
         day: cells[index][0].substr(0, 2),
@@ -129,13 +128,18 @@ function getSessionFromSheet(cells : any, index : number) : Session
     
     let endDate = new Date(date.year, date.month, date.day, end.hours, end.minutes, 0, 0);
     
-    console.log(new Date(cells[index][0]));
+    let capacity = cells[index][2];
+    let reserved = cells[index][3];
+    let free = cells[index][4];
     
     let session : Session=
-        {
-            start : startDate,
-            end: endDate
-        };
+    {
+        start : startDate,
+        end: endDate,
+        capacity : capacity,
+        reserved : reserved,
+        free : free
+    };
     
     return session;
 }
@@ -166,10 +170,10 @@ function getSession(dateString : string, timeString : string) : Session
     let endDate = new Date(date.year, date.month, date.day, end.hours, end.minutes, 0, 0);
     
     let session : Session=
-        {
-            start : startDate,
-            end: endDate
-        };
+    {
+        start : startDate,
+        end: endDate
+    };
     
     return session;
 }

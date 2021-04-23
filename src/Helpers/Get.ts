@@ -105,41 +105,10 @@ function getEuropeDay(date : Date)
  */
 function getSessionFromSheet(cells : any, index : number) : Session
 {
-    let date = 
-    {
-        day: cells[index][0].substr(0, 2),
-        month: cells[index][0].substr(3, 2) - 1, // January = 0
-        year : cells[index][0].substr(6, 4)
-    }
-    
-    let start = 
-    {
-        hours : cells[index][1].substr(0, 2),
-        minutes : cells[index][1].substr(3, 2)
-    };
-    
-    let startDate = new Date(date.year, date.month, date.day, start.hours, start.minutes, 0, 0);
-    
-    let end = 
-    {
-        hours : cells[index][1].substr(8, 2),
-        minutes : cells[index][1].substr(11, 2)
-    };
-    
-    let endDate = new Date(date.year, date.month, date.day, end.hours, end.minutes, 0, 0);
-    
-    let capacity = cells[index][2];
-    let reserved = cells[index][3];
-    let free = cells[index][4];
-    
-    let session : Session=
-    {
-        start : startDate,
-        end: endDate,
-        capacity : capacity,
-        reserved : reserved,
-        free : free
-    };
+    let session : Session = getSession(cells[index][0], cells[index][1]);
+    session.capacity = cells[index][2];
+    session.reserved = cells[index][3];
+    session.free = cells[index][4];
     
     return session;
 }
@@ -153,24 +122,49 @@ function getSession(dateString : string, timeString : string) : Session
         year : parseInt(dateString.substr(6, 4))
     }
     
-    let start = 
+    let textTime = 
     {
-        hours : parseInt(timeString.substr(0, 2)),
-        minutes : parseInt(timeString.substr(3, 2))
+        start:
+        {
+            hours : timeString.substr(0, 2),
+                minutes: timeString.substr(3, 2)
+        },
+        end:
+        {
+            hours : timeString.substr(8, 2),
+                minutes: timeString.substr(11, 2)
+        }
     };
     
-    let startDate = new Date(date.year, date.month, date.day, start.hours, start.minutes, 0, 0);
-    
-    let end = 
+    let numberTime = 
     {
-        hours : parseInt(timeString.substr(8, 2)),
-        minutes : parseInt(timeString.substr(11, 2))
+        start:
+        {
+            hours : parseInt(textTime.start.hours),
+            minutes: parseInt(textTime.start.minutes)
+        },
+        end:
+        {
+            hours : parseInt(textTime.end.hours),
+            minutes: parseInt(textTime.end.minutes)
+        }
     };
+
     
-    let endDate = new Date(date.year, date.month, date.day, end.hours, end.minutes, 0, 0);
+    let startDate = new Date(date.year, date.month, date.day, numberTime.start.hours, numberTime.start.minutes, 0, 0);
+    let endDate = new Date(date.year, date.month, date.day, numberTime.end.hours, numberTime.end.minutes, 0, 0);
     
     let session : Session=
     {
+        text:
+        {
+            date : dateString,
+            time : 
+            {
+                start: `${timeString.substr(0, 2)}:${timeString.substr(3, 2)}`,
+                end: `${timeString.substr(8, 2)}:${timeString.substr(11, 2)}`,
+            }
+        },
         start : startDate,
         end: endDate
     };

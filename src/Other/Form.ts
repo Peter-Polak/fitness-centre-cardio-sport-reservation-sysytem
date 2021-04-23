@@ -29,7 +29,7 @@ function onFormSubmitInstallable(formResponseEvent : GoogleAppsScript.Events.She
             let sessionDates = Session.getDatesFromString(sessionString);
             if(sessionDates == undefined) return;
             
-            sessions.push(new Session(sessionDates?.start, sessionDates?.end));
+            sessions.push(new Session(sessionDates.start, sessionDates.end));
         }
     );
     

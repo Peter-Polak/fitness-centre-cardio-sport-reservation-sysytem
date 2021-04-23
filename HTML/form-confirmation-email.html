@@ -106,7 +106,7 @@
                                     <ul>
                                     <? for (var i = 0; i < sessions.length; i++) { ?>
                                         <li>
-                                            <?= sessionDays[i] ?>, <?= sessions[i] ?>
+                                            <?= sessionDays[i] ?>, <?= sessions[i].text.date ?> <?= sessions[i].text.time ?>
                                         </li>
                                         <? } ?>
                                     </ul>

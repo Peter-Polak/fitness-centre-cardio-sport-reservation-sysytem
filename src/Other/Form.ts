@@ -20,38 +20,26 @@ function onFormSubmitInstallable(formResponseEvent : GoogleAppsScript.Events.She
     
     //#region Create form response object
     
-    //"22.11.2020 15:00 - 16:00 (6/6), 23.11.2020 15:00 - 16:00 (6/6)"
-    let test = "22.11.2020 15:00 - 16:00 (6/6), 23.11.2020 15:00 - 16:00 (6/6)";
-    let sessionDateRegex = /(([0][1-9])|([12][0-9])|(3[0-1]))\.(([0][1-9])|([1][0-2]))\.([0-9]+)/;
-    let sessionTimeRegex = /(([01][0-9])|(2[0-3])):(([0-5][0-9])) - (([01][0-9])|(2[0-3])):(([0-5][0-9]))/;
+    let sessionStrings = data[3].split(', ');
+    let sessions : Array<Session> = [];
     
-    let sessions = test.split(', ');
-    let normSessions : Array<Session> = [];
-    
-    if(sessions == null) return;
-    
-    sessions.forEach(
-        (value) =>
+    sessionStrings.forEach(
+        (sessionString) =>
         {
-            let dateResult = sessionDateRegex.exec(value);
-            let timeResult = sessionTimeRegex.exec(value);
+            let sessionDates = Session.getDatesFromString(sessionString);
+            if(sessionDates == undefined) return;
             
-            if(dateResult == null || timeResult == null) return;
-            
-            let normSession : Session = getSession(dateResult[0], timeResult[0]);
-            
-            normSessions.push(normSession);
+            sessions.push(new Session(sessionDates?.start, sessionDates?.end));
         }
-    )
+    );
     
-    let reservation : Reservation = 
-    {
-        timestamp : data[0],
-        name : data[1],
-        surname : data[2],
-        sessions : normSessions,
-        emailAdress : data[4]
-    };
+    let reservation : Reservation = new Reservation(
+        data[0], 
+        data[1],
+        data[2],
+        sessions,
+        data[4]
+    );
     
     //#endregion
     
@@ -99,7 +87,7 @@ function processFormResponse(formResponse : Reservation)
     {
         reservations[index] = 
         [
-            formResponse.timestamp, formResponse.name, formResponse.surname, formResponse.sessions[index], formResponse.emailAdress, 'FALSE'
+            formResponse.timestamp, formResponse.name, formResponse.surname, formResponse.sessionStrings[index], formResponse.emailAdress, 'FALSE'
         ];
     }
 
@@ -139,12 +127,11 @@ function updateForm()
     {
         let currentDate = new Date();
         let session = getSessionFromSheet(sessionSheetCells, n);
+        if(session == undefined) return;
         
-        if(session.text == undefined || session.capacity == undefined || session.free == undefined || session.reserved == undefined) return;
-        
-        if(session.free > 0 && session.capacity > 0 && (currentDate.getTime() <= session.start.getTime())) // If there is free space and tha capacity isn't 0 and the session hasn't already started
+        if(session.getFreeSpaces > 0 && session.capacity > 0 && (currentDate.getTime() <= session.startDate.getTime())) // If there is free space and tha capacity isn't 0 and the session hasn't already started
         {
-            let checkboxChoice = `${session.text?.date} ${session.text?.time.start} - ${session.text?.time.end} (${session.free}/${session.capacity})`;
+            let checkboxChoice = `${session.getDateString} ${session.getTimeString} (${session.getFreeSpaces}/${session.capacity})`;
             newFreeSessions.push(checkboxChoice);
         }
     }
@@ -167,13 +154,11 @@ function sendConfirmationEmail(formResponse : Reservation)
 {
     //#region Process form data and prepare it for injecting it in e-mail template
     
-    let sessionDays = [], sessionDates = [], sessionTimes = [];
+    let sessionDays = [];
     
     for(var index = 0; index < formResponse.sessions.length; index++)
     {
-        sessionDays.push(getDayOfWeekString(getEuropeDay(formResponse.sessions[index].start)));
-        // sessionDates.push(getSessionDate(session).text);
-        // sessionTimes.push(getSessionTime(session).text);
+        sessionDays.push(getDayOfWeekString(getEuropeDay(formResponse.sessions[index].startDate)));
     }
     
     //#endregion

@@ -168,10 +168,11 @@ function archiveOldSessions()
     {
         let currentDate = new Date(); // Used for comparison if the session is older than right now
         let session = getSessionFromSheet(cells, n);
+        if(session == undefined) return;
         
         //#region If the session has already finished, archive it
         
-        if(currentDate.getTime() >= session.end.getTime())
+        if(currentDate.getTime() >= session.endDate.getTime())
         {
             let archiveLastRow = archiveSheet.getLastRow();
             let rowToArchive = n - numOfArchivedRows + 1; // 1 is for index offset
@@ -195,4 +196,130 @@ function archiveOldSessions()
     archiveSheet.sort(1, true); // Sort sheet based on date of session
     
     //#endregion
+}
+
+/**
+ * Get session object from the sessions sheet at specified row.
+ * @param cells All cells in the sessions sheet.
+ * @param index Row index.
+ */
+ function getSessionFromSheet(cells : any, index : number) : Session | undefined
+ {
+    let date = cells[index][0];
+    let time = cells[index][1];
+    let capacity = cells[index][2];
+    let reserved = cells[index][3];
+    let free = cells[index][4];
+    
+    let dateString : string = "";
+    
+    if(typeof date == "string")
+    {
+        dateString = date;
+    }
+    else
+    {
+        dateString =  getDateString(date)
+    }
+     
+    let sessionString = `${dateString} ${time}`;
+    let dates = Session.getDatesFromString(sessionString);
+    if(dates == undefined) return;
+     
+    return new Session(dates.start, dates.end, capacity, reserved);;
+ }
+ 
+ 
+ //@ts-ignore // Complains because it is declared in Google Apps Script types file
+class Session
+{
+    startDate : Date;
+    endDate : Date;
+    capacity : number;
+    reserved : number;
+    
+    constructor(startDate : Date, endDate : Date, capacity? : number, reserved? : number)
+    {
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.capacity = capacity ? capacity : 0;
+        this.reserved = reserved ? reserved : 0;
+    }
+    
+    get getFreeSpaces()
+    {
+        return this.capacity - this.reserved;
+    }
+    
+    get getDateString()
+    {
+        return getDateString(this.startDate);
+    }
+    
+    get getTimeString()
+    {
+        let start =`${getNumberString(this.startDate.getHours())}:${getNumberString(this.startDate.getMinutes())}`;
+        let end = `${getNumberString(this.endDate.getHours())}:${getNumberString(this.endDate.getHours())}`;
+        
+        return `${start} - ${end}`;
+    }
+    
+    static getDatesFromString(string : string) : { start : Date, end : Date} | undefined
+    {
+        let sessionDateRegex = /(([0][1-9])|([12][0-9])|(3[0-1]))\.(([0][1-9])|([1][0-2]))\.([0-9]+)/;
+        let sessionTimeRegex = /(([01][0-9])|(2[0-3])):(([0-5][0-9])) - (([01][0-9])|(2[0-3])):(([0-5][0-9]))/;
+        
+        let dateResult = sessionDateRegex.exec(string);
+        let timeResult = sessionTimeRegex.exec(string);
+        if(dateResult == null || timeResult == null) return;
+        
+        let dateString = dateResult[0];
+        let timeString = dateResult[0];
+        
+        let date = 
+        {
+            day: parseInt(dateString.substr(0, 2)),
+            month: parseInt(dateString.substr(3, 2)) - 1, // January = 0
+            year : parseInt(dateString.substr(6, 4))
+        }
+        
+        let textTime = 
+        {
+            start:
+            {
+                hours : timeString.substr(0, 2),
+                minutes: timeString.substr(3, 2)
+            },
+            end:
+            {
+                hours : timeString.substr(8, 2),
+                minutes: timeString.substr(11, 2)
+            }
+        };
+        
+        let numberTime = 
+        {
+            start:
+            {
+                hours : parseInt(textTime.start.hours),
+                minutes: parseInt(textTime.start.minutes)
+            },
+            end:
+            {
+                hours : parseInt(textTime.end.hours),
+                minutes: parseInt(textTime.end.minutes)
+            }
+        };
+        
+        let startDate = new Date(date.year, date.month, date.day, numberTime.start.hours, numberTime.start.minutes, 0, 0);
+        let endDate = new Date(date.year, date.month, date.day, numberTime.end.hours, numberTime.end.minutes, 0, 0);
+        
+        let dates = 
+        {
+            start : startDate,
+            end: endDate
+        }
+        
+        return dates;
+    }
 }

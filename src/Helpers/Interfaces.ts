@@ -64,20 +64,21 @@ interface AppSettings
     scheduleOfNewSessions : WeekSchedule
 }
 
-interface Session
-{
-    text?: 
-    {
-        date : string,
-        time : 
-        {
-            start : string,
-            end : string
-        }
-    },
-    start : Date,
-    end : Date,
-    capacity? : number,
-    reserved? : number,
-    free? : number
-}
+//@ts-ignore // Complains because it is declared in Google Apps Script types file
+// interface Session
+// {
+//     text?: 
+//     {
+//         date : string,
+//         time : 
+//         {
+//             start : string,
+//             end : string
+//         }
+//     },
+//     start : Date,
+//     end : Date,
+//     capacity? : number,
+//     reserved? : number,
+//     free? : number
+// }

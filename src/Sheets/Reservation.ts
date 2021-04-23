@@ -2,6 +2,45 @@
  * Scripts for Reservations sheet.
  */
 
+ class Reservation
+ {
+     timestamp : string;
+     name : string;
+     surname: string;
+     sessions : Array<Session>;
+     emailAdress : string;
+     sessionStrings : Array<string>
+     
+     constructor(timestamp : string, name : string, surname: string, sessions : Array<Session> | string, emailAdress : string)
+     {
+         this.timestamp = timestamp;
+         this.name = name;
+         this.surname = surname;
+         this.emailAdress = emailAdress;
+         this.sessions = [];
+         
+         if(typeof sessions == "string")
+         {
+            this.sessionStrings = sessions.split(', ');
+            
+            this.sessionStrings.forEach(
+                (sessionString) =>
+                {
+                    let sessionDates = Session.getDatesFromString(sessionString);
+                    if(sessionDates == undefined) return;
+                    
+                    let session = new Session(sessionDates.start, sessionDates.end)
+                    this.sessions.push(session);
+                }
+             )
+         }
+         else
+         {
+             this.sessions = sessions;
+             this.sessionStrings = [];
+         } 
+     }
+ }
 
 /**
  * Hides all rows with old reservations in it.
@@ -32,8 +71,9 @@ function hideOldReservations()
     for(let row = 0; row < data.length; row++)
     {
         let session = getSessionFromSheet(data, row);
+        if(session == undefined) return;
         
-        if(nowTime > session.end.getTime())
+        if(nowTime > session.endDate.getTime())
         {
             reservationSheet.hideRows(startingRow + row);
         }

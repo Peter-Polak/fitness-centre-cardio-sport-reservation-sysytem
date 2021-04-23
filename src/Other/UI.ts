@@ -45,11 +45,15 @@ function getEmailExampleHtmlBody()
     
     const name = "Peter";
     const surname = "Polák";
-    const sessions = [getSession("26.11.2020", "16:30 - 18:30"), getSession("27.11.2020", "20:00 - 22:00")];
+    const dates = [Session.getDatesFromString("26.11.2020 16:30 - 18:30"), Session.getDatesFromString("27.11.2020 20:00 - 22:00")];
+    if(dates[0] == undefined || dates[1] == undefined) return;
+    
+    const sessions = [ new Session(dates[0].start, dates[0].end), new Session(dates[1].start, dates[1].end) ];
     let sessionDays = [];
+    
     for(var session of sessions)
     {
-        sessionDays.push(getDayOfWeekString(getEuropeDay(session.start)));
+        sessionDays.push(getDayOfWeekString(getEuropeDay(session.startDate)));
     }
     
     //#endregion
@@ -63,6 +67,7 @@ function getEmailExampleHtmlBody()
 function showEmailExample()
 {
     let htmlBody = getEmailExampleHtmlBody(); // Get HTML content
+    if(htmlBody == undefined) return;
     
     //#region Show example e-mail
     

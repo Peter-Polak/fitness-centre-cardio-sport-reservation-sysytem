@@ -17,7 +17,7 @@ function addDebugString(string : string)
  * Show sidebar with debug variable (or specified string) as it's content.
  * @param [string] Optional. If specified, it will show this instead of the debug variable. 
  */
-function debug(string : string)
+function debug(string? : string)
 {
     let debugString = string ? string : debugVariable;
     

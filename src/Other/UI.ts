@@ -58,18 +58,14 @@ function showFormDialog()
         .showModalDialog(html, 'Formulár na rezervovanie vstupu do fitness centra');
 }
 
-
-/**
- * Show an example of an e-mail sent to customers after making a reservation in a dialog window.
- */
-function showEmailExample()
+function getEmailExampleHtmlBody()
 {
     //#region Prepare form mockup data
     
     const name = "Peter";
     const surname = "Polák";
     const sessions = [getSession("26.11.2020", "16:30 - 18:30"), getSession("27.11.2020", "20:00 - 22:00")];
-    let sessionDays = [], sessionDates = [], sessionTimes = []
+    let sessionDays = [];
     for(var session of sessions)
     {
         sessionDays.push(getDayOfWeekString(getEuropeDay(session.start)));
@@ -77,7 +73,15 @@ function showEmailExample()
     
     //#endregion
     
-    let htmlBody = getEmailBodyReservations(name, surname, sessions, sessionDays); // Get HTML content
+    return getEmailBodyReservations(name, surname, sessions, sessionDays); // Get HTML content
+}
+
+/**
+ * Show an example of an e-mail sent to customers after making a reservation in a dialog window.
+ */
+function showEmailExample()
+{
+    let htmlBody = getEmailExampleHtmlBody(); // Get HTML content
     
     //#region Show example e-mail
     
@@ -103,7 +107,7 @@ function sendTestEmail()
     
     if (selectedButton == ui.Button.OK) // User clicked "OK".
     {
-        let htmlBody = getEmailBodyReservations("Peter", "Polák", [getSession("01.01.1970", "16:30 - 18:30")], ["Pondelok"]); // Get HTML content
+        let htmlBody = getEmailExampleHtmlBody(); // Get HTML content
         
         let mail = 
         {
@@ -115,7 +119,7 @@ function sendTestEmail()
     
         MailApp.sendEmail(mail);
         
-        ui.alert(`E-mail bol zalaný na adresu ${emailAdress}.`);
+        ui.alert(`E-mail bol zaslaný na adresu ${emailAdress}.`);
     }
     else if (selectedButton == ui.Button.CANCEL) // User clicked "Cancel".
     { 

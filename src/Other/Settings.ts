@@ -129,13 +129,13 @@ function saveSettings(type : PropertiesType, settings : {[key: string]: string;}
  * Get settings of type document.
  * @returns {{[key: string]: string;}}  Document settings.
  */
- function getSettingsDocument() : {[key: string]: string;}
- {
-     const documentProperties = getPropertiesDocument();
-     let documentSettings = documentProperties.getProperties();
-     
-     return documentSettings;
- }
+function getSettingsDocument() : {[key: string]: string;}
+{
+    const documentProperties = getPropertiesDocument();
+    let documentSettings = documentProperties.getProperties();
+    
+    return documentSettings;
+}
  
  /**
  * Get settings of type script.
@@ -153,13 +153,13 @@ function getSettingsScript() : {[key: string]: string;}
  * Get settings of type user.
  * @returns {{[key: string]: string;}} User settings.
  */
- function getSettingsUser() : {[key: string]: string;}
- {
-     const userProperties = getPropertiesUser();
-     let userSettings = userProperties.getProperties();
-     
-     return userSettings;
- }
+function getSettingsUser() : {[key: string]: string;}
+{
+    const userProperties = getPropertiesUser();
+    let userSettings = userProperties.getProperties();
+    
+    return userSettings;
+}
  
  /**
  * Get settings of type `type`.

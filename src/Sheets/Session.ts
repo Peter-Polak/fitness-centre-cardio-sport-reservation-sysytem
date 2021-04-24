@@ -259,7 +259,7 @@ class Session
     get getTimeString()
     {
         let start =`${getNumberString(this.startDate.getHours())}:${getNumberString(this.startDate.getMinutes())}`;
-        let end = `${getNumberString(this.endDate.getHours())}:${getNumberString(this.endDate.getHours())}`;
+        let end = `${getNumberString(this.endDate.getHours())}:${getNumberString(this.endDate.getMinutes())}`;
         
         return `${start} - ${end}`;
     }
@@ -274,7 +274,7 @@ class Session
         if(dateResult == null || timeResult == null) return;
         
         let dateString = dateResult[0];
-        let timeString = dateResult[0];
+        let timeString = timeResult[0];
         
         let date = 
         {

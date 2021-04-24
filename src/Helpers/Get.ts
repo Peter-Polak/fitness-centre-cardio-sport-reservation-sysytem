@@ -141,7 +141,7 @@ function getNumberString(number : number) : string
 function getDateString(date : Date)
 {
     let day = `${getNumberString(date.getDate())}`;
-    let month = `${getNumberString(date.getMonth())}`;
+    let month = `${getNumberString(date.getMonth() + 1)}`;
     let year = `${date.getFullYear()}`;
     
     return `${day}.${month}.${year}`;

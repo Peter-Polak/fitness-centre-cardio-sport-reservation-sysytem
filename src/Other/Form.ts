@@ -20,24 +20,11 @@ function onFormSubmitInstallable(formResponseEvent : GoogleAppsScript.Events.She
     
     //#region Create form response object
     
-    let sessionStrings = data[3].split(', ');
-    let sessions : Array<Session> = [];
-    
-    sessionStrings.forEach(
-        (sessionString) =>
-        {
-            let sessionDates = Session.getDatesFromString(sessionString);
-            if(sessionDates == undefined) return;
-            
-            sessions.push(new Session(sessionDates.start, sessionDates.end));
-        }
-    );
-    
     let reservation : Reservation = new Reservation(
         data[0], 
         data[1],
         data[2],
-        sessions,
+        data[3],
         data[4]
     );
     

@@ -8,7 +8,8 @@
 enum HtmlFiles
 {
     FORM = "form-html",
-    SETTINGS =  "settings"
+    TIME =  "time",
+    TIMETABLE =  "timetable"
 };
 
 /**
@@ -132,7 +133,7 @@ function showTimesSettings()
     
     let times : Array<SessionTime> = propertyToJson(property);
     
-    var template = HtmlService.createTemplateFromFile(HtmlFiles.SETTINGS); // Create template
+    var template = HtmlService.createTemplateFromFile(HtmlFiles.TIME); // Create template
      
     template.times = times;
      

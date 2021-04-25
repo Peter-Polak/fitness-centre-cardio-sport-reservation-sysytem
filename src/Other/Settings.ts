@@ -281,3 +281,10 @@ function propertyToJson(settings : string)
 }
 
 //#endregion
+
+function deleteAllProperties()
+{
+    getPropertiesDocument().deleteAllProperties();
+    getPropertiesScript().deleteAllProperties();
+    getPropertiesUser().deleteAllProperties();
+}

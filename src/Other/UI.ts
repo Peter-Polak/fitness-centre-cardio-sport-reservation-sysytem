@@ -25,7 +25,7 @@ function renderUI()
     let formMenu = ui.createMenu("Formulár").addItem("Aktualizovať formúlar", "updateForm").addItem("Zobraziť formulár", "showFormDialog");
     let emailMenu = ui.createMenu("E-mail").addItem("Ukázať príklad e-mailu", "showEmailExample").addItem("Poslať príklad e-mailu", "sendTestEmail");
     let settingsMenu = ui.createMenu("Nastavenia").addItem("Časy", "showTimesSettings");
-    let developerMenu = ui.createMenu("Developer").addItem("Debug code", "debug");
+    let developerMenu = ui.createMenu("Developer").addItem("Debug code", "debug").addItem("Delete all properties", "showDeletePropertiesDialog").addItem("Delete all triggers", "showDeleteTriggersDialog");
     
     reservationSystemMenu
     .addSubMenu(reservationsMenu)
@@ -141,4 +141,44 @@ function showTimesSettings()
     
     var html = HtmlService.createHtmlOutput(htmlBody).setTitle('Settings').setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
     SpreadsheetApp.getUi().showSidebar(html);
+}
+
+function showDeletePropertiesDialog()
+{
+    var ui = SpreadsheetApp.getUi();
+    var result = ui.alert(
+        "Delete all properties",
+        "Are you sure you want to delete all properties?",
+        ui.ButtonSet.YES_NO
+    );
+    
+    if (result == ui.Button.YES) // User clicked "OK".
+    {
+        deleteAllProperties();
+        ui.alert("All properties have been deleted!");
+    }
+    else if (result == ui.Button.NO) // User clicked "Cancel".
+    { 
+        
+    }
+}
+
+function showDeleteTriggersDialog()
+{
+    var ui = SpreadsheetApp.getUi();
+    var result = ui.alert(
+        "Delete all properties",
+        "Are you sure you want to delete all triggers?",
+        ui.ButtonSet.YES_NO
+    );
+
+    if (result == ui.Button.YES) // User clicked "OK".
+    {
+        deleteAllTriggers();
+        ui.alert("All triggers have been deleted!");
+    }
+    else if (result == ui.Button.NO) // User clicked "Cancel".
+    { 
+        
+    }
 }

@@ -16,17 +16,25 @@ enum HtmlFiles
  */
 function renderUI()
 {
-    var ui = SpreadsheetApp.getUi();
+    const ui = SpreadsheetApp.getUi();
     
-    ui.createMenu("Rezervačný systém")
-    .addSubMenu(ui.createMenu("Rezervácie").addItem("Skryť staré rezervácie", "hideOldReservations"))
-    .addSubMenu(ui.createMenu("Termíny").addItem("Vypísať termíny podľa rozvrhu", "addNewSessions").addItem("Archívovať staré termíny", "archiveOldSessions")
-                .addSubMenu(ui.createMenu("Deň").addItem("Pondelok", 'addMonday').addItem("Utorok", 'addTuesday').addItem("Streda", 'addWednesday').addItem("Štvrtok", 'addThursday').addItem("Piatok", 'addFriday').addItem("Sobota", 'addSaturday').addItem("Nedeľa", 'addSunday')))
-    .addSubMenu(ui.createMenu("Formulár").addItem("Aktualizovať formúlar", "updateForm").addItem("Zobraziť formulár", "showFormDialog"))
-    .addSubMenu(ui.createMenu("E-mail").addItem("Ukázať príklad e-mailu", "showEmailExample").addItem("Poslať príklad e-mailu", "sendTestEmail"))
-    .addSubMenu(ui.createMenu("Developer").addItem("Debug code", "debug"))
-    .addItem("Settings", "showSettingsSidebar")
-    .addToUi();
+    let reservationSystemMenu = ui.createMenu("Rezervačný systém");
+    let reservationsMenu = ui.createMenu("Rezervácie").addItem("Skryť staré rezervácie", "hideOldReservations");
+    let sessionsMenu = ui.createMenu("Termíny").addItem("Vypísať termíny podľa rozvrhu", "addNewSessions").addItem("Archívovať staré termíny", "archiveOldSessions");
+    let formMenu = ui.createMenu("Formulár").addItem("Aktualizovať formúlar", "updateForm").addItem("Zobraziť formulár", "showFormDialog");
+    let emailMenu = ui.createMenu("E-mail").addItem("Ukázať príklad e-mailu", "showEmailExample").addItem("Poslať príklad e-mailu", "sendTestEmail");
+    let settingsMenu = ui.createMenu("Nastavenia").addItem("Časy", "showTimesSettings");
+    let developerMenu = ui.createMenu("Developer").addItem("Debug code", "debug");
+    
+    reservationSystemMenu
+    .addSubMenu(reservationsMenu)
+    .addSubMenu(sessionsMenu)
+    .addSubMenu(formMenu)
+    .addSubMenu(emailMenu)
+    .addSubMenu(settingsMenu)
+    .addSubMenu(developerMenu);
+    
+    reservationSystemMenu.addToUi();
 }
 
 /**
@@ -117,7 +125,7 @@ function sendTestEmail()
     }
 }
 
-function showSettingsSidebar()
+function showTimesSettings()
 {
     let property = getPropertyScript("times");
     if(property == null) return;

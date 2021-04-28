@@ -71,7 +71,12 @@ function hideOldReservations()
     for(let row = 0; row < data.length; row++)
     {
         let session = getSessionFromSheet(data, row);
-        if(session == undefined) return;
+        
+        if(session == undefined)
+        {
+            reservationSheet.hideRows(startingRow + row);
+            continue;
+        }
         
         if(nowTime > session.endDate.getTime())
         {

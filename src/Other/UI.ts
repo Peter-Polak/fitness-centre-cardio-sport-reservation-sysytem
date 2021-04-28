@@ -8,7 +8,7 @@
 enum HtmlFiles
 {
     FORM = "form-html",
-    TIME =  "time",
+    TIME =  "times",
     TIMETABLE =  "timetable"
 };
 
@@ -24,7 +24,7 @@ function renderUI()
     let sessionsMenu = ui.createMenu("Termíny").addItem("Vypísať termíny podľa rozvrhu", "addNewSessions").addItem("Archívovať staré termíny", "archiveOldSessions");
     let formMenu = ui.createMenu("Formulár").addItem("Aktualizovať formúlar", "updateForm").addItem("Zobraziť formulár", "showFormDialog");
     let emailMenu = ui.createMenu("E-mail").addItem("Ukázať príklad e-mailu", "showEmailExample").addItem("Poslať príklad e-mailu", "sendTestEmail");
-    let settingsMenu = ui.createMenu("Nastavenia").addItem("Časy", "showTimesSettings");
+    let settingsMenu = ui.createMenu("Nastavenia").addItem("Časy", "showTimesSettings").addItem("Timetable", "showTimetableSettings").addItem("Schedule", "showTimesSettings");
     let developerMenu = ui.createMenu("Developer").addItem("Debug code", "debug").addItem("Delete all properties", "showDeletePropertiesDialog").addItem("Delete all triggers", "showDeleteTriggersDialog");
     
     reservationSystemMenu
@@ -80,8 +80,8 @@ function showEmailExample()
     
     //#region Show example e-mail
     
-    var html = HtmlService.createHtmlOutput(htmlBody.toString()).setTitle('E-mail example').setWidth(1280).setHeight(720);
-    SpreadsheetApp.getUi().showDialog(html);
+    var html = HtmlService.createHtmlOutput(htmlBody.toString()).setWidth(1280).setHeight(720);
+    SpreadsheetApp.getUi().showModalDialog(html, "E-mail example");
     
     //#endregion
 }
@@ -129,7 +129,7 @@ function sendTestEmail()
 function showTimesSettings()
 {
     let property = getPropertyScript("times");
-    if(property == null) return;
+    if(property == null) property = getEmptyProperty("times");
     
     let times : Array<SessionTime> = propertyToJson(property);
     
@@ -141,6 +141,27 @@ function showTimesSettings()
     
     var html = HtmlService.createHtmlOutput(htmlBody).setTitle('Settings').setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
     SpreadsheetApp.getUi().showSidebar(html);
+}
+
+function showTimetableSettings()
+{
+    let propertyTimetable = getPropertyScript("timetable");
+    let propertyTimes = getPropertyScript("times");
+    
+    if(propertyTimetable == null) propertyTimetable = getEmptyProperty("timetable");
+    if(propertyTimes == null) propertyTimes = getEmptyProperty("times");
+    let timetable : Timetable = propertyToJson(propertyTimetable);
+    let times : Array<SessionTime> = propertyToJson(propertyTimes);
+    
+    var template = HtmlService.createTemplateFromFile(HtmlFiles.TIMETABLE); // Create template
+     
+    template.timetable = timetable;
+    template.times = times;
+    
+    let htmlBody = template.evaluate().getContent(); // Evaluate template and get HTML content
+    
+    var html = HtmlService.createHtmlOutput(htmlBody).setWidth(1280).setHeight(720).setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
+    SpreadsheetApp.getUi().showModalDialog(html, "Settings");
 }
 
 function showDeletePropertiesDialog()

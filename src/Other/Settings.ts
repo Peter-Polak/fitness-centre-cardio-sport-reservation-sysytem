@@ -288,3 +288,16 @@ function deleteAllProperties()
     getPropertiesScript().deleteAllProperties();
     getPropertiesUser().deleteAllProperties();
 }
+
+function getEmptyProperty(key : string)
+{
+    switch(key)
+    {
+        case "times":
+            return "[]";
+        case "timetable":
+            return '{"monday" : [], "tuesday" : [], "wednesday" : [], "thursday" : [], "friday" : [], "saturday" : [], "sunday" : []}';
+        default:
+            return "";
+    }
+}

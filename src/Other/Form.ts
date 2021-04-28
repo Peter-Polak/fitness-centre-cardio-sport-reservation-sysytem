@@ -74,7 +74,7 @@ function processFormResponse(formResponse : Reservation)
     {
         reservations[index] = 
         [
-            formResponse.timestamp, formResponse.name, formResponse.surname, formResponse.sessionStrings[index], formResponse.emailAdress, 'FALSE'
+            formResponse.timestamp, formResponse.name, formResponse.surname, formResponse.sessionStrings[index], formResponse.emailAdress, 'FALSE',  'FALSE'
         ];
     }
 

@@ -63,7 +63,7 @@
 <body>
     <input id="sessionStartHours" type="text" pattern="([01][0-9])|(2[0-3])" required > : <input id="sessionStartMinutes" type="text" pattern="([0-5][0-9])" required >
      - 
-     <input id="sessionEndHours" type="text" pattern="([01][0-9])|(2[0-3])" required > : <input id="sessionEndMinutes" type="text" pattern="([0-5][0-9])" required >
+    <input id="sessionEndHours" type="text" pattern="([01][0-9])|(2[0-3])" required > : <input id="sessionEndMinutes" type="text" pattern="([0-5][0-9])" required >
     <button id="addSession" onclick="addSessionTime()">Add</button>
     
     <ul id="times">
@@ -101,10 +101,18 @@
             google.script.run.withSuccessHandler(
                 (sessions) =>
                 {
-                    updateList(sessions);
+                    google.script.run.withSuccessHandler(
+                        (sessions) =>
+                        {
+                            updateList(sessions);
+                        }
+                    )
+                    .withFailureHandler(console.log)
+                    .sortSessionTimes(sessions);
                 }
             )
-            .addToArrayProperty("times", session, sortSessionTimes);
+            .withFailureHandler(console.log)
+            .addToArrayProperty("times", session);
             
             
         }
@@ -116,13 +124,21 @@
             google.script.run.withSuccessHandler(
                 (sessions) =>
                 {
-                    updateList(sessions);
+                    google.script.run.withSuccessHandler(
+                        (sessions) =>
+                        {
+                            updateList(sessions);
+                        }
+                    )
+                    .withFailureHandler(console.log)
+                    .sortSessionTimes(sessions);
                 }
             )
-            .removeFromArrayProperty("times", indexNum, sortSessionTimes);
+            .withFailureHandler(console.log)
+            .removeFromArrayProperty("times", indexNum);
         }
         
-        function getSessionsAsItems(items)
+        function getSessionsAsHtml(items)
         {
             let sessions = [];
                     
@@ -156,7 +172,7 @@
                 list.removeChild(list.lastChild);
             }
             
-            let children = getSessionsAsItems(sessions);
+            let children = getSessionsAsHtml(sessions);
             
             children.forEach(
                 (child) =>

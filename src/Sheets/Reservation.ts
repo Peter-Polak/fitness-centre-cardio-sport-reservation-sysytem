@@ -86,3 +86,8 @@ function hideOldReservations()
     
     //#endregion
 }
+
+function getMockupReservation(timestamp : string = "01.01.2021 00:00:00", name : string = "Peter", surname : string = "Polák", sessions : Array<Session> = getMockupSessions(), emailAdress : string = "peter.polak.mail@gmail.com")
+{
+    return  new Reservation(timestamp, name, surname, sessions, emailAdress)
+}

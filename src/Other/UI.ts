@@ -48,34 +48,13 @@ function showFormDialog()
         .showModalDialog(html, 'Formulár na rezervovanie vstupu do fitness centra');
 }
 
-function getEmailExampleHtmlBody()
-{
-    //#region Prepare form mockup data
-    
-    const name = "Peter";
-    const surname = "Polák";
-    const dates = [Session.getDatesFromString("26.11.2020 16:30 - 18:30"), Session.getDatesFromString("27.11.2020 20:00 - 22:00")];
-    if(dates[0] == undefined || dates[1] == undefined) return;
-    
-    const sessions = [ new Session(dates[0].start, dates[0].end), new Session(dates[1].start, dates[1].end) ];
-    let sessionDays = [];
-    
-    for(var session of sessions)
-    {
-        sessionDays.push(getDayOfWeekString(getEuropeDay(session.startDate)));
-    }
-    
-    //#endregion
-    
-    return getEmailBodyReservations(name, surname, sessions, sessionDays); // Get HTML content
-}
-
 /**
  * Show an example of an e-mail sent to customers after making a reservation in a dialog window.
  */
 function showEmailExample()
 {
-    let htmlBody = getEmailExampleHtmlBody(); // Get HTML content
+    let reservation = getMockupReservation();
+    let htmlBody = getEmailBodyReservations(reservation); // Get HTML content
     if(htmlBody == undefined) return;
     
     //#region Show example e-mail
@@ -102,13 +81,14 @@ function sendTestEmail()
     
     if (selectedButton == ui.Button.OK) // User clicked "OK".
     {
-        let htmlBody = getEmailExampleHtmlBody(); // Get HTML content
+        let reservation = getMockupReservation(undefined, undefined, undefined, undefined, emailAdress);
+        let htmlBody = getEmailBodyReservations(reservation); // Get HTML content
         
         let mail = 
         {
             name: "Fitness centrum Cardio Sport", // Name shown as an author of the e-mail
             to: emailAdress, // Recipient from dialog text
-            subject: "Potvrdenie rezervácie termínu vstupu do Fitness centra Cardio Sport",
+            subject: getEmailSubject(reservation.sessions),
             htmlBody: htmlBody
         };
     

@@ -139,18 +139,7 @@ function updateForm()
  */
 function sendConfirmationEmail(formResponse : Reservation)
 {
-    //#region Process form data and prepare it for injecting it in e-mail template
-    
-    let sessionDays = [];
-    
-    for(var index = 0; index < formResponse.sessions.length; index++)
-    {
-        sessionDays.push(getDayOfWeekString(getEuropeDay(formResponse.sessions[index].startDate)));
-    }
-    
-    //#endregion
-
-    let htmlBody = getEmailBodyReservations(formResponse.name, formResponse.surname, formResponse.sessions, sessionDays); // Get HTML content
+    let htmlBody = getEmailBodyReservations(formResponse); // Get HTML content
     
     //#region Prepare e-mail object and send it
     
@@ -158,7 +147,7 @@ function sendConfirmationEmail(formResponse : Reservation)
     {
         name: "Fitness centrum Cardio Sport", // Name shown as an author of the e-mail
         to: formResponse.emailAdress, // Recipient from form
-        subject: "Potvrdenie rezervácie termínu vstupu do Fitness centra Cardio Sport",
+        subject: getEmailSubject(formResponse.sessions),
         htmlBody: htmlBody
     };
     

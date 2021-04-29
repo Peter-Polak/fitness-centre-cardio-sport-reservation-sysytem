@@ -323,3 +323,17 @@ class Session
         return dates;
     }
 }
+
+function getMockupSessions(sessionStrings : Array<string> = ["26.11.2020 16:30 - 18:30", "27.11.2020 20:00 - 22:00"])
+{
+    let sessions : Array<Session> = [];
+    
+    for (let index = 0; index < sessionStrings.length; index++)
+    {
+        const element = sessionStrings[index];
+        const date = Session.getDatesFromString("26.11.2020 16:30 - 18:30");
+        if(date != undefined) sessions.push(new Session(date.start, date.end));
+    }
+    
+    return sessions;
+}

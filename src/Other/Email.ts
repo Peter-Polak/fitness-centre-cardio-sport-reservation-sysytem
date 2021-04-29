@@ -11,17 +11,37 @@
  * @returns {string} HTML body of the e-mail.
  * @example getReservationEmailBody("Peter", "Polák", ["01.01.1970 08:00 - 09:00", ...], ["Pondelok", ...])
  */
- function getEmailBodyReservations(name : string, surname : string, sessions : Array<Session>, sessionDays : Array<string>) : string
+ function getEmailBodyReservations(reservation : Reservation) : string
  {
-     var template = HtmlService.createTemplateFromFile('form-confirmation-email'); // Create template
+    var template = HtmlService.createTemplateFromFile('form-confirmation-email'); // Create template
      
-     // Fill the template with the information from the form
-     template.name = name;
-     template.surname = surname;
-     template.sessions = sessions;
-     template.sessionDays = sessionDays;
-     
-     let htmlBody = template.evaluate().getContent(); // Evaluate template and get HTML content
-     
-     return htmlBody;
+    let sessionDays = [];
+    
+    for(var index = 0; index < reservation.sessions.length; index++)
+    {
+        sessionDays.push(getDayOfWeekString(getEuropeDay(reservation.sessions[index].startDate)));
+    }
+    
+    // Fill the template with the information from the form
+    template.name = reservation.name;
+    template.surname = reservation.surname;
+    template.sessions = reservation.sessions;
+    template.sessionDays = sessionDays;
+    
+    let htmlBody = template.evaluate().getContent(); // Evaluate template and get HTML content
+    
+    return htmlBody;
+ }
+ 
+ function getEmailSubject(sessions : Array<Session>)
+ {
+    let subject = "Potvrdenie rezervácie - ";
+    
+    for(var index = 0; index < sessions.length; index++)
+    {
+        if(index > 0) subject+= ", ";
+        subject += sessions[0].getDateString + " " + sessions[0].getTimeString;
+    }
+    
+    return subject;
  }

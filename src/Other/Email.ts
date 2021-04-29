@@ -39,8 +39,9 @@
     
     for(var index = 0; index < sessions.length; index++)
     {
-        if(index > 0) subject+= ", ";
-        subject += sessions[0].getDateString + " " + sessions[0].getTimeString;
+        const session = sessions[index];
+        if(index > 0) subject += ", ";
+        subject += session.getDateString + " " + session.getTimeString;
     }
     
     return subject;

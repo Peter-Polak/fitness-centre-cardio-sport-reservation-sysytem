@@ -331,7 +331,7 @@ function getMockupSessions(sessionStrings : Array<string> = ["26.11.2020 16:30 -
     for (let index = 0; index < sessionStrings.length; index++)
     {
         const element = sessionStrings[index];
-        const date = Session.getDatesFromString("26.11.2020 16:30 - 18:30");
+        const date = Session.getDatesFromString(element);
         if(date != undefined) sessions.push(new Session(date.start, date.end));
     }
     

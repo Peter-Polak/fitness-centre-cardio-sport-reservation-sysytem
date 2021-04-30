@@ -78,7 +78,7 @@
                 <? for(var i = 0; i < sessions.length; i++) { ?>
                     <div class="daySessions">
                         <h3><?= sessions[i][0].getDateString ?></h3>
-                        <? for(var j = 0; j < sessions[i].length; j++) { ?>
+                        <? for(var j = 0; j < sessions[i].length; j++) { if(sessions[i][j].getFreeSpaces == 0) continue; ?>
                             <label>
                                 <input type="radio" name="<?= sessions[i][j].getDateString ?>" value="<?= sessions[i][j].getTimeString ?>">
                                 <?= sessions[i][j].getTimeString ?> (<?= sessions[i][j].getFreeSpaces ?>/<?= sessions[i][j].capacity ?>)

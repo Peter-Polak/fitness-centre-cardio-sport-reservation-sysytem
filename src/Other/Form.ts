@@ -165,3 +165,8 @@ function doGet()
     
     return htmlTemplate.evaluate();
 }
+
+function include(htmlFileName : string)
+{
+    return HtmlService.createHtmlOutputFromFile(htmlFileName).getContent();
+}

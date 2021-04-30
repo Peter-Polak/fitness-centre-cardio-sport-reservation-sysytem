@@ -170,3 +170,41 @@ function include(htmlFileName : string)
 {
     return HtmlService.createHtmlOutputFromFile(htmlFileName).getContent();
 }
+
+function isReservationValid(reservation : Reservation)
+{
+    let sessionSheet = getSessionSheet(); 
+    if(sessionSheet == undefined) return;
+    
+    let sessionsRange = sessionSheet.getDataRange().getValues();
+    
+    let allSessions = getAllSessionsFromSheet();
+    if(allSessions == undefined) return;
+    
+    for (let reservationIndex = 0; reservationIndex < reservation.sessions.length; reservationIndex++)
+    {
+        const reservationSession = reservation.sessions[reservationIndex];
+        
+        daySessions:
+        for (let dayIndex = 0; dayIndex < allSessions.length; dayIndex++)
+        {
+            const daySessions = allSessions[dayIndex];
+            
+            for (let sessionIndex = 0; sessionIndex < daySessions.length; sessionIndex++)
+            {
+                const session = daySessions[sessionIndex];
+                
+                if(session.startDate.getTime() == reservationSession.startDate.getTime())
+                {
+                    if(session.getFreeSpaces <= 0)
+                    {
+                        return false;
+                    }
+                    break daySessions;
+                }
+            } 
+        }
+    }
+    
+    return true;
+}

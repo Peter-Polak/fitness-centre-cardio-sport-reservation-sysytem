@@ -223,7 +223,7 @@
                         <? for(var j = 0; j < sessions[i].length; j++) { ?>
                             <label>
                                 <input type="radio" name="<?= sessions[i][j].getDateString ?>" value="<?= sessions[i][j].getTimeString ?>">
-                                <?= sessions[i][j].getTimeString ?>
+                                <?= sessions[i][j].getTimeString ?> (<?= sessions[i][j].getFreeSpaces ?>/<?= sessions[i][j].capacity ?>)
                             </label>
                         <? } ?>
                     </div>

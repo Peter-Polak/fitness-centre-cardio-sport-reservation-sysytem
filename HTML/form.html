@@ -53,23 +53,27 @@
         </div>
         
         <div class="section row">
-            <label>
-                <h2>Meno</h2>
-                <input type="text" name="name" required>
-            </label>
+            <div class="field-container">
+                <label for="name">Meno</label>
+                <input type="text" name="name" class="field white" required>
+            </div>
             
-            <label>
-                <h2>Priezvisko</h2>
-                <input type="text" name="surname" required>
-            </label>
-            
+            <div class="field-container">
+                <label for="surname">Priezvisko</label>
+                <input type="text" name="surname" class="field white" required>
+            </div>
         </div>
         
         <div class="section row">
-            <label>
-                <h2>E-mailová adresa</h2>
-                <input type="email"  name="emailAddress">
-            </label>
+            <div class="field-container">
+                <label for="emailAddress">E-mailová adresa</label>
+                <input type="email"  name="emailAddress" class="field white">
+            </div>
+            <!-- <div class="details">
+                Táto položka <b>NIE JE</b> povinná!
+                Ak si želáte dostať potvrdenie o prijatí vašej rezervácie, zadajte vašu e-mailovú adresu a mi vám ihneď zašleme potvrdenie, že sme vašu rezerváciu na vami vybrané termíny prijali. Taktiež v prípade, ak si želáte neskôr zrušiť danú rezerváciu, môžete na daný e-mail odpovedať s vašou požiadavkou o zrušenie rezervácie. 
+                Nič iné vám na e-mailovú adresu nebudeme zasielať a nebudeme ju distribuovať iným osobám.
+            </div> -->
         </div>
         
         <div class="section">
@@ -79,10 +83,8 @@
                     <div class="daySessions">
                         <h3><?= sessions[i][0].getDateString ?></h3>
                         <? for(var j = 0; j < sessions[i].length; j++) { if(sessions[i][j].getFreeSpaces == 0) continue; ?>
-                            <label>
-                                <input type="radio" name="<?= sessions[i][j].getDateString ?>" value="<?= sessions[i][j].getTimeString ?>">
-                                <?= sessions[i][j].getTimeString ?> (<?= sessions[i][j].getFreeSpaces ?>/<?= sessions[i][j].capacity ?>)
-                            </label>
+                            <label for="<?= sessions[i][j].getDateString ?>"><?= sessions[i][j].getTimeString ?> (<?= sessions[i][j].getFreeSpaces ?>/<?= sessions[i][j].capacity ?>)</label>
+                            <input type="radio" name="<?= sessions[i][j].getDateString ?>" value="<?= sessions[i][j].getTimeString ?>">
                         <? } ?>
                     </div>
                 <? } ?>

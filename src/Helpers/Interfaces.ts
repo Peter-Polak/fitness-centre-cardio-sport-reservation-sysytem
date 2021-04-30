@@ -2,13 +2,13 @@
  * Interfaces
  */
 
-interface Reservation
-{
+interface FormResponse
+{ 
     timestamp : string
-    name : string
+    name: string
     surname : string
-    sessions : Array<Session>
-    emailAdress : string
+    sessions : string
+    email : string
 }
 
 interface Time

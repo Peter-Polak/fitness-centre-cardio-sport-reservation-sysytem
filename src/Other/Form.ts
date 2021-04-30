@@ -155,3 +155,13 @@ function sendConfirmationEmail(formResponse : Reservation)
     
     //#endregion
 }
+
+function doGet()
+{
+    const sessions = getAllSessionsFromSheet();
+    let htmlTemplate = HtmlService.createTemplateFromFile("form");
+    
+    htmlTemplate.sessions = sessions;
+    
+    return htmlTemplate.evaluate();
+}

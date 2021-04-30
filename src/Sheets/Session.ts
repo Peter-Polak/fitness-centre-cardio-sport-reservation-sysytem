@@ -205,7 +205,7 @@ function archiveOldSessions()
  */
  function getSessionFromSheet(cells : any, index : number) : Session | undefined
  {
-    let date = cells[index][0];
+    let date = new Date(cells[index][0]);
     let time = cells[index][1];
     let capacity = cells[index][2];
     let reserved = cells[index][3];
@@ -227,6 +227,37 @@ function archiveOldSessions()
     if(dates == undefined) return;
      
     return new Session(dates.start, dates.end, capacity, reserved);;
+ }
+ 
+ function getAllSessionsFromSheet()
+ {
+    const sessionSheet = getSessionSheet();
+    if(sessionSheet == null) return;
+    
+    let cells = sessionSheet.getDataRange().getValues();
+    let sessions : Array<Array<Session>> = [];
+    
+    for (let index = 4; index < cells.length; index++)
+    {
+        let session = getSessionFromSheet(cells, index);
+        if(session == undefined) continue;
+        
+        let foundSameDate = false;
+        for (let i = 0; i < sessions.length; i++)
+        {
+            const element = sessions[i][0];
+            if(session.getDateString == element.getDateString)
+            {
+                sessions[i].push(session);
+                foundSameDate = true;
+                break;
+            }
+        }
+        
+        if(!foundSameDate) sessions.push([session]);
+    }
+    
+    return sessions;
  }
  
  

@@ -176,8 +176,6 @@ function isReservationValid(reservation : Reservation)
     let sessionSheet = getSessionSheet(); 
     if(sessionSheet == undefined) return;
     
-    let sessionsRange = sessionSheet.getDataRange().getValues();
-    
     let allSessions = getAllSessionsFromSheet();
     if(allSessions == undefined) return;
     

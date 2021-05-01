@@ -159,8 +159,6 @@ function sendConfirmationEmail(formResponse : Reservation)
 function doGet()
 {
     const sessions = getAllSessionsFromSheet();
-    if(sessions == undefined) return;
-    
     const organizedSessions = organizeSessions(sessions);
     
     let htmlTemplate = HtmlService.createTemplateFromFile("form");
@@ -180,31 +178,26 @@ function isReservationValid(reservation : Reservation)
     let sessionSheet = getSessionSheet(); 
     if(sessionSheet == undefined) return;
     
-    let allSessions = getAllSessionsFromSheet();
-    if(allSessions == undefined) return;
+    let sessions = getAllSessionsFromSheet();
+    if(sessions.length == 0) return false;
     
     for (let reservationIndex = 0; reservationIndex < reservation.sessions.length; reservationIndex++)
     {
         const reservationSession = reservation.sessions[reservationIndex];
         
-        daySessions:
-        for (let dayIndex = 0; dayIndex < allSessions.length; dayIndex++)
+        for (let dayIndex = 0; dayIndex < sessions.length; dayIndex++)
         {
-            const daySessions = allSessions[dayIndex];
-            
-            for (let sessionIndex = 0; sessionIndex < daySessions.length; sessionIndex++)
-            {
-                const session = daySessions[sessionIndex];
+            const session = sessions[dayIndex];
                 
-                if(session.startDate.getTime() == reservationSession.startDate.getTime())
+            if(session.startDate.getTime() == reservationSession.startDate.getTime())
+            {
+                if(session.getFreeSpaces <= 0)
                 {
-                    if(session.getFreeSpaces <= 0)
-                    {
-                        return false;
-                    }
-                    break daySessions;
+                    return false;
                 }
-            } 
+                
+                break;
+            }
         }
     }
     

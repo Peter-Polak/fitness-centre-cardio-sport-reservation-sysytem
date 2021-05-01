@@ -157,7 +157,7 @@ function sendConfirmationEmail(formResponse : Reservation)
 }
 
 /**
- * Gets called when user opens web app page.\
+ * Gets called when user opens web app page.
  * @returns {GoogleAppsScript.HTML.HtmlOutput} HTML page to show to the user of the web app.
  */
 function doGet()

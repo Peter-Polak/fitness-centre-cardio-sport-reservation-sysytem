@@ -156,6 +156,10 @@ function sendConfirmationEmail(formResponse : Reservation)
     //#endregion
 }
 
+/**
+ * Gets called when user opens web app page.\
+ * @returns {GoogleAppsScript.HTML.HtmlOutput} HTML page to show to the user of the web app.
+ */
 function doGet()
 {
     const sessions = getAllSessionsFromSheet();

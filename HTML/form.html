@@ -79,14 +79,22 @@
         <div class="section">
             <h2>Voľné termíny</h2>
             <div class="sessions">
-                <? for(var i = 0; i < sessions.length; i++) { ?>
-                    <div class="daySessions">
-                        <h3><?= sessions[i][0].getDateString ?></h3>
-                        <? for(var j = 0; j < sessions[i].length; j++) { if(sessions[i][j].getFreeSpaces == 0) continue; ?>
-                            <label for="<?= sessions[i][j].getDateString ?>"><?= sessions[i][j].getTimeString ?> (<?= sessions[i][j].getFreeSpaces ?>/<?= sessions[i][j].capacity ?>)</label>
-                            <input type="radio" name="<?= sessions[i][j].getDateString ?>" value="<?= sessions[i][j].getTimeString ?>">
-                        <? } ?>
-                    </div>
+                <? for(const dateString in sessions) { ?>
+                <div class="daySessions">
+                    <h3><?= dateString ?></h3>
+                    <? for(let i = 0; i < sessions[dateString]["free"].length; i++) 
+                    { 
+                        let session = sessions[dateString]["free"][i];
+                        let timeString = session.getTimeString; 
+                        let capacity = session.capacity;
+                        let freeSpaces = session.getFreeSpaces;
+                    ?>
+                        <div class="radio-container">
+                            <input type="radio" name="<?= dateString ?>" value="<?= timeString ?>">
+                            <label for="<?= dateString ?>"><?= timeString ?> (<?= freeSpaces ?>/<?= capacity ?>)</label>
+                        </div>
+                    <? } ?>
+                </div>
                 <? } ?>
             </div>
         </div>

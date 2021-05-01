@@ -203,16 +203,16 @@ function archiveOldSessions()
  * @param cells All cells in the sessions sheet.
  * @param index Row index.
  */
- function getSessionFromSheet(cells : any, index : number) : Session | undefined
- {
+function getSessionFromSheet(cells : any, index : number) : Session | undefined
+{
     let date = new Date(cells[index][0]);
     let time = cells[index][1];
     let capacity = cells[index][2];
     let reserved = cells[index][3];
     let free = cells[index][4];
-    
+
     let dateString : string = "";
-    
+
     if(typeof date == "string")
     {
         dateString = date;
@@ -221,44 +221,63 @@ function archiveOldSessions()
     {
         dateString =  getDateString(date)
     }
-     
+        
     let sessionString = `${dateString} ${time}`;
     let dates = Session.getDatesFromString(sessionString);
     if(dates == undefined) return;
-     
-    return new Session(dates.start, dates.end, capacity, reserved);;
- }
- 
- function getAllSessionsFromSheet()
- {
+        
+    return new Session(dates.start, dates.end, capacity, reserved);
+}
+
+function getAllSessionsFromSheet()
+{
     const sessionSheet = getSessionSheet();
     if(sessionSheet == null) return;
-    
+
     let cells = sessionSheet.getDataRange().getValues();
-    let sessions : Array<Array<Session>> = [];
-    
+    let sessions : Array<Session> = [];
+
     for (let index = 4; index < cells.length; index++)
     {
         let session = getSessionFromSheet(cells, index);
         if(session == undefined) continue;
+        sessions.push(session)
+    }
+
+    return sessions;
+}
+
+
+/**
+ * Organizes sessions based on date and free spaces and returns them as an object.
+ * @param {Array<Session>} sessions Array of sessions to organize.
+ * @returns {{ [key: string]: { free : Array<Session>, full : Array<Session> }} Organized sessions.
+ */
+function organizeSessions(sessions : Array<Session>) : { [key: string]: { free : Array<Session>, full : Array<Session> } }
+{
+    let organizedSessions : { [key: string]: {free : Array<Session>, full : Array<Session>} } = {};
+    
+    for (let i = 0; i < sessions.length; i++)
+    {
+        const session = sessions[i];
         
-        let foundSameDate = false;
-        for (let i = 0; i < sessions.length; i++)
+        if(!(session.getDateString in organizedSessions))
         {
-            const element = sessions[i][0];
-            if(session.getDateString == element.getDateString)
-            {
-                sessions[i].push(session);
-                foundSameDate = true;
-                break;
-            }
+            organizedSessions[session.getDateString] = { free : [], full : []}
         }
         
-        if(!foundSameDate) sessions.push([session]);
+        if(session.getFreeSpaces > 0)
+        {
+            organizedSessions[session.getDateString]["free"].push(session);
+        }
+        else
+        {
+            organizedSessions[session.getDateString]["full"].push(session);
+        }
     }
     
-    return sessions;
- }
+    return organizedSessions;
+}
  
  
  //@ts-ignore // Complains because it is declared in Google Apps Script types file

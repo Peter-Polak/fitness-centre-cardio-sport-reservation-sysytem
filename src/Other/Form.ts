@@ -159,9 +159,13 @@ function sendConfirmationEmail(formResponse : Reservation)
 function doGet()
 {
     const sessions = getAllSessionsFromSheet();
+    if(sessions == undefined) return;
+    
+    const organizedSessions = organizeSessions(sessions);
+    
     let htmlTemplate = HtmlService.createTemplateFromFile("form");
     
-    htmlTemplate.sessions = sessions;
+    htmlTemplate.sessions = organizedSessions;
     
     return htmlTemplate.evaluate();
 }

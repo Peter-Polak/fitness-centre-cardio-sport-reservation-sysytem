@@ -90,8 +90,8 @@
                         let freeSpaces = session.getFreeSpaces;
                     ?>
                         <div class="radio-container">
-                            <input type="radio" name="<?= dateString ?>" value="<?= timeString ?>">
-                            <label for="<?= dateString ?>"><?= timeString ?> (<?= freeSpaces ?>/<?= capacity ?>)</label>
+                            <input id="<?= dateString ?>-<?= timeString ?>" type="radio" name="<?= dateString ?>" value="<?= timeString ?>">
+                            <label for="<?= dateString ?>-<?= timeString ?>"><?= timeString ?> (<?= freeSpaces ?>/<?= capacity ?>)</label>
                         </div>
                     <? } ?>
                 </div>

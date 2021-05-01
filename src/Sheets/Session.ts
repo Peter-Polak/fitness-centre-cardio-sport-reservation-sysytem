@@ -141,7 +141,7 @@ function addNewSessions()
 }
 
 /**
- * Goes throug all active sessions and archives every single one that has ended already.
+ * Goes through all active sessions and archives every single one that has ended already.
  */
 function archiveOldSessions()
 {
@@ -247,7 +247,6 @@ function getAllSessionsFromSheet()
     return sessions;
 }
 
-
 /**
  * Organizes sessions based on date and free spaces and returns them as an object.
  * @param {Array<Session>} sessions Array of sessions to organize.
@@ -279,8 +278,7 @@ function organizeSessions(sessions : Array<Session>) : { [key: string]: { free :
     return organizedSessions;
 }
  
- 
- //@ts-ignore // Complains because it is declared in Google Apps Script types file
+//@ts-ignore // Complains because it is declared in Google Apps Script types file
 class Session
 {
     startDate : Date;

@@ -229,10 +229,14 @@ function getSessionFromSheet(cells : any, index : number) : Session | undefined
     return new Session(dates.start, dates.end, capacity, reserved);
 }
 
-function getAllSessionsFromSheet()
+/**
+ * Get all sessions from sheet in an array.
+ * @returns {Array<Session>} Array of sessions.
+ */
+function getAllSessionsFromSheet() : Array<Session>
 {
     const sessionSheet = getSessionSheet();
-    if(sessionSheet == null) return;
+    if(sessionSheet == null) return [];
 
     let cells = sessionSheet.getDataRange().getValues();
     let sessions : Array<Session> = [];

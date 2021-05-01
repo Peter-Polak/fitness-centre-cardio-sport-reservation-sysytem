@@ -57,54 +57,57 @@
             <span>Piatok : Vypíšu sa termíny na Pondelok, Utorok, Stredu.</span>
         </div>
         
-        <div class="section row">
-            <div class="field-container">
-                <label for="name">Meno</label>
-                <input type="text" name="name" class="field white" required>
+        <div id="form" class="column">
+            <h2>Formulár</h2>
+            <div class="section row">
+                <div class="field-container">
+                    <label for="name">Meno</label>
+                    <input type="text" name="name" class="field white" required>
+                </div>
+                
+                <div class="field-container">
+                    <label for="surname">Priezvisko</label>
+                    <input type="text" name="surname" class="field white" required>
+                </div>
             </div>
             
-            <div class="field-container">
-                <label for="surname">Priezvisko</label>
-                <input type="text" name="surname" class="field white" required>
+            <div class="section row">
+                <div class="field-container">
+                    <label for="emailAddress">E-mailová adresa</label>
+                    <input type="email"  name="emailAddress" class="field white">
+                </div>
+                <!-- <div class="details">
+                    Táto položka <b>NIE JE</b> povinná!
+                    Ak si želáte dostať potvrdenie o prijatí vašej rezervácie, zadajte vašu e-mailovú adresu a mi vám ihneď zašleme potvrdenie, že sme vašu rezerváciu na vami vybrané termíny prijali. Taktiež v prípade, ak si želáte neskôr zrušiť danú rezerváciu, môžete na daný e-mail odpovedať s vašou požiadavkou o zrušenie rezervácie. 
+                    Nič iné vám na e-mailovú adresu nebudeme zasielať a nebudeme ju distribuovať iným osobám.
+                </div> -->
             </div>
-        </div>
-        
-        <div class="section row">
-            <div class="field-container">
-                <label for="emailAddress">E-mailová adresa</label>
-                <input type="email"  name="emailAddress" class="field white">
-            </div>
-            <!-- <div class="details">
-                Táto položka <b>NIE JE</b> povinná!
-                Ak si želáte dostať potvrdenie o prijatí vašej rezervácie, zadajte vašu e-mailovú adresu a mi vám ihneď zašleme potvrdenie, že sme vašu rezerváciu na vami vybrané termíny prijali. Taktiež v prípade, ak si želáte neskôr zrušiť danú rezerváciu, môžete na daný e-mail odpovedať s vašou požiadavkou o zrušenie rezervácie. 
-                Nič iné vám na e-mailovú adresu nebudeme zasielať a nebudeme ju distribuovať iným osobám.
-            </div> -->
-        </div>
-        
-        <div class="section">
-            <h2>Voľné termíny</h2>
-            <div class="sessions">
-                <? for(const dateString in sessions) { ?>
-                <div class="daySessions">
-                    <h3><?= dateString ?></h3>
-                    <? for(let i = 0; i < sessions[dateString]["free"].length; i++) 
-                    { 
-                        let session = sessions[dateString]["free"][i];
-                        let timeString = session.getTimeString; 
-                        let capacity = session.capacity;
-                        let freeSpaces = session.getFreeSpaces;
-                    ?>
-                        <div class="radio-container">
-                            <input id="<?= dateString ?>-<?= timeString ?>" type="radio" name="<?= dateString ?>" value="<?= timeString ?>">
-                            <label for="<?= dateString ?>-<?= timeString ?>"><?= timeString ?> (<?= freeSpaces ?>/<?= capacity ?>)</label>
-                        </div>
+            
+            <div class="section">
+                <h2>Voľné termíny</h2>
+                <div class="sessions">
+                    <? for(const dateString in sessions) { ?>
+                    <div class="daySessions">
+                        <h3><?= dateString ?></h3>
+                        <? for(let i = 0; i < sessions[dateString]["free"].length; i++) 
+                        { 
+                            let session = sessions[dateString]["free"][i];
+                            let timeString = session.getTimeString; 
+                            let capacity = session.capacity;
+                            let freeSpaces = session.getFreeSpaces;
+                        ?>
+                            <div class="radio-container">
+                                <input id="<?= dateString ?>-<?= timeString ?>" type="radio" name="<?= dateString ?>" value="<?= timeString ?>">
+                                <label for="<?= dateString ?>-<?= timeString ?>"><?= timeString ?> (<?= freeSpaces ?>/<?= capacity ?>)</label>
+                            </div>
+                        <? } ?>
+                    </div>
                     <? } ?>
                 </div>
-                <? } ?>
             </div>
+            
+            <button id="sendButton" class="button succes">Odoslať</button>
         </div>
-        
-        <button id="sendButton" class="button succes">Odoslať</button>
     </main>
     
     <?!= include("form-js") ?>

@@ -78,22 +78,3 @@ enum SessionError
     DOES_NOT_EXIST = "doesnt_exist",
     IS_FULL = "full"
 }
-
-//@ts-ignore // Complains because it is declared in Google Apps Script types file
-// interface Session
-// {
-//     text?: 
-//     {
-//         date : string,
-//         time : 
-//         {
-//             start : string,
-//             end : string
-//         }
-//     },
-//     start : Date,
-//     end : Date,
-//     capacity? : number,
-//     reserved? : number,
-//     free? : number
-// }

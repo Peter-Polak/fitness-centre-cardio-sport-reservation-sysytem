@@ -11,6 +11,7 @@
     
     #page
     {
+        /* width: 100vw; */
         margin: 5vh 5vw 5vh 5vw;
     }
     
@@ -60,6 +61,7 @@
     
     #headerImage
     {
+        /* object-fit: cover; */
         
         width: 100%;
         max-width: 700px;
@@ -127,7 +129,7 @@
         transition: 0.5s;
     }
     
-    .field:invalid
+    .field:invalid:not(:placeholder-shown)
     {
         border: 2px solid red;
     }

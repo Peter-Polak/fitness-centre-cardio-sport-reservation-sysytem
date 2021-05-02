@@ -1,21 +1,27 @@
 <script>
     function sendReservation()
     {
-        if($("input[name='name']").is(":invalid"))
+        let nameInput = $("input[name='name']");
+        let surnameInput = $("input[name='surname']");
+        let emailInput = $("input[name='emailAddress']");
+        
+        if(nameInput.is(":invalid"))
         {
-            window.alert("Prosim, zadajte meno.")
+            nameInput.attr("placeholder", "");
+            showNotification("Prosím, vyplnte položku 'Meno'.", "warning");
             return;
         }
         
-        if($("input[name='surname']").is(":invalid"))
+        if(surnameInput.is(":invalid"))
         {
-            window.alert("Prosim, zadajte priezvisko.")
+            surnameInput.attr("placeholder", "");
+            showNotification("Prosím, vyplnte položku 'Priezvisko'.", "warning");
             return;
         }
         
-        if($("input[name='emailAddress']").is(":invalid"))
+        if(emailInput.is(":invalid"))
         {
-            window.alert("Prosim, zadajte spravnu e-mailovu adresu.")
+            showNotification("Prosím, zadajte spravnu e-mailovú adresu.", "warning");
             return;
         }
         
@@ -31,7 +37,7 @@
         
         if(chosenSessions.length == 0)
         {
-            window.alert("Prosim, vyberte aspon jeden termin.")
+            showNotification("Prosím, vyberte aspoň jeden termín.", "warning");
             return;
         }
         

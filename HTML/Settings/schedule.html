@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schedule</title>
+    
+    <style>
+        button
+        {
+            margin: 10px;
+            padding: 5px 25px;
+            
+            color: black;
+            
+            border: none;
+            border-radius: 3px;
+            outline: none;
+            
+            background-color: unset;
+        }
+        
+        button.success
+        {
+            color: white;
+            background-color: #4a8a3a;
+        }
+        
+        input[type=checkbox]
+        {
+            width: 30px;
+            height: 30px;
+        }
+        
+        .schedule
+        {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .row
+        {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            align-items: center;
+            justify-items: center;
+            
+            height: 10vh;
+        }
+        
+        #saveButton
+        {
+            margin: 0 ;
+        }
+    </style>
+</head>
+<body>
+    <div id="Schedule">
+        <div id="headers" class="row"><div><button id="saveButton" class="success">Save</button></div><header>Monday</header><header>Tuesday</header><header>Wednesday</header><header>Thursday</header><header>Friday</header><header>Saturday</header><header>Sunday</header></div>
+        <div id="monday" class="row"><header>Monday</header><input id="0,0" type="checkbox"><input id="0,1" type="checkbox"><input id="0,2" type="checkbox"></div>
+        <div id="tuesday" class="row"><header>Tuesday</header></div>
+        <div id="wednesday" class="row"><header>Wednesday</header></div>
+        <div id="thursday" class="row"><header>Thursday</header></div>
+        <div id="friday" class="row"><header>Friday</header></div>
+        <div id="saturday" class="row"><header>Saturday</header></div>
+        <div id="sunday" class="row"><header>Sunday</header></div>
+    </div>
+    <!-- <button id="saveButton" class="success">Save</button> -->
+</body>
+</html>

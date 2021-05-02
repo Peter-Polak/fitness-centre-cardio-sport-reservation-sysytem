@@ -187,6 +187,8 @@ function onHtmlFormSubmit(formResponse : FormResponse)
     if(reservation.emailAdress != "") sendConfirmationEmail(reservation); // Send a confirmation e-mail if the user specified it.
     
     //#endregion
+    
+    return JSON.stringify(reservation);
 }
 
 function processReservation(reservation : Reservation)
@@ -201,7 +203,7 @@ function processReservation(reservation : Reservation)
     //#region Check reservation validity
     
     let reservationValidity = isReservationValid(reservation);
-    if(!reservationValidity.isValid) throw reservationValidity;
+    if(!reservationValidity.isValid) throw Error(JSON.stringify(reservationValidity));
     
     //#endregion
     

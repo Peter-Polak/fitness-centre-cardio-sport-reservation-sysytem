@@ -1,12 +1,17 @@
 <style>
     body
     {
+        display: block;
+        margin: 0;
+        
         color: rgb(255, 255, 255);
         font-family: Roboto Regular, Arial, Helvetica, sans-serif;
-        
-        margin: 2.5% 10% 5% 10%;
-        
         background-color: #1a1a1a;
+    }
+    
+    #page
+    {
+        margin: 5vh 5vw 5vh 5vw;
     }
     
     header
@@ -16,6 +21,8 @@
         align-items: center;
         
         width: 100%;
+        
+        margin-bottom: 50px;
     }
     
     nav
@@ -39,7 +46,7 @@
         text-align: center;
         color: rgb(54, 54, 54);
         text-decoration: unset;
-        font-size: 1.3em;
+        font-size: 1em;
         font-weight: 700;
         text-decoration: solid;
         
@@ -53,11 +60,9 @@
     
     #headerImage
     {
-        object-fit: cover;
         
-        height: 15vh;
-        
-        margin-bottom: 50px;
+        width: 100%;
+        max-width: 700px;
         
         border-radius: 10px;
         
@@ -90,7 +95,7 @@
         display: flex;
         flex-direction: column;
         
-        margin-right: 20px;
+        margin: 0 20px 20px 0;
     }
     
     .field-container > label

@@ -198,7 +198,12 @@ function processReservation(reservation : Reservation)
     
     //#endregion
     
-    if(!isReservationValid(reservation)) throw new Error("Invalid reservation!");
+    //#region Check reservation validity
+    
+    let reservationValidity = isReservationValid(reservation);
+    if(!reservationValidity.isValid) throw reservationValidity;
+    
+    //#endregion
     
     //#region Loop through reservations and fill the copy pasted template with each reservation
     
@@ -223,33 +228,53 @@ function include(htmlFileName : string)
     return HtmlService.createHtmlOutputFromFile(htmlFileName).getContent();
 }
 
-function isReservationValid(reservation : Reservation)
+function isReservationValid(reservation : Reservation) : ReservationValidity
 {
+    let result : ReservationValidity = { isValid : true, reasons: []};
+    
     let sessionSheet = getSessionSheet(); 
-    if(sessionSheet == undefined) return;
+    if(sessionSheet == undefined) return { isValid: false, reasons : []};
     
     let sessions = getAllSessionsFromSheet();
-    if(sessions.length == 0) return false;
+    if(sessions.length == 0)
+    {
+        result.isValid = false;
+        reservation.sessions.forEach(
+            session => 
+            {
+                result.reasons.push({ session: session, error: SessionError.DOES_NOT_EXIST })
+            }
+        );
+    };
     
     for (let reservationIndex = 0; reservationIndex < reservation.sessions.length; reservationIndex++)
     {
         const reservationSession = reservation.sessions[reservationIndex];
         
-        for (let dayIndex = 0; dayIndex < sessions.length; dayIndex++)
+        let wasFound = false;
+        for (let sessionsIndex = 0; sessionsIndex < sessions.length; sessionsIndex++)
         {
-            const session = sessions[dayIndex];
+            const session = sessions[sessionsIndex];
                 
             if(session.startDate.getTime() == reservationSession.startDate.getTime())
             {
+                wasFound = true;
+                
                 if(session.getFreeSpaces <= 0)
                 {
-                    return false;
+                    result.isValid = false;
+                    result.reasons.push({ session: reservationSession, error: SessionError.IS_FULL })
                 }
-                
                 break;
             }
         }
+        
+        if(!wasFound)
+        {
+            result.isValid = false;
+            result.reasons.push({ session: reservationSession, error: SessionError.DOES_NOT_EXIST })
+        }
     }
     
-    return true;
+    return result;
 }

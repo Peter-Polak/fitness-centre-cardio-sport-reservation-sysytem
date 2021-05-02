@@ -8,20 +8,20 @@
         if(nameInput.is(":invalid"))
         {
             nameInput.attr("placeholder", "");
-            showNotification("Prosím, vyplnte položku 'Meno'.", "warning");
+            showNotification("Položka 'Meno' je povinná! Prosím, vyplnte položku 'Meno'.", "warning");
             return;
         }
         
         if(surnameInput.is(":invalid"))
         {
             surnameInput.attr("placeholder", "");
-            showNotification("Prosím, vyplnte položku 'Priezvisko'.", "warning");
+            showNotification("Položka 'Priezvisko' je povinná! Prosím, vyplnte položku 'Priezvisko'.", "warning");
             return;
         }
         
         if(emailInput.is(":invalid"))
         {
-            showNotification("Prosím, zadajte spravnu e-mailovú adresu.", "warning");
+            showNotification("Zadaná e-mailova adresa je nesprávna! Prosím, zadajte spravnu e-mailovú adresu.", "warning");
             return;
         }
         

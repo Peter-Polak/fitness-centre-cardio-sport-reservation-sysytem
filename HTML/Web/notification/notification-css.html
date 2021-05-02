@@ -1,0 +1,91 @@
+<style>
+    #notifications
+    {
+        position: fixed;
+        top: 15px;
+        
+        /*Used to center*/
+        left: 50%;
+        transform: translateX(-50%); 
+        
+        display: flex;
+        flex-direction: column;
+        
+        width: 70%;
+        max-width: 700px;
+    }
+    
+    .notification
+    {
+        height: 100px;
+        
+        display: flex;
+        flex-direction: row;
+        
+        margin-bottom: 15px;
+        
+        overflow: hidden;
+        
+        color: black;
+        
+        border-radius: 5px;
+        background-color: white;
+    }
+    
+    .notification > .indicator
+    {
+        flex: 5;
+        background-color: red;
+    }
+    
+    .notification > .icon
+    {
+        flex: 15;
+        width: 100%;
+        margin: auto auto;
+        text-align: center;
+    }
+    
+    .notification > .text
+    {
+        flex: 80;
+        margin: 20px;
+    }
+    
+    .appear
+    {
+        animation: appear 0.5s;
+    }
+    
+    .disappear
+    {
+        animation: disappear 0.5s;
+        animation-fill-mode: forwards;
+    }
+    
+    @keyframes appear
+    {
+        0%
+        {
+            opacity: 0%;
+        }
+        
+        100%
+        {
+            opacity: 100%;
+        }
+    }
+    
+    @keyframes disappear
+    {
+        0%
+        {
+            opacity: 100%;
+        }
+        
+        100%
+        {
+            opacity: 0%;
+        }
+    }
+</style>

@@ -1,0 +1,28 @@
+<script>
+    function showNotification(text)
+    {
+        let notifications = $(".notification");
+        
+        let notification = $(`
+        \<div class="notification appear" style="top: ${15 + notifications.length * 100}px"\>
+            <div class="indicator"></div>
+            <div class="icon">😟</div>
+            <div class="text">${text}</div>
+        \<\/div\>
+        `);
+        
+        $("#notifications").append(notification);
+        notification.on(
+            "click",
+            () => hideNotification(notification)
+        )
+        
+        setTimeout(() => hideNotification(notification), 1500);
+    }
+    
+    function hideNotification(notification)
+    {
+        notification.toggleClass("appear disappear");
+        setTimeout(() => notification.remove(), 500);
+    }
+</script>

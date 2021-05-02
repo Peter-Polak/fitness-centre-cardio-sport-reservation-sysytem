@@ -41,12 +41,12 @@
             return;
         }
         
-        let response = 
+        let reservation = 
         {
             timestamp: getTimestamp(),
-            name : $("input[name='name']").val(),
-            surname : $("input[name='surname']").val(),
-            email : $("input[name='emailAddress']").val(),
+            name : nameInput.val(),
+            surname : surnameInput.val(),
+            email : emailInput.val(),
             sessions : chosenSessions
         }
         
@@ -58,7 +58,7 @@
                 $("main").html("Termin je plny!");
             }
         )
-        .onHtmlFormSubmit(response);
+        .onHtmlFormSubmit(reservation);
     }
     
     function getTimestamp()

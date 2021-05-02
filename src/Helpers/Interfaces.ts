@@ -64,6 +64,21 @@ interface AppSettings
     scheduleOfNewSessions : WeekSchedule
 }
 
+interface ReservationValidity
+{
+    isValid : boolean
+    reasons : Array<{
+        session : Session
+        error : SessionError
+    }>
+}
+
+enum SessionError
+{
+    DOES_NOT_EXIST = "doesnt_exist",
+    IS_FULL = "full"
+}
+
 //@ts-ignore // Complains because it is declared in Google Apps Script types file
 // interface Session
 // {

@@ -172,6 +172,52 @@ function doGet()
     return htmlTemplate.evaluate();
 }
 
+function onHtmlFormSubmit(formResponse : FormResponse)
+{
+    //#region Create form response object
+    
+    let reservation : Reservation = new Reservation(formResponse.timestamp, formResponse.name, formResponse.surname, formResponse.sessions, formResponse.email);
+    
+    //#endregion
+    
+    //#region Process the form response.
+    
+    processReservation(reservation); // Add the form response to the reservations sheet.
+    updateForm(); // Update the form.
+    if(reservation.emailAdress != "") sendConfirmationEmail(reservation); // Send a confirmation e-mail if the user specified it.
+    
+    //#endregion
+}
+
+function processReservation(reservation : Reservation)
+{
+    //#region Reservation sheet variables
+    
+    let reservationSheet = getReservationSheet(); 
+    if(reservationSheet == undefined) return;
+    
+    //#endregion
+    
+    if(!isReservationValid(reservation)) throw new Error("Invalid reservation!");
+    
+    //#region Loop through reservations and fill the copy pasted template with each reservation
+    
+    // Prepare reservation sessions data in 2D array to set into sheet
+    for(var index = 0; index < reservation.sessions.length; index++)
+    {
+        let reservationRow = 
+        [
+            reservation.timestamp, reservation.name, reservation.surname, reservation.sessionStrings[index], reservation.emailAdress, 'FALSE',  'FALSE'
+        ];
+        
+        reservationSheet.appendRow(reservationRow);
+    }
+
+    //#endregion
+
+    reservationSheet.sort(1, true); // Sort sheet based on timestamp column
+}
+
 function include(htmlFileName : string)
 {
     return HtmlService.createHtmlOutputFromFile(htmlFileName).getContent();

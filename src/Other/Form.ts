@@ -169,7 +169,11 @@ function doGet()
     
     htmlTemplate.sessions = organizedSessions;
     
-    return htmlTemplate.evaluate();
+    let htmlOutput =  htmlTemplate.evaluate();
+    htmlOutput.addMetaTag('viewport', 'width=device-width, initial-scale=1');
+    htmlOutput.setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
+    
+    return htmlOutput;
 }
 
 function onHtmlFormSubmit(formResponse : FormResponse)

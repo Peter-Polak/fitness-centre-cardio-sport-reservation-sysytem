@@ -50,12 +50,37 @@
             sessions : chosenSessions
         }
         
+        renderLoadingScreen();
+        
         google.script.run
         .withFailureHandler(
             (error) =>
             {
-                console.log(error.message);
-                $("main").html("Termin je plny!");
+                deleteLoadingScreen();
+                let errorMessage = error.message.slice(7);
+                let response = JSON.parse(errorMessage);
+                
+                $("main").html(errorMessage);
+            }
+        )
+        .withSuccessHandler(
+            (response) =>
+            {
+                deleteLoadingScreen();
+                let reservation = JSON.parse(response);
+                
+                let html = 
+                `
+                <div id="reservation-response">
+                    <span id="response-icon" class="material-icons success">check_circle</span>
+                    <div id="response-message">Vašu rezerváciu sme úspešne prijali!</div>
+                    <div id="response">
+                        <span></span>
+                    </div>
+                </div>
+                `;
+                
+                $("main").html(html);
             }
         )
         .onHtmlFormSubmit(reservation);

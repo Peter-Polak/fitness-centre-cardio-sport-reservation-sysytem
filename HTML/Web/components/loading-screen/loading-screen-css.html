@@ -1,7 +1,7 @@
 <style>
     #loading-screen
     {
-        position: absolute;
+        position: fixed;
         top: 0;
         left: 0;
         z-index: 999;
@@ -25,19 +25,19 @@
     }
     
     @keyframes rotate 
+    {
+        from 
         {
-            from 
-            {
-            transform: rotate(0deg);
-            }
-            to 
-            { 
-            transform: rotate(360deg);
-            }
+        transform: rotate(0deg);
         }
+        to 
+        { 
+        transform: rotate(360deg);
+        }
+    }
 
-        .rotate
-        {
-            animation: rotate 1.5s infinite ease;
-        }
+    .rotate
+    {
+        animation: rotate 1.5s infinite ease;
+    }
 </style>

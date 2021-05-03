@@ -90,27 +90,38 @@
                 <div class="section">
                     <h2>Voľné termíny</h2>
                     <div class="sessions">
-                        <? for(const dateString in sessions) { ?>
-                        <div class="daySessions">
-                            <h3><?= dateString ?></h3>
-                            <? for(let i = 0; i < sessions[dateString]["free"].length; i++) 
-                            { 
-                                let session = sessions[dateString]["free"][i];
-                                let timeString = session.getTimeString; 
-                                let capacity = session.capacity;
-                                let freeSpaces = session.getFreeSpaces;
-                            ?>
-                                <div class="radio-container">
-                                    <input id="<?= dateString ?>-<?= timeString ?>" type="radio" name="<?= dateString ?>" value="<?= timeString ?>">
-                                    <label for="<?= dateString ?>-<?= timeString ?>"><?= timeString ?> (<?= freeSpaces ?>/<?= capacity ?>)</label>
-                                </div>
-                            <? } ?>
-                        </div>
+                        <? 
+                            let buttonClass = "";
+                        ?>
+                        <? if(Object.keys(sessions).length == 0)
+                        { ?>
+                            <? buttonClass = "disabled"; ?>
+                            <span>Nie sú vypísané žiadne termíny.</span>
+                        <? } ?>
+                        
+                        <? for(const dateString in sessions) 
+                        { ?>
+                            <div class="daySessions">
+                                <h3><?= sessions[dateString].day ?>, <?= dateString ?></h3>
+                                <? if(sessions[dateString]["free"].length <= 0) { ?> <span>Nie sú žiadne voľné termíny.</span> <? } ?>
+                                <? for(let i = 0; i < sessions[dateString]["free"].length; i++) 
+                                { 
+                                    let session = sessions[dateString]["free"][i];
+                                    let timeString = session.getTimeString; 
+                                    let capacity = session.capacity;
+                                    let freeSpaces = session.getFreeSpaces;
+                                ?>
+                                    <div class="radio-container">
+                                        <input id="<?= dateString ?>-<?= timeString ?>" type="radio" name="<?= dateString ?>" value="<?= timeString ?>">
+                                        <label for="<?= dateString ?>-<?= timeString ?>"><?= timeString ?> (<?= freeSpaces ?>/<?= capacity ?>)</label>
+                                    </div>
+                                <? } ?>
+                            </div>
                         <? } ?>
                     </div>
                 </div>
                 
-                <button id="sendButton" class="button succes">Odoslať</button>
+                <button id="sendButton" class="button succes <?= buttonClass ?>">Odoslať</button>
             </div>
         </main>
     </div>
@@ -123,8 +134,8 @@
         crossorigin="anonymous">
     </script>
     
-    <?!= include("form-js") ?>
-    <?!= include("notification-js") ?>
     <?!= include("loading-screen-js") ?>
+    <?!= include("notification-js") ?>
+    <?!= include("form-js") ?>
 </body>
 </html>

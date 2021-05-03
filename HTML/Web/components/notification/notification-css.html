@@ -35,7 +35,7 @@
     .notification > .indicator
     {
         flex: 3;
-        background-color: red;
+        background-color: #F4D800;
     }
     
     .notification > .icon
@@ -44,6 +44,8 @@
         width: 100%;
         
         margin: auto auto;
+        
+        color: #F4D800;
         text-align: center;
         font-size: 2em;
     }
@@ -53,6 +55,9 @@
         flex: 80;
         margin: 20px;
     }
+    
+    .notification.error > .indicator{ background-color: red; }
+    .notification.error > .icon{ color: red; }
     
     .appear
     {

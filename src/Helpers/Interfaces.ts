@@ -78,3 +78,13 @@ enum SessionError
     DOES_NOT_EXIST = "doesnt_exist",
     IS_FULL = "full"
 }
+
+interface OrganizedSessions
+{ 
+    [key: string]: 
+    { 
+        day: string, 
+        free : Array<Session>, 
+        full : Array<Session> 
+    } 
+}

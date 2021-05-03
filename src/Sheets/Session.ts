@@ -256,9 +256,9 @@ function getAllSessionsFromSheet() : Array<Session>
  * @param {Array<Session>} sessions Array of sessions to organize.
  * @returns {{ [key: string]: { free : Array<Session>, full : Array<Session> }} Organized sessions.
  */
-function organizeSessions(sessions : Array<Session>) : { [key: string]: { free : Array<Session>, full : Array<Session> } }
+function organizeSessions(sessions : Array<Session>) : OrganizedSessions
 {
-    let organizedSessions : { [key: string]: {free : Array<Session>, full : Array<Session>} } = {};
+    let organizedSessions : OrganizedSessions = {};
     
     for (let i = 0; i < sessions.length; i++)
     {
@@ -266,7 +266,7 @@ function organizeSessions(sessions : Array<Session>) : { [key: string]: { free :
         
         if(!(session.getDateString in organizedSessions))
         {
-            organizedSessions[session.getDateString] = { free : [], full : []}
+            organizedSessions[session.getDateString] = { day: session.getStartDay , free : [], full : []}
         }
         
         if(session.getFreeSpaces > 0)

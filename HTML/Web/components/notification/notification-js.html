@@ -1,10 +1,10 @@
 <script>
-    function showNotification(text, icon)
+    function showNotification(text, icon, type)
     {
         let notifications = $(".notification");
         
         let notification = $(`
-        <div class="notification appear" style="top: ${15 + notifications.length * 100}px"\>
+        <div class="notification ${type} appear"\>
             <div class="indicator"></div>
             <span class="icon material-icons">${icon}</span>
             <div class="text">${text}</div>

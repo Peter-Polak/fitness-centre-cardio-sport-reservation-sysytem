@@ -1,0 +1,18 @@
+<script>
+    function renderLoadingScreen()
+    {
+        let html = 
+        `
+        <div id="loading-screen">
+            <span id="loading-icon" class="material-icons rotate">hourglass_empty</span>
+        </div>
+        `;
+        
+        $("body").append(html);
+    }
+    
+    function deleteLoadingScreen()
+    {
+        $("#loading-screen").remove();
+    }
+</script>

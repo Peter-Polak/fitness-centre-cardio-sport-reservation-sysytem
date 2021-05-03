@@ -6,9 +6,14 @@
     <title>Cardio Sport - Rezervácia vstupu</title>
     
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <?!= include("form-css") ?>
+    
+    <!-- Components -->
     <?!= include("notification-css") ?>
     <?!= include("loading-screen-css") ?>
+    <?!= include("reservation-response-css") ?>
+    
+    <!-- Page -->
+    <?!= include("form-css") ?>
 </head>
 <body>
     <div id="page">
@@ -137,8 +142,12 @@
         crossorigin="anonymous">
     </script>
     
+    <!-- Components -->
     <?!= include("loading-screen-js") ?>
     <?!= include("notification-js") ?>
+    <?!= include("reservation-response-js") ?>
+    
+    <!-- Page -->
     <?!= include("form-js") ?>
 </body>
 </html>

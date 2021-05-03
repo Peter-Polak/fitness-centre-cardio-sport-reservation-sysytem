@@ -7,21 +7,21 @@
         
         if(nameInput.is(":invalid"))
         {
-            nameInput.attr("placeholder", "");
-            showNotification("Položka 'Meno' je povinná! Prosím, vyplnte položku 'Meno'.", "warning");
+            // nameInput.attr("placeholder", "");
+            showNotification("Položka 'Meno' je povinná! Prosím, vyplnte položku 'Meno'.", "warning", "error");
             return;
         }
         
         if(surnameInput.is(":invalid"))
         {
-            surnameInput.attr("placeholder", "");
-            showNotification("Položka 'Priezvisko' je povinná! Prosím, vyplnte položku 'Priezvisko'.", "warning");
+            // surnameInput.attr("placeholder", "");
+            showNotification("Položka 'Priezvisko' je povinná! Prosím, vyplnte položku 'Priezvisko'.", "warning", "error");
             return;
         }
         
         if(emailInput.is(":invalid"))
         {
-            showNotification("Zadaná e-mailova adresa je nesprávna! Prosím, zadajte spravnu e-mailovú adresu.", "warning");
+            showNotification("Zadaná e-mailova adresa je nesprávna! Prosím, zadajte spravnu e-mailovú adresu.", "warning", "error");
             return;
         }
         
@@ -37,7 +37,7 @@
         
         if(chosenSessions.length == 0)
         {
-            showNotification("Prosím, vyberte aspoň jeden termín.", "warning");
+            showNotification("Prosím, vyberte si aspoň jeden termín.", "warning", "error");
             return;
         }
         

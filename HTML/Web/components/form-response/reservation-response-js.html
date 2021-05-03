@@ -1,0 +1,17 @@
+<script>
+    function renderReservationResponse(reservation)
+    {
+        let html = 
+        `
+        <div id="reservation-response">
+            <span id="response-icon" class="material-icons success">check_circle</span>
+            <div id="response-message">Vašu rezerváciu sme úspešne prijali!</div>
+            <div id="response">
+                <span></span>
+            </div>
+        </div>
+        `;
+        
+        $("body").html(html);
+    }
+</script>

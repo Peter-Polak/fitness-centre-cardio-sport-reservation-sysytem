@@ -170,7 +170,7 @@ function doGet()
     htmlTemplate.sessions = organizedSessions;
     
     let htmlOutput =  htmlTemplate.evaluate();
-    htmlOutput.addMetaTag('viewport', 'width=device-width, initial-scale=1');
+    htmlOutput.addMetaTag('viewport', 'width=device-width, initial-scale=1'); // Thank you! https://stackoverflow.com/questions/56423742/my-page-doesnt-scale-in-google-app-script-only-on-mobile-and-when-not-in-lands?answertab=votes#tab-top
     htmlOutput.setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
     
     return htmlOutput;

@@ -202,20 +202,22 @@ function setPropertyUser(key : string, value : string)
 function getPropertyScript(key : string)
 {
     const scriptProperties = getPropertiesScript();
-    return scriptProperties.getProperty(key);
+    let value = scriptProperties.getProperty(key);
+    if(value == null) value = getEmptyProperty(key);
+    
+    return value;
 }
 
 //#endregion
 
-function addToArrayProperty(key : string, value : object, sortFunc? : ((property : Array<object>) => Array<object>))
+function addToArrayProperty(key : string, value : object)
 {
     let property = getPropertyScript(key);
-    if(property == null) return;
+    if(property == null) property = getEmptyProperty(key);
     
     let currentValues : Array<object> = propertyToJson(property);
     
     currentValues.push(value);
-    if(sortFunc != undefined) currentValues = sortFunc(currentValues);
     
     let newValuesString : string = propertyToString(currentValues);
     
@@ -224,7 +226,7 @@ function addToArrayProperty(key : string, value : object, sortFunc? : ((property
     return currentValues;
 }
 
-function removeFromArrayProperty(key : string, index : number, sortFunc? : ((property : Array<object>) => Array<object>))
+function removeFromArrayProperty(key : string, index : number)
 {
     let property = getPropertyScript(key);
     if(property == null) return;
@@ -232,7 +234,6 @@ function removeFromArrayProperty(key : string, index : number, sortFunc? : ((pro
     let currentValues : Array<object> = propertyToJson(property);
     
     currentValues.splice(index, 1);
-    if(sortFunc != undefined) currentValues = sortFunc(currentValues);
     
     let newValuesString : string = propertyToString(currentValues);
     
@@ -243,6 +244,8 @@ function removeFromArrayProperty(key : string, index : number, sortFunc? : ((pro
 
 function sortSessionTimes(sessionTimes : Array<SessionTime>)
 {
+    if(sessionTimes == null || sessionTimes == undefined || sessionTimes.length == 0) return sessionTimes;
+    
     let sortedSessionTimes = sessionTimes.sort(
         (a, b) =>
         {

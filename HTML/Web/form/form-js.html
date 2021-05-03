@@ -27,7 +27,7 @@
         
         let chosenSessions = "";
         
-        $("input[type='radio']:checked").each(
+        $("input[type='checkbox']:checked").each(
             function (index)
             {
                 if(index > 0) chosenSessions += ", ";
@@ -105,14 +105,11 @@
     
     $("#sendButton").on("click", sendReservation);
     
-    // $("input[type='radio']").on(
-    //     "check",
-    //     function(e)
-    //     {
-    //         if ($(this).is(':checked'))
-    //         {
-    //             $(this).prop('checked', false);
-    //         }
-    //     }
-    // );
+    $('input[type="checkbox"]').on(
+        "change", 
+        function() 
+        {
+            $('input[name="' + this.name + '"]').not(this).prop('checked', false);
+        }
+    );
 </script>

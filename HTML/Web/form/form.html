@@ -111,8 +111,8 @@
                                     let capacity = session.capacity;
                                     let freeSpaces = session.getFreeSpaces;
                                 ?>
-                                    <div class="radio-container">
-                                        <input id="<?= dateString ?>-<?= timeString ?>" type="radio" name="<?= dateString ?>" value="<?= timeString ?>">
+                                    <div class="session">
+                                        <input id="<?= dateString ?>-<?= timeString ?>" type="checkbox" name="<?= dateString ?>" value="<?= timeString ?>">
                                         <label for="<?= dateString ?>-<?= timeString ?>"><?= timeString ?> (<?= freeSpaces ?>/<?= capacity ?>)</label>
                                     </div>
                                 <? } ?>

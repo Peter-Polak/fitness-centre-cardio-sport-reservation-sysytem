@@ -316,6 +316,11 @@ class Session
         return `${start} - ${end}`;
     }
     
+    get getStartDay()
+    {
+        return  getDayOfWeekString(getEuropeDay(this.startDate));
+    }
+    
     static getDatesFromString(string : string) : { start : Date, end : Date} | undefined
     {
         let sessionDateRegex = /(([0][1-9])|([12][0-9])|(3[0-1]))\.(([0][1-9])|([1][0-2]))\.([0-9]+)/;

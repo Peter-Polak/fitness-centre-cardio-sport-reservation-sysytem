@@ -14,7 +14,7 @@ function doGet(event : any)
         ...parameters
     };
     
-    let htmlOutput = getHtmlOutput("form", data);
+    let htmlOutput = getHtmlOutputFromTemplate("form", data);
     
     return htmlOutput;
 }
@@ -24,7 +24,7 @@ function include(htmlFileName : string)
     return HtmlService.createHtmlOutputFromFile(htmlFileName).getContent();
 }
 
-function getHtmlOutput(templateFileName : string, templateData : {[key : string] : any})
+function getHtmlOutputFromTemplate(templateFileName : string, templateData : {[key : string] : any})
 {
     const htmlTemplate = HtmlService.createTemplateFromFile(templateFileName);
     

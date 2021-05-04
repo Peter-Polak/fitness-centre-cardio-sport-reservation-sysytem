@@ -81,7 +81,7 @@ enum SessionError
 
 interface OrganizedSessions
 { 
-    [key: string]: 
+    [date: string]: 
     { 
         day: string, 
         free : Array<Session>, 

@@ -91,3 +91,54 @@ function getMockupReservation(timestamp : string = "01.01.2021 00:00:00", name :
 {
     return  new Reservation(timestamp, name, surname, sessions, emailAdress)
 }
+
+function isReservationValid(reservation : Reservation) : ReservationValidity
+{
+    let result : ReservationValidity = { isValid : true, reasons: []};
+    
+    let sessionSheet = getSessionSheet(); 
+    if(sessionSheet == undefined) return { isValid: false, reasons : []};
+    
+    let sessions = getAllSessionsFromSheet();
+    if(sessions.length == 0)
+    {
+        result.isValid = false;
+        reservation.sessions.forEach(
+            session => 
+            {
+                result.reasons.push({ session: session, error: SessionError.DOES_NOT_EXIST })
+            }
+        );
+    };
+    
+    for (let reservationIndex = 0; reservationIndex < reservation.sessions.length; reservationIndex++)
+    {
+        const reservationSession = reservation.sessions[reservationIndex];
+        
+        let wasFound = false;
+        for (let sessionsIndex = 0; sessionsIndex < sessions.length; sessionsIndex++)
+        {
+            const session = sessions[sessionsIndex];
+                
+            if(session.startDate.getTime() == reservationSession.startDate.getTime())
+            {
+                wasFound = true;
+                
+                if(session.getFreeSpaces <= 0)
+                {
+                    result.isValid = false;
+                    result.reasons.push({ session: reservationSession, error: SessionError.IS_FULL })
+                }
+                break;
+            }
+        }
+        
+        if(!wasFound)
+        {
+            result.isValid = false;
+            result.reasons.push({ session: reservationSession, error: SessionError.DOES_NOT_EXIST })
+        }
+    }
+    
+    return result;
+}

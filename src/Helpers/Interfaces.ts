@@ -75,8 +75,8 @@ interface ReservationValidity
 
 enum SessionError
 {
-    DOES_NOT_EXIST = "doesnt_exist",
-    IS_FULL = "full"
+    DOES_NOT_EXIST = "DOESNT_EXIST",
+    IS_FULL = "FULL"
 }
 
 interface OrganizedSessions

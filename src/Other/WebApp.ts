@@ -8,20 +8,40 @@ function doGet(event : any)
     const sessions = getAllSessionsFromSheet();
     const organizedSessions = organizeSessions(sessions);
     
-    let htmlTemplate = HtmlService.createTemplateFromFile("form");
+    let data = 
+    {
+        sessions : organizedSessions,
+        ...parameters
+    };
     
-    htmlTemplate.sessions = organizedSessions;
-    if("name" in parameters) htmlTemplate.name = parameters.name;
-    if("surname" in parameters) htmlTemplate.name = parameters.surname;
-    if("emailAddress" in parameters) htmlTemplate.name = parameters.emailAddress;
+    let htmlOutput = getHtmlOutput("form", data);
     
-    let htmlOutput =  htmlTemplate.evaluate();
-    htmlOutput.addMetaTag('viewport', 'width=device-width, initial-scale=1'); // Thank you! https://stackoverflow.com/questions/56423742/my-page-doesnt-scale-in-google-app-script-only-on-mobile-and-when-not-in-lands?answertab=votes#tab-top
+    return htmlOutput;
+}
+
+function include(htmlFileName : string)
+{
+    return HtmlService.createHtmlOutputFromFile(htmlFileName).getContent();
+}
+
+function getHtmlOutput(templateFileName : string, templateData : {[key : string] : any})
+{
+    const htmlTemplate = HtmlService.createTemplateFromFile(templateFileName);
+    
+    for(const property in templateData)
+    {
+        htmlTemplate[property] = templateData[property];
+    }
+    
+    const htmlOutput = htmlTemplate.evaluate();
+    
+    // Thank you! https://stackoverflow.com/questions/56423742/my-page-doesnt-scale-in-google-app-script-only-on-mobile-and-when-not-in-lands?answertab=votes#tab-top
+    htmlOutput.addMetaTag('viewport', 'width=device-width, initial-scale=1');
     htmlOutput.setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
     
     return htmlOutput;
 }
- 
+
 function onHtmlFormSubmit(formResponse : FormResponse)
 {
     //#region Create form response object
@@ -78,11 +98,6 @@ function processReservation(reservation : Reservation)
     //#endregion
 
     reservationSheet.sort(1, true); // Sort sheet based on timestamp column
-}
-
-function include(htmlFileName : string)
-{
-    return HtmlService.createHtmlOutputFromFile(htmlFileName).getContent();
 }
 
 // function getReservationErrorHtml(reservationValidity : ReservationValidity)

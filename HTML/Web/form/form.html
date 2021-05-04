@@ -8,13 +8,13 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     
     <!-- Components -->
-    <?!= include("notification-css") ?>
-    <?!= include("loading-screen-css") ?>
-    <?!= include("reservation-response-css") ?>
+    <?!= getHtml("notification-css") ?>
+    <?!= getHtml("loading-screen-css") ?>
+    <?!= getHtml("reservation-response-css") ?>
     
     <!-- Page -->
-    <?!= include("page-css") ?>
-    <?!= include("form-css") ?>
+    <?!= getHtml("page-css") ?>
+    <?!= getHtml("form-css") ?>
 </head>
 <body>
     <div id="page">
@@ -39,7 +39,7 @@
                 </ol>
             </div>
             
-            <?!= include("info") ?>
+            <?!= getHtml("info") ?>
             
             <div id="form" class="column">
                 <h2>Formulár</h2>
@@ -118,11 +118,11 @@
     </script>
     
     <!-- Components -->
-    <?!= include("loading-screen-js") ?>
-    <?!= include("notification-js") ?>
-    <?!= include("reservation-response-js") ?>
+    <?!= getHtml("loading-screen-js") ?>
+    <?!= getHtml("notification-js") ?>
+    <?!= getHtml("reservation-response-js") ?>
     
     <!-- Page -->
-    <?!= include("form-js") ?>
+    <?!= getHtml("form-js") ?>
 </body>
 </html>

@@ -19,7 +19,7 @@ function doGet(event : any)
     return htmlOutput;
 }
 
-function include(htmlFileName : string)
+function getHtml(htmlFileName : string)
 {
     return HtmlService.createHtmlOutputFromFile(htmlFileName).getContent();
 }

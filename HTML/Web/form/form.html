@@ -1,128 +1,75 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cardio Sport - Rezervácia vstupu</title>
+<div id="form" class="column">
+    <h1>Formulár</h1>
     
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    
-    <!-- Components -->
-    <?!= getHtml("notification-css") ?>
-    <?!= getHtml("loading-screen-css") ?>
-    <?!= getHtml("reservation-response-css") ?>
-    
-    <!-- Page -->
-    <?!= getHtml("page-css") ?>
-    <?!= getHtml("form-css") ?>
-</head>
-<body>
-    <div id="page">
-        <header>
-            <img id="headerImage" src="https://i.imgur.com/PfVClfw.png" alt="Fitness centrum Cardio Sport">
-        </header>
-        
-        <nav>
-            <!-- <a class="navButton" href="#info">Informácie</a> -->
-            <a class="navButton" href="#form">Formulár</a>
-            <a class="navButton" href="https://www.facebook.com/groups/207982942629720/" target="_blank">Facebook</a>
-        </nav>
-        
-        <main>
-            <?!= getHtml("info") ?>
-            
-            <div id="form" class="column">
-                <h1>Formulár</h1>
-                
-                <div class="section">
-                    <h2>Prosíme vas, ...</h2>
-                    <ol>
-                        <li>Pri každej návšteve fitness centra sa zapíšte na tlačivo, ktoré sa nachádza hneď pri vchode do fitness centra na pulte. Je potrebne vyplniť meno, priezvisko, kontakt a podpísať to.</li>
-                        <li>Noste si so sebou a používajte vlastný uterák.</li>
-                        <li>Po cvičení vydezinfikujte po sebe náradie, stroje a lavičky, ktoré ste použili.</li>
-                    </ol>
-                </div>
-                
-                <div class="section row">
-                    <div class="field-container">
-                        <label for="name">Meno *</label>
-                        <input class="field white" type="text" name="name" placeholder=" " required>
-                    </div>
-                    
-                    <div class="field-container">
-                        <label for="surname">Priezvisko *</label>
-                        <input class="field white" type="text" name="surname" placeholder=" " required>
-                    </div>
-                </div>
-                
-                <div class="section row">
-                    <div class="field-container">
-                        <label for="emailAddress">E-mailová adresa</label>
-                        <div class="details">
-                            Táto položka <b>NIE JE</b> povinná!
-                            Ak si želáte dostať potvrdenie o prijatí vašej rezervácie, zadajte vašu e-mailovú adresu a my vám ihneď zašleme potvrdenie, že sme vašu rezerváciu na vami vybrané termíny prijali. Taktiež v prípade, ak si želáte neskôr zrušiť danú rezerváciu, môžete na daný e-mail odpovedať s vašou požiadavkou o zrušenie rezervácie. 
-                            Nič iné vám na e-mailovú adresu nebudeme zasielať a nebudeme ju distribuovať iným osobám.
-                        </div>
-                        <input class="field white" type="email"  name="emailAddress" placeholder=" ">
-                    </div>
-                </div>
-                
-                <div class="section">
-                    <h2>Voľné termíny</h2>
-                    <div class="details">
-                        Tip: Viete si spraviť rezerváciu na viacero termínov naraz vyplnením jedného formulára. Stačí zaškrtnúť všetky políčka/termíny o ktoré máte záujem.
-                    </div>
-                    <div class="sessions">
-                        <? 
-                            let buttonClass = "";
-                        ?>
-                        <? if(Object.keys(sessions).length == 0)
-                        { ?>
-                            <? buttonClass = "disabled"; ?>
-                            <span>Nie sú vypísané žiadne termíny.</span>
-                        <? } ?>
-                        
-                        <? for(const dateString in sessions) 
-                        { ?>
-                            <div class="daySessions">
-                                <h3><?= sessions[dateString].day ?>, <?= dateString ?></h3>
-                                <? if(sessions[dateString]["free"].length <= 0) { ?> <span>Nie sú žiadne voľné termíny.</span> <? } ?>
-                                <? for(let i = 0; i < sessions[dateString]["free"].length; i++) 
-                                { 
-                                    let session = sessions[dateString]["free"][i];
-                                    let timeString = session.getTimeString; 
-                                    let capacity = session.capacity;
-                                    let freeSpaces = session.getFreeSpaces;
-                                ?>
-                                    <div class="session">
-                                        <input id="<?= dateString ?>-<?= timeString ?>" type="checkbox" name="<?= dateString ?>" value="<?= timeString ?>">
-                                        <label for="<?= dateString ?>-<?= timeString ?>"><?= timeString ?> (<?= freeSpaces ?>/<?= capacity ?>)</label>
-                                    </div>
-                                <? } ?>
-                            </div>
-                        <? } ?>
-                    </div>
-                </div>
-                
-                <button id="sendButton" class="button succes <?= buttonClass ?>">Odoslať</button>
-            </div>
-        </main>
+    <div class="section">
+        <h2>Prosíme vas, ...</h2>
+        <ol>
+            <li>Pri každej návšteve fitness centra sa zapíšte na tlačivo, ktoré sa nachádza hneď pri vchode do fitness centra na pulte. Je potrebne vyplniť meno, priezvisko, kontakt a podpísať to.</li>
+            <li>Noste si so sebou a používajte vlastný uterák.</li>
+            <li>Po cvičení vydezinfikujte po sebe náradie, stroje a lavičky, ktoré ste použili.</li>
+        </ol>
     </div>
     
-    <div id="notifications"></div>
+    <div class="section row">
+        <div class="field-container">
+            <label for="name">Meno *</label>
+            <input class="field white" type="text" name="name" placeholder=" " required>
+        </div>
+        
+        <div class="field-container">
+            <label for="surname">Priezvisko *</label>
+            <input class="field white" type="text" name="surname" placeholder=" " required>
+        </div>
+    </div>
     
-    <script
-        src="https://code.jquery.com/jquery-3.6.0.min.js"
-        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
-        crossorigin="anonymous">
-    </script>
+    <div class="section row">
+        <div class="field-container">
+            <label for="emailAddress">E-mailová adresa</label>
+            <div class="details">
+                Táto položka <b>NIE JE</b> povinná!
+                Ak si želáte dostať potvrdenie o prijatí vašej rezervácie, zadajte vašu e-mailovú adresu a my vám ihneď zašleme potvrdenie, že sme vašu rezerváciu na vami vybrané termíny prijali. Taktiež v prípade, ak si želáte neskôr zrušiť danú rezerváciu, môžete na daný e-mail odpovedať s vašou požiadavkou o zrušenie rezervácie. 
+                Nič iné vám na e-mailovú adresu nebudeme zasielať a nebudeme ju distribuovať iným osobám.
+            </div>
+            <input class="field white" type="email"  name="emailAddress" placeholder=" ">
+        </div>
+    </div>
     
-    <!-- Components -->
-    <?!= getHtml("loading-screen-js") ?>
-    <?!= getHtml("notification-js") ?>
-    <?!= getHtml("reservation-response-js") ?>
+    <div class="section">
+        <h2>Voľné termíny</h2>
+        <div class="details">
+            Tip: Viete si spraviť rezerváciu na viacero termínov naraz vyplnením jedného formulára. Stačí zaškrtnúť všetky políčka/termíny o ktoré máte záujem.
+        </div>
+        <div class="sessions">
+            <? 
+                let buttonClass = "";
+            ?>
+            <? if(Object.keys(sessions).length == 0)
+            { ?>
+                <? buttonClass = "disabled"; ?>
+                <span>Nie sú vypísané žiadne termíny.</span>
+            <? } ?>
+            
+            <? for(const dateString in sessions) 
+            { ?>
+                <div class="daySessions">
+                    <h3><?= sessions[dateString].day ?>, <?= dateString ?></h3>
+                    <? if(sessions[dateString]["free"].length <= 0) { ?> <span>Nie sú žiadne voľné termíny.</span> <? } ?>
+                    <? for(let i = 0; i < sessions[dateString]["free"].length; i++) 
+                    { 
+                        let session = sessions[dateString]["free"][i];
+                        let timeString = session.getTimeString; 
+                        let capacity = session.capacity;
+                        let freeSpaces = session.getFreeSpaces;
+                    ?>
+                        <div class="session">
+                            <input id="<?= dateString ?>-<?= timeString ?>" type="checkbox" name="<?= dateString ?>" value="<?= timeString ?>">
+                            <label for="<?= dateString ?>-<?= timeString ?>"><?= timeString ?> (<?= freeSpaces ?>/<?= capacity ?>)</label>
+                        </div>
+                    <? } ?>
+                </div>
+            <? } ?>
+        </div>
+    </div>
     
-    <!-- Page -->
-    <?!= getHtml("form-js") ?>
-</body>
-</html>
+    <button id="sendButton" class="button succes <?= buttonClass ?>">Odoslať</button>
+</div>

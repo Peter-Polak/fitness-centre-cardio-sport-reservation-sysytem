@@ -60,7 +60,9 @@
                 let errorMessage = error.message.slice(7);
                 let response = JSON.parse(errorMessage);
                 
-                $("main").html(errorMessage);
+                console.log(response);
+                
+                renderReservationError(response);
             }
         )
         .withSuccessHandler(
@@ -69,10 +71,46 @@
                 deleteLoadingScreen();
                 
                 let reservation = JSON.parse(response);
-                renderReservationResponse(reservation);
+                renderReservationSuccess(reservation);
             }
         )
         .onHtmlFormSubmit(reservation);
+    }
+    
+    function refreshForm()
+    {
+        renderLoadingScreen();
+        
+        let nameInputSelector = "input[name='name']";
+        let surnameInputSelector = "input[name='surname']";
+        let emailInputSelector = "input[name='emailAddress']";
+        
+        let formData = 
+        {
+            name : $(nameInputSelector).val(),
+            surname : $(surnameInputSelector).val(),
+            email : $(emailInputSelector).val(),
+        }
+        
+        google.script.run
+        .withFailureHandler(
+            (error) =>
+            {
+                
+            }
+        )
+        .withSuccessHandler(
+            (html) =>
+            {
+                $("#form").replaceWith(html);
+                $(nameInputSelector).val(formData.name);
+                $(surnameInputSelector).val(formData.surname);
+                $(emailInputSelector).val(formData.email);
+                
+                deleteLoadingScreen();
+            }
+        )
+        .getReservationFormHtml();
     }
     
     function getTimestamp()

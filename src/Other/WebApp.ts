@@ -5,16 +5,13 @@
 function doGet(event : any)
 {
     let parameters = event.parameter;
-    const sessions = getAllSessionsFromSheet();
-    const organizedSessions = organizeSessions(sessions);
     
     let data = 
     {
-        sessions : organizedSessions,
         ...parameters
     };
     
-    let htmlOutput = getHtmlOutputFromTemplate("form", data);
+    let htmlOutput = getHtmlOutputFromTemplate("app", data);
     
     return htmlOutput;
 }
@@ -40,6 +37,22 @@ function getHtmlOutputFromTemplate(templateFileName : string, templateData : {[k
     htmlOutput.setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
     
     return htmlOutput;
+}
+
+function getReservationFormHtml()
+{
+    const sessions = getAllSessionsFromSheet();
+    const organizedSessions = organizeSessions(sessions);
+    
+    let data = 
+    {
+        sessions : organizedSessions,
+    };
+    
+    let htmlOutput = getHtmlOutputFromTemplate("form", data);
+    let html = htmlOutput.getContent();
+    
+    return html;
 }
 
 function onHtmlFormSubmit(formResponse : FormResponse)

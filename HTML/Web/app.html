@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cardio Sport - Rezervácia vstupu</title>
+    
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    
+    <!-- Components -->
+    <?!= getHtml("notification-css") ?>
+    <?!= getHtml("loading-screen-css") ?>
+    <?!= getHtml("reservation-response-css") ?>
+    
+    <!-- Page -->
+    <?!= getHtml("page-css") ?>
+    <?!= getHtml("form-css") ?>
+</head>
+<body>
+    <div id="page">
+        <header>
+            <img id="headerImage" src="https://i.imgur.com/PfVClfw.png" alt="Fitness centrum Cardio Sport">
+        </header>
+        
+        <nav>
+            <!-- <a class="navButton" href="#info">Informácie</a> -->
+            <a class="navButton" href="#form">Formulár</a>
+            <a class="navButton" href="https://www.facebook.com/groups/207982942629720/" target="_blank">Facebook</a>
+        </nav>
+        
+        <main>
+            <?!= getHtml("info") ?>
+            
+            <?!= getReservationFormHtml() ?>
+        </main>
+    </div>
+    
+    <div id="notifications"></div>
+    
+    <script
+        src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+        crossorigin="anonymous">
+    </script>
+    
+    <!-- Components -->
+    <?!= getHtml("loading-screen-js") ?>
+    <?!= getHtml("notification-js") ?>
+    <?!= getHtml("reservation-response-js") ?>
+    
+    <!-- Page -->
+    <?!= getHtml("form-js") ?>
+</body>
+</html>

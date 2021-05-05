@@ -52,14 +52,18 @@ function hideOldReservations()
     const reservationSheet = getReservationSheet();
     if(reservationSheet == null) return;
     
+    /*
     const lastRow = reservationSheet.getLastRow();
-    
     const numOfFrozenRows = 3;
-    const sessionColumn = 4;
+    const sessionColumn = 4; 
+    
     const startingRow = lastRow - 100 > numOfFrozenRows ? lastRow - 100 : 1 + numOfFrozenRows;
     const numOfRows = startingRow > 1 + numOfFrozenRows ? 100 : lastRow - numOfFrozenRows;
     const data = reservationSheet.getRange(startingRow, sessionColumn, numOfRows).getValues();
-    // let data = reservationSheet.getDataRange().getValues();
+    */
+   
+    const startingRow = 0;
+    const data = reservationSheet.getDataRange().getValues();
     
     const now = new Date();
     const nowTime = now.getTime()

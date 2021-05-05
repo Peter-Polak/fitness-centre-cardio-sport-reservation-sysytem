@@ -1,9 +1,14 @@
 <script>
+    var nameInputSelector = "input[name='name']";
+    var surnameInputSelector = "input[name='surname']";
+    var emailInputSelector = "input[name='emailAddress']";
+    var sessionsSelector = "input[type='checkbox']";
+    
     function sendReservation()
     {
-        let nameInput = $("input[name='name']");
-        let surnameInput = $("input[name='surname']");
-        let emailInput = $("input[name='emailAddress']");
+        let nameInput = $(nameInputSelector);
+        let surnameInput = $(surnameInputSelector);
+        let emailInput = $(emailInputSelector);
         
         if(nameInput.is(":invalid"))
         {
@@ -27,7 +32,7 @@
         
         let chosenSessions = "";
         
-        $("input[type='checkbox']:checked").each(
+        $(sessionsSelector + ":checked").each(
             function (index)
             {
                 if(index > 0) chosenSessions += ", ";
@@ -77,20 +82,9 @@
         .onHtmlFormSubmit(reservation);
     }
     
-    function refreshForm()
+    function refreshForm(keepValues)
     {
         renderLoadingScreen();
-        
-        let nameInputSelector = "input[name='name']";
-        let surnameInputSelector = "input[name='surname']";
-        let emailInputSelector = "input[name='emailAddress']";
-        
-        let formData = 
-        {
-            name : $(nameInputSelector).val(),
-            surname : $(surnameInputSelector).val(),
-            email : $(emailInputSelector).val(),
-        }
         
         google.script.run
         .withFailureHandler(
@@ -102,12 +96,28 @@
         .withSuccessHandler(
             (html) =>
             {
-                $("#form").replaceWith(html);
-                $(nameInputSelector).val(formData.name);
-                $(surnameInputSelector).val(formData.surname);
-                $(emailInputSelector).val(formData.email);
+                if(keepValues)
+                {
+                    let formData = 
+                    {
+                        name : $(nameInputSelector).val(),
+                        surname : $(surnameInputSelector).val(),
+                        email : $(emailInputSelector).val(),
+                    }
+                    
+                    $("#form").replaceWith(html);
+                    
+                    $(nameInputSelector).val(formData.name);
+                    $(surnameInputSelector).val(formData.surname);
+                    $(emailInputSelector).val(formData.email);
+                }
+                else
+                {
+                    $("#form").replaceWith(html);
+                }
                 
                 deleteLoadingScreen();
+                document.getElementById("form").scrollIntoView();
             }
         )
         .getReservationFormHtml();

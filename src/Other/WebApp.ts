@@ -90,8 +90,3 @@ function processReservation(reservation : Reservation)
     
     appendReservation(reservation);
 }
-
-// function getReservationErrorHtml(reservationValidity : ReservationValidity)
-// {
-    
-// }

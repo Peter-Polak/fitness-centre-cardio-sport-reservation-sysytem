@@ -316,6 +316,11 @@ class Session
         return `${start} - ${end}`;
     }
     
+    get getDateTimeString()
+    {
+        return `${this.getDateString} ${this.getTimeString}`;
+    }
+    
     get getStartDay()
     {
         return  getDayOfWeekString(getEuropeDay(this.startDate));

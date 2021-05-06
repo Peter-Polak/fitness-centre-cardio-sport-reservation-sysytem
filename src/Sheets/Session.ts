@@ -219,7 +219,7 @@ function getSessionFromSheet(cells : any, index : number) : Session | undefined
     }
     else
     {
-        dateString =  getDateString(date)
+        dateString = getDateString(date)
     }
         
     let sessionString = `${dateString} ${time}`;

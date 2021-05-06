@@ -2,6 +2,9 @@
  * Scripts for Reservations sheet.
  */
 
+ const numOfFrozenRows = 3;
+ const sessionColumn = 4; 
+ 
  class Reservation
  {
      timestamp : string;
@@ -52,18 +55,10 @@ function hideOldReservations()
     const reservationSheet = getReservationSheet();
     if(reservationSheet == null) return;
     
-    /*
+    const startingRow = numOfFrozenRows;
     const lastRow = reservationSheet.getLastRow();
-    const numOfFrozenRows = 3;
-    const sessionColumn = 4; 
-    
-    const startingRow = lastRow - 100 > numOfFrozenRows ? lastRow - 100 : 1 + numOfFrozenRows;
-    const numOfRows = startingRow > 1 + numOfFrozenRows ? 100 : lastRow - numOfFrozenRows;
-    const data = reservationSheet.getRange(startingRow, sessionColumn, numOfRows).getValues();
-    */
-   
-    const startingRow = 0;
-    const data = reservationSheet.getDataRange().getValues();
+    const numOfRows = lastRow - numOfFrozenRows;
+    const sessions = reservationSheet.getRange(startingRow + 1, sessionColumn, numOfRows).getValues();
     
     const now = new Date();
     const nowTime = now.getTime()
@@ -72,19 +67,16 @@ function hideOldReservations()
     
     //#region Loop through all rows in reservations sheet and hide all reservations for old sessions
     
-    for(let row = 0; row < data.length; row++)
+    for(let row = 0; row < sessions.length; row++)
     {
-        let session = getSessionFromSheet(data, row);
+        let dates = Session.getDatesFromString(sessions[row][0]);
+        if(dates == undefined) { reservationSheet.hideRows(startingRow + row + 1); continue; }
         
-        if(session == undefined)
-        {
-            reservationSheet.hideRows(startingRow + row);
-            continue;
-        }
+        let session = new Session(dates.start, dates.start)
         
         if(nowTime > session.endDate.getTime())
         {
-            reservationSheet.hideRows(startingRow + row);
+            reservationSheet.hideRows(startingRow + row + 1);
         }
     }
     

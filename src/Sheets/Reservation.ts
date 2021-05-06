@@ -186,3 +186,39 @@ function getAllReservations() : Array<Reservation>
     
     return reservations;
 }
+
+function appendReservation(reservation : Reservation)
+{
+    let reservationSheet = getReservationSheet(); 
+    if(reservationSheet == undefined) return;
+    
+    const lastColumn = reservationSheet.getLastColumn();
+    const lastRow = reservationSheet.getLastRow();
+    
+    const reservationTemplateCells = reservationSheet.getRange(2, 1, 1, lastColumn); // Select reservation template cells to copy (second row in reservations sheet)
+    const emptyRows = reservationSheet.getRange(lastRow + 1, 1, reservation.sessions.length, lastColumn); // Last row of reservations sheet + rows after that based on number of reservations made
+
+    reservationTemplateCells.copyTo(emptyRows);
+    
+    //#endregion
+    
+    //#region Loop through reservations and fill the copy pasted template with each reservation
+    
+    let reservations = [];
+    
+    // Prepare reservation sessions data in 2D array to set into sheet
+    for(var index = 0; index < reservation.sessions.length; index++)
+    {
+        let reservationRow = 
+        [
+            reservation.timestamp, reservation.name, reservation.surname, reservation.sessionStrings[index], reservation.emailAdress, 'FALSE',  'FALSE'
+        ];
+        
+        reservations.push(reservationRow);
+        // reservationSheet.appendRow(reservationRow);
+    }
+    
+    emptyRows.setValues(reservations);
+    
+    reservationSheet.sort(1, true); // Sort sheet based on timestamp column
+}

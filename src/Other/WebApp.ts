@@ -76,13 +76,6 @@ function onHtmlFormSubmit(formResponse : FormResponse)
 
 function processReservation(reservation : Reservation)
 {
-    //#region Reservation sheet variables
-    
-    let reservationSheet = getReservationSheet(); 
-    if(reservationSheet == undefined) return;
-    
-    //#endregion
-    
     //#region Check reservation validity
     
     let reservationValidity = isReservationValid(reservation);
@@ -95,22 +88,7 @@ function processReservation(reservation : Reservation)
     
     //#endregion
     
-    //#region Loop through reservations and fill the copy pasted template with each reservation
-    
-    // Prepare reservation sessions data in 2D array to set into sheet
-    for(var index = 0; index < reservation.sessions.length; index++)
-    {
-        let reservationRow = 
-        [
-            reservation.timestamp, reservation.name, reservation.surname, reservation.sessionStrings[index], reservation.emailAdress, 'FALSE',  'FALSE'
-        ];
-        
-        reservationSheet.appendRow(reservationRow);
-    }
-
-    //#endregion
-
-    reservationSheet.sort(1, true); // Sort sheet based on timestamp column
+    appendReservation(reservation);
 }
 
 // function getReservationErrorHtml(reservationValidity : ReservationValidity)

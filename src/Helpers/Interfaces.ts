@@ -8,7 +8,7 @@ interface FormResponse
     name: string
     surname : string
     sessions : string
-    email : string
+    emailAddress : string
 }
 
 interface Time
@@ -67,16 +67,21 @@ interface AppSettings
 interface ReservationValidity
 {
     isValid : boolean
-    reasons : Array<{
-        session : Session
-        error : SessionError
-    }>
+    reasons : 
+    {
+        [dateTime : string] : 
+        {
+            session : Session
+            error : SessionError
+        }
+    }
 }
 
 enum SessionError
 {
     DOES_NOT_EXIST = "DOESNT_EXIST",
-    IS_FULL = "FULL"
+    IS_FULL = "FULL",
+    RESERVATION_EXISTS = "RESERVATION_EXISTS"
 }
 
 interface OrganizedSessions

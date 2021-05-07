@@ -59,7 +59,7 @@ function onHtmlFormSubmit(formResponse : FormResponse)
 {
     //#region Create form response object
     
-    let reservation : Reservation = new Reservation(formResponse.timestamp, formResponse.name, formResponse.surname, formResponse.sessions, formResponse.email);
+    let reservation : Reservation = new Reservation(formResponse.timestamp, formResponse.name, formResponse.surname, formResponse.sessions, formResponse.emailAddress);
     
     //#endregion
     
@@ -71,7 +71,7 @@ function onHtmlFormSubmit(formResponse : FormResponse)
     
     //#endregion
     
-    return JSON.stringify(reservation);
+    return formResponse;
 }
 
 function processReservation(reservation : Reservation)
@@ -81,7 +81,11 @@ function processReservation(reservation : Reservation)
     let reservationValidity = isReservationValid(reservation);
     if(!reservationValidity.isValid)
     {
-        let response = reservationValidity;
+        let response = 
+        {
+            reservation : reservation,
+            validity : reservationValidity
+        };
         
         throw Error(JSON.stringify(response));
     }

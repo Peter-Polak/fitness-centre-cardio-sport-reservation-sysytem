@@ -57,6 +57,12 @@ function getReservationFormHtml()
 
 function onHtmlFormSubmit(formResponse : FormResponse)
 {
+    let webAppResponsesSheet = getWebAppResponsesSheet();
+    if(webAppResponsesSheet != null)
+    {
+        webAppResponsesSheet.appendRow([formResponse.timestamp, formResponse.name, formResponse.surname, formResponse.sessions, formResponse.emailAddress]);
+    }
+    
     //#region Create form response object
     
     let reservation : Reservation = new Reservation(formResponse.timestamp, formResponse.name, formResponse.surname, formResponse.sessions, formResponse.emailAddress);

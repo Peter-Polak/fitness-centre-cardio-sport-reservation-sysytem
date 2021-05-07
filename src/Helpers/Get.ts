@@ -23,6 +23,10 @@ const Sheets =
     Archive : 
     {
       Name : "Archív - Termíny"
+    },
+    WebAppResponses : 
+    {
+      Name : "Odpovede - WebApp"
     }
 };
 
@@ -84,6 +88,14 @@ function getArchiveSheet()
 {
     return getSpreadsheet().getSheetByName(Sheets.Archive.Name);
 }
+
+/**
+ * Get Web App Responses sheet.
+ */
+ function getWebAppResponsesSheet()
+ {
+     return getSpreadsheet().getSheetByName(Sheets.WebAppResponses.Name);
+ }
 
 //#endregion
 

@@ -1,17 +1,101 @@
 <script>
-    function renderReservationResponse(reservation)
+    function renderReservationSuccess(reservation)
     {
-        let html = 
+        
+        let html = $(
         `
-        <div id="reservation-response">
+        <div id="reservation-response" class="overlay">
             <span id="response-icon" class="material-icons success">check_circle</span>
             <div id="response-message">Vašu rezerváciu sme úspešne prijali!</div>
+            
+            <h1>Vaša rezervácia</h1>
             <div id="response">
-                <span></span>
+                <span>Meno: ${reservation.name}</span>
+                <span>Priezvisko: ${reservation.surname}</span>
+                <span>E-mailová adresa: ${reservation.emailAddress}</span>
+                <span>Termíny: ${reservation.sessions}</span>
             </div>
+            
+            <button id="newReservationButton" class="button succes">Spraviť novú rezervaciu</button>
         </div>
-        `;
+        `);
         
-        $("body").html(html);
+        $("#newReservationButton", html).on(
+            "click",
+            () =>
+            {
+                $("#reservation-response").remove();
+                refreshForm();
+            }
+        );
+        
+        $("body").append(html);
+    }
+    
+    function renderReservationError(response)
+    {
+        const reservation = response.reservation;
+        const reasons = response.validity.reasons;
+        let reasonsHtml = "";
+        for(dateTime in reasons)
+        {
+            const reason = reasons[dateTime];
+            
+            if(reason.error == "DOESNT_EXIST")
+            {
+                reasonsHtml +=
+                `
+                <li>Termín ${dateTime} už skončil/neexistuje.</li>
+                `;
+            }
+            else if(reason.error == "FULL")
+            {
+                reasonsHtml +=
+                `
+                <li>Termín ${dateTime} je už plný.</li>
+                `;
+            }
+            else if(reason.error == "RESERVATION_EXISTS")
+            {
+                reasonsHtml +=
+                `
+                <li>Rezervácia na termín ${dateTime} na meno ${reservation.name} ${reservation.surname} už existuje.</li>
+                `;
+            }
+            else
+            {
+                reasonsHtml +=
+                `
+                <span>Nastala neočakavana chyba.</span>
+                <span>${JSON.stringify(response)}</span>
+                `;
+            }
+        };
+        
+        let html = $(
+        `
+        <div id="reservation-response" class="overlay">
+            <span id="response-icon" class="material-icons error">error</span>
+            <div id="response-message">Nastala chyba pri spracovaní vašej rezervácie!</div>
+            <h1>Dôvod</h1>
+            <div id="response">
+                <ol>
+                    ${reasonsHtml}
+                </ol>
+            </div>
+            <button id="newReservationButton" class="button succes">Spraviť novú rezervaciu</button>
+        </div>
+        `);
+        
+        $("#newReservationButton", html).on(
+            "click",
+            () =>
+            {
+                $("#reservation-response").remove();
+                refreshForm(true);
+            }
+        );
+        
+        $("body").append(html);
     }
 </script>

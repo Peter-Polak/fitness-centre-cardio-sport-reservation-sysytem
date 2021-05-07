@@ -147,8 +147,9 @@
     
     $("body").on("click", "#sendButton", sendReservation);
     
-    $('input[type="checkbox"]').on(
+    $("body").on(
         "change", 
+        'input[type="checkbox"]',
         function() 
         {
             $('input[name="' + this.name + '"]').not(this).prop('checked', false);

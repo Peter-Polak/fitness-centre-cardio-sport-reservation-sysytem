@@ -189,8 +189,8 @@ function getAllReservations() : Array<Reservation>
 
 function appendReservation(reservation : Reservation)
 {
-    let reservationSheet = getReservationSheet(); 
-    if(reservationSheet == undefined) return;
+    let reservationSheet = getReservationSheet();
+    if(reservationSheet == null) return;
     
     const lastColumn = reservationSheet.getLastColumn();
     const lastRow = reservationSheet.getLastRow();

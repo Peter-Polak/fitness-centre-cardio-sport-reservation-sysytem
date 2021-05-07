@@ -51,7 +51,7 @@
             timestamp: getTimestamp(),
             name : nameInput.val(),
             surname : surnameInput.val(),
-            email : emailInput.val(),
+            emailAddress : emailInput.val(),
             sessions : chosenSessions
         }
         
@@ -61,7 +61,10 @@
         .withFailureHandler(
             (error) =>
             {
+                console.log(JSON.stringify(error.message));
+                
                 deleteLoadingScreen();
+                
                 let errorMessage = error.message.slice(7);
                 let response = JSON.parse(errorMessage);
                 
@@ -73,9 +76,11 @@
         .withSuccessHandler(
             (response) =>
             {
+                console.log(response);
+                
                 deleteLoadingScreen();
                 
-                let reservation = JSON.parse(response);
+                let reservation = response;
                 renderReservationSuccess(reservation);
             }
         )
@@ -140,7 +145,7 @@
         return timestamp;
     }
     
-    $("#sendButton").on("click", sendReservation);
+    $("body").on("click", "#sendButton", sendReservation);
     
     $('input[type="checkbox"]').on(
         "change", 

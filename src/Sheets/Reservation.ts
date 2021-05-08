@@ -11,7 +11,7 @@
      name : string;
      surname: string;
      sessions : Array<Session>;
-     emailAdress : string;
+     emailAddress : string;
      wasCancelled : boolean;
      wasntPresent : boolean;
      sessionStrings : Array<string>
@@ -21,7 +21,7 @@
          this.timestamp = timestamp;
          this.name = name;
          this.surname = surname;
-         this.emailAdress = emailAdress;
+         this.emailAddress = emailAdress;
          this.sessions = [];
          this.wasCancelled = wasCancelled;
          this.wasntPresent = wasntPresent;
@@ -79,13 +79,24 @@ function hideOldReservations()
     //#endregion
 }
 
-function getMockupReservation(timestamp : string = "01.01.2021 00:00:00", name : string = "Peter", surname : string = "Polák", sessions : Array<Session> = getMockupSessions(), emailAdress : string = "peter.polak.mail@gmail.com")
+/**
+ * Get resrvation object with mockup data.
+ * @param timestamp Timestamp of reservation.
+ * @param name Customer's name.
+ * @param surname Customer's surname.
+ * @param sessions Sessions to reserve.
+ * @param emailAddress Custome's e-mail address.
+ */
+function getMockupReservation(timestamp : string = "01.01.2021 00:00:00", name : string = "Peter", surname : string = "Polák", sessions : Array<Session> = getMockupSessions(), emailAddress : string = "peter.polak.mail@gmail.com")
 {
-    return  new Reservation(timestamp, name, surname, sessions, emailAdress)
+    return  new Reservation(timestamp, name, surname, sessions, emailAddress)
 }
 
-// let testReservation = new Reservation("01.01.2021 00:00:00", "op", "op", [new Session(new Date(2021, 4, 2, 18, 0, 0), new Date(2021, 4, 2, 20, 0, 0))], "")
-
+/**
+ * Checks if the reservation is valid (if session isn't full, exists and reservation doesn't already exist).
+ * @param {Reservation} reservation Reservation to validate.
+ * @returns {ReservationValidity} Reservation validity object.
+ */
 function isReservationValid(reservation : Reservation) : ReservationValidity
 {
     let result : ReservationValidity = { isValid : true, reasons: {}};
@@ -151,6 +162,10 @@ function isReservationValid(reservation : Reservation) : ReservationValidity
     return result;
 }
 
+/**
+ * Gets all reservations from Reservations sheet.
+ * @return {Array<Reservation>} All reseravtions in an array.
+ */
 function getAllReservations() : Array<Reservation>
 {
     const reservationSheet = getReservationSheet();
@@ -187,8 +202,40 @@ function getAllReservations() : Array<Reservation>
     return reservations;
 }
 
+/**
+ * 
+ * @param {Reservation} reservation Reservation to process.
+ */
 function appendReservation(reservation : Reservation)
 {
+    let reservationSheet = getReservationSheet();
+    if(reservationSheet == null) return;
+    
+    //#region Loop through reservations and append each session reservation
+    
+    for(var index = 0; index < reservation.sessions.length; index++)
+    {
+        let reservationRow = 
+        [
+            reservation.timestamp, reservation.name, reservation.surname, reservation.sessionStrings[index], reservation.emailAddress, 'FALSE',  'FALSE'
+        ];
+        
+        reservationSheet.appendRow(reservationRow);
+    }
+    
+    //#endregion
+    
+    reservationSheet.sort(1, true); // Sort sheet based on timestamp column
+}
+
+/**
+ * Copies template resrvation, pastes it and sets tha values of it with actual reservation values.
+ * @param {Reservation} reservation Reservation to process.
+ */
+function addReservation(reservation : Reservation)
+{
+    //#region Variables
+    
     let reservationSheet = getReservationSheet();
     if(reservationSheet == null) return;
     
@@ -211,14 +258,48 @@ function appendReservation(reservation : Reservation)
     {
         let reservationRow = 
         [
-            reservation.timestamp, reservation.name, reservation.surname, reservation.sessionStrings[index], reservation.emailAdress, 'FALSE',  'FALSE'
+            reservation.timestamp, reservation.name, reservation.surname, reservation.sessionStrings[index], reservation.emailAddress, 'FALSE',  'FALSE'
         ];
         
         reservations.push(reservationRow);
-        // reservationSheet.appendRow(reservationRow);
     }
     
     emptyRows.setValues(reservations);
     
+    //#endregion
+    
     reservationSheet.sort(1, true); // Sort sheet based on timestamp column
+}
+
+function getReservationsByEmail(emailAddress : string)
+{
+    const allReservations = getAllReservations();
+    const filteredreservations = allReservations.map(reservation => reservation.emailAddress == emailAddress);
+    
+    return filteredreservations;
+}
+
+/**
+ * Process new reservation. Check if it is valid and if it is append it to the reservations sheet.
+ * @param reservation Reservation to process.
+ */
+function processReservation(reservation : Reservation)
+{
+    //#region Check reservation validity
+    
+    let reservationValidity = isReservationValid(reservation);
+    if(!reservationValidity.isValid)
+    {
+        let response = 
+        {
+            reservation : reservation,
+            validity : reservationValidity
+        };
+        
+        throw Error(JSON.stringify(response));
+    }
+    
+    //#endregion
+    
+    appendReservation(reservation);
 }

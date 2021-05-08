@@ -39,22 +39,6 @@ function getHtmlOutputFromTemplate(templateFileName : string, templateData : {[k
     return htmlOutput;
 }
 
-function getReservationFormHtml()
-{
-    const sessions = getAllSessionsFromSheet();
-    const organizedSessions = organizeSessions(sessions);
-    
-    let data = 
-    {
-        sessions : organizedSessions,
-    };
-    
-    let htmlOutput = getHtmlOutputFromTemplate("form", data);
-    let html = htmlOutput.getContent();
-    
-    return html;
-}
-
 function onHtmlFormSubmit(formResponse : FormResponse)
 {
     let webAppResponsesSheet = getWebAppResponsesSheet();
@@ -73,30 +57,40 @@ function onHtmlFormSubmit(formResponse : FormResponse)
     
     processReservation(reservation); // Add the form response to the reservations sheet.
     updateForm(); // Update the form.
-    if(reservation.emailAdress != "") sendConfirmationEmail(reservation); // Send a confirmation e-mail if the user specified it.
+    if(reservation.emailAddress != "") sendConfirmationEmail(reservation); // Send a confirmation e-mail if the user specified it.
     
     //#endregion
     
     return formResponse;
 }
 
-function processReservation(reservation : Reservation)
+function getReservationFormHtml()
 {
-    //#region Check reservation validity
+    const sessions = getAllSessionsFromSheet();
+    const organizedSessions = organizeSessions(sessions);
     
-    let reservationValidity = isReservationValid(reservation);
-    if(!reservationValidity.isValid)
+    let data = 
     {
-        let response = 
-        {
-            reservation : reservation,
-            validity : reservationValidity
-        };
-        
-        throw Error(JSON.stringify(response));
-    }
+        sessions : organizedSessions,
+    };
     
-    //#endregion
+    let htmlOutput = getHtmlOutputFromTemplate("form", data);
+    let html = htmlOutput.getContent();
     
-    appendReservation(reservation);
+    return html;
+}
+
+function getReservationsHtml(emailAddress : string)
+{
+    const reservations = getReservationsByEmail(emailAddress);
+    
+    let data = 
+    {
+        reservations : reservations,
+    };
+    
+    let htmlOutput = getHtmlOutputFromTemplate("reservations", data);
+    let html = htmlOutput.getContent();
+    
+    return html;
 }

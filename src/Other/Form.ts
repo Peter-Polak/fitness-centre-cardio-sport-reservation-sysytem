@@ -34,7 +34,7 @@ function onFormSubmitInstallable(formResponseEvent : GoogleAppsScript.Events.She
     
     processFormResponse(reservation); // Add the form response to the reservations sheet.
     updateForm(); // Update the form.
-    if(reservation.emailAdress != "") sendConfirmationEmail(reservation); // Send a confirmation e-mail if the user specified it.
+    if(reservation.emailAddress != "") sendConfirmationEmail(reservation); // Send a confirmation e-mail if the user specified it.
     
     //#endregion
 }
@@ -74,7 +74,7 @@ function processFormResponse(formResponse : Reservation)
     {
         reservations[index] = 
         [
-            formResponse.timestamp, formResponse.name, formResponse.surname, formResponse.sessionStrings[index], formResponse.emailAdress, 'FALSE',  'FALSE'
+            formResponse.timestamp, formResponse.name, formResponse.surname, formResponse.sessionStrings[index], formResponse.emailAddress, 'FALSE',  'FALSE'
         ];
     }
 
@@ -146,7 +146,7 @@ function sendConfirmationEmail(formResponse : Reservation)
     let mail = 
     {
         name: "Fitness centrum Cardio Sport", // Name shown as an author of the e-mail
-        to: formResponse.emailAdress, // Recipient from form
+        to: formResponse.emailAddress, // Recipient from form
         subject: getEmailSubject(formResponse.sessions),
         htmlBody: htmlBody
     };

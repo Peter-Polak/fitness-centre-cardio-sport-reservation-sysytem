@@ -27,6 +27,10 @@ const Sheets =
     WebAppResponses : 
     {
       Name : "Odpovede - WebApp"
+    },
+    Users : 
+    {
+      Name : "Users"
     }
 };
 
@@ -96,6 +100,14 @@ function getArchiveSheet()
  {
      return getSpreadsheet().getSheetByName(Sheets.WebAppResponses.Name);
  }
+ 
+ /**
+ * Get "Users" sheet.
+ */
+  function getUsersSheet()
+  {
+      return getSpreadsheet().getSheetByName(Sheets.Users.Name);
+  }
 
 //#endregion
 
@@ -174,6 +186,20 @@ function getTimestamp(date : Date)
     const timeString = getTimeString(date);
     
     return `${dateString} ${timeString}`;
+}
+
+function getToken(length : number = 6)
+{
+    let result = [];
+    let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let charactersLength = characters.length;
+    
+    for(let i = 0; i < length; i++)
+    {
+        result.push(characters.charAt(Math.floor(Math.random() * charactersLength)));
+    }
+    
+    return result.join('');
 }
 
 //#endregion

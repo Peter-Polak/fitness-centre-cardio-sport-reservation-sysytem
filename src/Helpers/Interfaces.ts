@@ -85,3 +85,9 @@ interface OrganizedSessions
         full : Array<Session> 
     } 
 }
+
+interface User
+{
+    emailAddress : string
+    token : string
+}

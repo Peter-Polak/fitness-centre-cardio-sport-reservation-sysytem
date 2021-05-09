@@ -101,6 +101,8 @@
         .withSuccessHandler(
             (html) =>
             {
+                replacePageHistory(html, "form");
+                
                 if(keepValues)
                 {
                     let formData = 

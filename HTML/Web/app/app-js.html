@@ -18,14 +18,98 @@
             .withSuccessHandler(
                 (response) =>
                 {
-                    console.log(response);
-                    
+                    pushPageToHistory(response, "reservations");
                     $("main").html(response);
-                    
                     deleteLoadingScreen();
                 }
             )
             .getReservationsHtml("peter.polak.mail@gmail.com");
         }
     );
+    
+    $("body").on(
+        "click",
+        "#renderInfo",
+        (e) =>
+        {
+            e.preventDefault();
+            renderLoadingScreen();
+            
+            google.script.run
+            .withFailureHandler(
+                (error) =>
+                {
+                    deleteLoadingScreen();
+                    console.log(JSON.stringify(error.message));
+                }
+            )
+            .withSuccessHandler(
+                (response) =>
+                {
+                    pushPageToHistory(response, "info");
+                    $("main").html(response);
+                    deleteLoadingScreen();
+                }
+            )
+            .getHtml("info");
+        }
+    );
+    
+    $("body").on(
+        "click",
+        "#renderForm",
+        (e) =>
+        {
+            e.preventDefault();
+            renderLoadingScreen();
+            
+            google.script.run
+            .withFailureHandler(
+                (error) =>
+                {
+                    deleteLoadingScreen();
+                    console.log(JSON.stringify(error.message));
+                }
+            )
+            .withSuccessHandler(
+                (response) =>
+                {
+                    pushPageToHistory(response, "form");
+                    $("main").html(response);
+                    deleteLoadingScreen();
+                }
+            )
+            .getReservationFormHtml();
+        }
+    );
+    
+    function pushPageToHistory(html, pageId) 
+    {
+        let state = { page: html };
+        let location  = { page : pageId};
+        // let hash = pageId;
+        
+        console.log("pushPageToHistory: ", state);
+        google.script.history.push(state, location);
+    }
+    
+    function replacePageHistory(html, pageId) 
+    {
+        let state = { page: html };
+        let location  = { page : pageId};
+        
+        google.script.history.replace(state, location);
+    }
+    
+    google.script.history.setChangeHandler(
+        function(e)
+        {
+            console.log("history change handler: ", e);
+            let state = e.state;
+            let page = state.page;
+            $("main").html(page);
+        }
+    );
+    
+    replacePageHistory($("main").html(), $(".pageContent").attr("id"));
 </script>

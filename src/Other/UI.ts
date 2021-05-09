@@ -54,7 +54,13 @@ function showFormDialog()
 function showEmailExample()
 {
     let reservation = getMockupReservation();
-    let htmlBody = getEmailBodyReservations(reservation); // Get HTML content
+    let user : User = 
+    {
+        emailAddress : reservation.emailAddress,
+        token : getToken()
+    };
+    
+    let htmlBody = getEmailBodyReservations(reservation, user); // Get HTML content
     if(htmlBody == undefined) return;
     
     //#region Show example e-mail
@@ -82,7 +88,13 @@ function sendTestEmail()
     if (selectedButton == ui.Button.OK) // User clicked "OK".
     {
         let reservation = getMockupReservation(undefined, undefined, undefined, undefined, emailAdress);
-        let htmlBody = getEmailBodyReservations(reservation); // Get HTML content
+        let user : User = 
+        {
+            emailAddress : reservation.emailAddress,
+            token : getToken()
+        };
+        
+        let htmlBody = getEmailBodyReservations(reservation, user); // Get HTML content
         
         let mail = 
         {

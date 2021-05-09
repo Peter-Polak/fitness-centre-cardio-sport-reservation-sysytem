@@ -42,3 +42,45 @@ function getUserByToken(token : string): User | null
     
     return null;
 }
+
+function addUser(emailAddress : string = "peter.polak.mail@gmail.com") : User
+{
+    const usersSheet = getUsersSheet();
+    if(usersSheet == null) return { emailAddress : "", token : "" };
+    
+    const users = getAllUsers();
+    let token = "";
+    let isUnique = true;
+    
+    // Check if user already exists or if the generated token is already assigned to another user
+    let limit = 0;
+    do
+    {
+        token = getToken();
+        
+        for(const user of users)
+        {
+            if(user.emailAddress == emailAddress) return user;
+            if(user.token == token)
+            {
+                isUnique = false;
+                break;
+            }
+        }
+        
+        limit++;
+    }
+    while(!isUnique && limit < 100)
+    
+    if(!isUnique) throw Error("Failed to generate unique token for new user!")
+    
+    let user : User = 
+    {
+        emailAddress : emailAddress,
+        token : token
+    }
+    
+    usersSheet.appendRow([user.emailAddress, user.token]);
+    
+    return user;
+}

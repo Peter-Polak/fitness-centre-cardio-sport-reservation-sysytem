@@ -139,7 +139,8 @@ function updateForm()
  */
 function sendConfirmationEmail(formResponse : Reservation)
 {
-    let htmlBody = getEmailBodyReservations(formResponse); // Get HTML content
+    let user = addUser(formResponse.emailAddress);
+    let htmlBody = getEmailBodyReservations(formResponse, user); // Get HTML content
     
     //#region Prepare e-mail object and send it
     

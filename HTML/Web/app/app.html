@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cardio Sport - Rezervácia vstupu</title>
+    <title>Fitness centrum Cardio Sport</title>
     
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     
@@ -23,16 +23,14 @@
         </header>
         
         <nav>
-            <!-- <a class="navButton" href="#info">Informácie</a> -->
-            <a class="navButton" href="#form">Formulár</a>
-            <a class="navButton" href="https://www.facebook.com/groups/207982942629720/" target="_blank">Facebook</a>
+            <a id="renderInfo" class="navButton" href="">Informácie</a>
+            <a id="renderForm" class="navButton" href="">Formulár</a>
             <a id="renderReservations" class="navButton" href="">Rezervácie</a>
+            <a class="navButton" href="https://www.facebook.com/groups/207982942629720/" target="_blank">Facebook</a>
         </nav>
         
         <main>
-            <?!= getHtml("info") ?>
-            
-            <?!= getReservationFormHtml() ?>
+            <?!= pageContent ?>
         </main>
     </div>
     

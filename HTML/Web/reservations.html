@@ -1,18 +1,18 @@
-<div id="reservations">
+<div id="reservations" class="page-content">
     <h1>Rezerácie</h1>
     <? 
     for(let i = 0; i < reservations.length; i++)
     {
         const reservation = reservations[i];
     ?>
-    <span>
+    <div>
         <?= getTimestamp(new Date(reservation.timestamp)) ?> 
         <?= reservation.name ?> 
         <?= reservation.surname ?> 
         <?= reservation.sessions[0].getDateTimeString ?> 
         <?= reservation.emailAddress ?> 
-        <input type="checkbox" <? if(reservation.wasCancelled) { ?> checked <? } ?> > 
-        <input type="checkbox" <? if(reservation.wasntPresent) { ?> checked <? } ?> > 
-    </span>
+        <input type="checkbox" <? if(reservation.wasCancelled) { ?> checked <? } ?> disabled> 
+        <input type="checkbox" <? if(reservation.wasntPresent) { ?> checked <? } ?> disabled> 
+    </div>
     <? } ?>
 </div>

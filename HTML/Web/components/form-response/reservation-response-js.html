@@ -10,10 +10,10 @@
             
             <h1>Vaša rezervácia</h1>
             <div id="response">
-                <span>Meno: ${reservation.name}</span>
-                <span>Priezvisko: ${reservation.surname}</span>
-                <span>E-mailová adresa: ${reservation.emailAddress}</span>
-                <span>Termíny: ${reservation.sessions}</span>
+                <p>Meno: ${reservation.name}</p>
+                <p>Priezvisko: ${reservation.surname}</p>
+                <p>E-mailová adresa: ${reservation.emailAddress}</p>
+                <p>Termíny: ${reservation.sessions}</p>
             </div>
             
             <button id="newReservationButton" class="button succes">Spraviť novú rezervaciu</button>
@@ -66,8 +66,8 @@
             {
                 reasonsHtml +=
                 `
-                <span>Nastala neočakavana chyba.</span>
-                <span>${JSON.stringify(response)}</span>
+                <p>Nastala neočakavana chyba.</p>
+                <p>${JSON.stringify(response)}</p>
                 `;
             }
         };

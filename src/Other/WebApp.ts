@@ -110,9 +110,24 @@ function getReservationFormHtml()
     return html;
 }
 
-function getReservationsHtml(emailAddress : string = "peter.polak.mail@gmail.com")
+function getReservationsHtmlByEmail(emailAddress : string)
 {
     const reservations = getReservationsByEmail(emailAddress);
+    
+    let data = 
+    {
+        reservations : reservations,
+    };
+    
+    let htmlOutput = getHtmlOutputFromTemplate("reservations", data);
+    let html = htmlOutput.getContent();
+    
+    return html;
+}
+
+function getReservationsHtmlByToken(token : string)
+{
+    const reservations = getReservationsByToken(token);
     
     let data = 
     {

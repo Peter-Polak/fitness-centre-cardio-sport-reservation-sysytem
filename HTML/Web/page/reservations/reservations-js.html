@@ -27,12 +27,12 @@
         .withSuccessHandler(
             (response) =>
             {
+                console.log(response);     
                 $("main").html(response);
-                
                 deleteLoadingScreen();
             }
         )
-        .getReservationsByToken(token);
+        .getReservationsHtmlByToken(token);
     }
     
     $("body").on("click", "#getReservationsButton", getReservations);

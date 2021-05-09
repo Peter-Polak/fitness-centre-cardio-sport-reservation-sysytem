@@ -38,7 +38,7 @@ function getPageContent(page : Page) : string
             return getReservationFormHtml();
         
         case Page.RESERVATIONS:
-            return getReservationsHtml();
+            return getHtml("reservations-form");
             
         case Page.INFO:
         default:
@@ -110,7 +110,7 @@ function getReservationFormHtml()
     return html;
 }
 
-function getReservationsHtml(emailAddress : string)
+function getReservationsHtml(emailAddress : string = "peter.polak.mail@gmail.com")
 {
     const reservations = getReservationsByEmail(emailAddress);
     

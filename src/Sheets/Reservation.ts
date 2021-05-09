@@ -190,10 +190,11 @@ function getAllReservations() : Array<Reservation>
         const name = reservationRow[1];
         const surname = reservationRow[2];
         const sessionString = reservationRow[3];
-        const wasCancelled = reservationRow[4];
-        const wasntPresent = reservationRow[5];
+        const emailAddress = reservationRow[4];
+        const wasCancelled = reservationRow[5];
+        const wasntPresent = reservationRow[6];
         
-        const reservation = new Reservation(timestamp, name, surname, sessionString, wasCancelled, wasntPresent);
+        const reservation = new Reservation(timestamp, name, surname, sessionString, emailAddress, wasCancelled, wasntPresent);
         reservations.push(reservation);
     }
     
@@ -274,7 +275,7 @@ function addReservation(reservation : Reservation)
 function getReservationsByEmail(emailAddress : string)
 {
     const allReservations = getAllReservations();
-    const filteredreservations = allReservations.map(reservation => reservation.emailAddress == emailAddress);
+    const filteredreservations = allReservations.filter(reservation => reservation.emailAddress == emailAddress);
     
     return filteredreservations;
 }

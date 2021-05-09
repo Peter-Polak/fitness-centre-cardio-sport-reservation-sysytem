@@ -5,6 +5,13 @@
  const numOfFrozenRows = 3;
  const sessionColumn = 4; 
  
+ enum SessionError
+{
+    DOES_NOT_EXIST = "DOESNT_EXIST",
+    IS_FULL = "FULL",
+    RESERVATION_EXISTS = "RESERVATION_EXISTS"
+}
+ 
  class Reservation
  {
      timestamp : string;
@@ -272,7 +279,7 @@ function addReservation(reservation : Reservation)
     reservationSheet.sort(1, true); // Sort sheet based on timestamp column
 }
 
-function getReservationsByEmail(emailAddress : string)
+function getReservationsByEmail(emailAddress : string = "peter.polak.mail@gmail.com")
 {
     const allReservations = getAllReservations();
     const filteredreservations = allReservations.filter(reservation => reservation.emailAddress == emailAddress);

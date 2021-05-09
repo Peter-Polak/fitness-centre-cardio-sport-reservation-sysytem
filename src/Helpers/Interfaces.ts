@@ -76,14 +76,6 @@ interface ReservationValidity
         }
     }
 }
-
-enum SessionError
-{
-    DOES_NOT_EXIST = "DOESNT_EXIST",
-    IS_FULL = "FULL",
-    RESERVATION_EXISTS = "RESERVATION_EXISTS"
-}
-
 interface OrganizedSessions
 { 
     [date: string]: 

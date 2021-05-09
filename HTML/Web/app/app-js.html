@@ -1,0 +1,31 @@
+<script>
+    $("body").on(
+        "click",
+        "#renderReservations",
+        (e) =>
+        {
+            e.preventDefault();
+            renderLoadingScreen();
+            
+            google.script.run
+            .withFailureHandler(
+                (error) =>
+                {
+                    deleteLoadingScreen();
+                    console.log(JSON.stringify(error.message));
+                }
+            )
+            .withSuccessHandler(
+                (response) =>
+                {
+                    console.log(response);
+                    
+                    $("main").html(response);
+                    
+                    deleteLoadingScreen();
+                }
+            )
+            .getReservationsHtml("peter.polak.mail@gmail.com");
+        }
+    );
+</script>

@@ -1,3 +1,11 @@
+enum Page
+{
+    INFO = "info", 
+    FORM = "form", 
+    RESERVATIONS = "reservations"
+}
+
+
 /**
  * Gets called when user opens web app page.
  * @returns {GoogleAppsScript.HTML.HtmlOutput} HTML page to show to the user of the web app.
@@ -8,12 +16,34 @@ function doGet(event : any)
     
     let data = 
     {
+        pageContent : getPageContent(parameters.page),
         ...parameters
     };
     
     let htmlOutput = getHtmlOutputFromTemplate("app", data);
     
     return htmlOutput;
+}
+
+/**
+ * 
+ * @param {Page} page 
+ * @returns {string} HTML code
+ */
+function getPageContent(page : Page) : string
+{
+    switch(page)
+    {
+        case Page.FORM:
+            return getReservationFormHtml();
+        
+        case Page.RESERVATIONS:
+            return getReservationsHtml();
+            
+        case Page.INFO:
+        default:
+            return getHtml("info");
+    }
 }
 
 function getHtml(htmlFileName : string)

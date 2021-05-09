@@ -159,4 +159,21 @@ function getDateString(date : Date)
     return `${day}.${month}.${year}`;
 }
 
+function getTimeString(date : Date)
+{
+    let hours = `${getNumberString(date.getHours())}`;
+    let minutes = `${getNumberString(date.getMinutes())}`;
+    let seconds = `${getNumberString(date.getSeconds())}`;
+    
+    return `${hours}:${minutes}:${seconds}`;
+}
+
+function getTimestamp(date : Date)
+{
+    const dateString = getDateString(date);
+    const timeString = getTimeString(date);
+    
+    return `${dateString} ${timeString}`;
+}
+
 //#endregion

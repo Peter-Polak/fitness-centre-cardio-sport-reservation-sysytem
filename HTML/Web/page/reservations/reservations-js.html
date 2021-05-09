@@ -1,0 +1,39 @@
+<script>
+    var tokenInputSelector = "input[name='token']";
+    
+    function getReservations()
+    {
+        let tokenInput = $(tokenInputSelector);
+        
+        if(tokenInput.is(":invalid"))
+        {
+            showNotification("Položka 'Identifikačný kľúč' je povinná! Prosím, vyplnte položku 'Identifikačný kľúč'.", "warning", "error");
+            return;
+        }
+        
+        let token = tokenInput.val();
+        
+        renderLoadingScreen();
+        
+        google.script.run
+        .withFailureHandler(
+            (error) =>
+            {
+                console.log(JSON.stringify(error.message));
+                
+                deleteLoadingScreen();
+            }
+        )
+        .withSuccessHandler(
+            (response) =>
+            {
+                $("main").html(response);
+                
+                deleteLoadingScreen();
+            }
+        )
+        .getReservationsByToken(token);
+    }
+    
+    $("body").on("click", "#sendButton", sendReservation);
+</script>

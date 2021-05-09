@@ -287,6 +287,16 @@ function getReservationsByEmail(emailAddress : string = "peter.polak.mail@gmail.
     return filteredreservations;
 }
 
+function getReservationsByToken(token : string)
+{
+    const user = getUserByToken(token);
+    if(user == null) return null;
+    
+    const reservations = getReservationsByEmail(user.emailAddress);
+    
+    return reservations;
+}
+
 /**
  * Process new reservation. Check if it is valid and if it is append it to the reservations sheet.
  * @param reservation Reservation to process.

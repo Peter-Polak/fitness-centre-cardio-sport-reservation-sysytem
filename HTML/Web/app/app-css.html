@@ -100,17 +100,21 @@
         text-align: center;
     }
     
-    .flex-column
+    .flex
     {
         display: flex;
-        flex-direction: column;
         flex-wrap: wrap;
     }
     
-    .flex-row
+    .flex.column
     {
-        display: flex;
-        flex-wrap: wrap;
+        flex-direction: column;
+    }
+    
+    .flex.center
+    {
+        justify-content: center;
+        align-items: center;
     }
     
     .section

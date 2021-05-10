@@ -32,7 +32,7 @@ function onFormSubmitInstallable(formResponseEvent : GoogleAppsScript.Events.She
     
     //#region Process the form response.
     
-    processFormResponse(reservation); // Add the form response to the reservations sheet.
+    appendReservation(reservation); // Add the form response to the reservations sheet.
     updateForm(); // Update the form.
     if(reservation.emailAddress != "") sendConfirmationEmail(reservation); // Send a confirmation e-mail if the user specified it.
     

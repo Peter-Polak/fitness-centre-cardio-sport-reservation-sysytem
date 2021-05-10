@@ -20,7 +20,7 @@
             (error) =>
             {
                 console.log(JSON.stringify(error.message));
-                
+                showNotification("Zadali ste nesprávny identifikačný kľúč!", "warning", "error");
                 deleteLoadingScreen();
             }
         )

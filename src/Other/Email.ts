@@ -27,7 +27,7 @@
     template.surname = reservation.surname;
     template.sessions = reservation.sessions;
     template.sessionDays = sessionDays;
-    template.token = user.token;
+    template.user = user;
     
     let htmlBody = template.evaluate().getContent(); // Evaluate template and get HTML content
     

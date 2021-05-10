@@ -12,7 +12,12 @@
             {
                 margin: unset;
             }
-              
+            
+            a, #token
+            {
+                color: #dbcb3b;
+            }
+                       
             #email
             {
                 margin: unset;
@@ -38,11 +43,14 @@
                 border-radius: 30px;
                 border-collapse: collapse;
             }
-
-            h1, #header
+            
+            #header
             {
-                margin: 50px;
-                
+                /* margin: 50px; */
+            }
+            
+            h1, #header-text
+            {
                 text-align: center;
                 color: #dbcb3b;
                 font-size: 2em;
@@ -63,15 +71,15 @@
                 border-radius: 10px;
             }
             
-            footer, #text
+            #text, #token-container
             {
-                padding: 70px 50px;
+                padding: 0 50px 0px 50px;
                 vertical-align: top;
             }
             
             #footer
             {
-                margin: 20px;
+                margin: 20px 50px;
                 
                 text-align: center;
                 color: #ececec;
@@ -86,21 +94,21 @@
             <tr>
                 <td>
                     <table id="content" align="center" border="0" cellspacing="0" cellpadding="0">
-                        <tr style="height: 20%;">
-                            <td align="center">
-                                <h1 id="header">
+                        <tr>
+                            <td id="header" align="center">
+                                <h1 id="header-text">
                                     Fitness centrum Cardio Sport
                                 </h1>
                             </td>
                         </tr>
                         
-                        <tr style="height: 15%;">
+                        <tr>
                             <td align="center">
                                 <img id="image" src="https://i.imgur.com/6DMtFhc.png">
                             </td>
                         </tr>
         
-                        <tr style="height: 35%;">
+                        <tr>
                             <td id="text">
                                 Vašu rezerváciu vstupu do fitness centra Cardio Sport sme úspešne prijali na meno <?= name ?>  <?= surname ?> a na <? if(sessions.length > 1){?>termíny<?} else{?>termín<?}?>:
                                     <ul>
@@ -114,15 +122,16 @@
                             </td>
                         </tr>
                         
-                        <tr style="height: 20%;">
-                            <td id="text">
-                                Váš identifikačný kluč je <?= token ?>.
+                        <tr>
+                            <td id="token-container"> 
+                                <p>Váš identifikačný kluč je <span id="token"><?= user.token ?></span>.</p>
+                                <p>Pomocou neho si viete skontrolovať a pozrieť všetky vaše rezervacie spravene na e-mailovú adresu <?= user.emailAddress ?> na <a href="https://cardiosport.surge.sh/" target="_blank">stranke fitness centra Cardio Sport</a>.</p>
                             </td>
                         </tr>
                         
-                        <tr style="height: 10%;">
+                        <tr id="footer">
                             <td align="center">
-                                <footer id="footer">
+                                <footer>
                                     Tento e-mail bol vygenerovaný automaticky.
                                 </footer>
                             </td>

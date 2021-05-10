@@ -29,7 +29,7 @@
             {
                 console.log(response);
                 
-                pushPageToHistory(response, "reservations");
+                replacePageHistory(response, "reservations");
                 $("main").html(response);
                 deleteLoadingScreen();
             }

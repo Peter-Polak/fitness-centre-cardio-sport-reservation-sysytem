@@ -13,7 +13,7 @@
                 margin: unset;
             }
             
-            a, #token
+            a[href], #token
             {
                 color: #dbcb3b;
             }
@@ -44,14 +44,9 @@
                 border-collapse: collapse;
             }
             
-            #header
+            img, #image
             {
-                /* margin: 50px; */
-            }
-            
-            h1, #header-text
-            {
-                margin-bottom: 30px;
+                width: 90%;
                 
                 text-align: center;
                 color: #dbcb3b;
@@ -60,23 +55,20 @@
                 font-weight: bold;
             }
             
-            img, #image
+            p
             {
-                object-fit: cover;
-                object-position: 10% 50%;
-                
-                height: 150px;
-                width: 90%;
-                
-                /* margin: 0 auto; */
-                
-                border-radius: 10px;
+                margin-bottom: 20px;
+            }
+            
+            #main
+            {
+                padding: 0 50px 0px 50px;
+                vertical-align: top;
             }
             
             #text, #token-container
             {
-                padding: 0 50px 0px 50px;
-                vertical-align: top;
+                margin-bottom: 50px;
             }
             
             #footer
@@ -98,16 +90,14 @@
                     <table id="content" align="center" border="0" cellspacing="0" cellpadding="0">
                         <tr>
                             <td id="header" align="center">
-                                <h1 id="header-text">
-                                    Fitness centrum Cardio Sport
-                                </h1>
-                                <img id="image" src="https://i.imgur.com/6DMtFhc.png">
+                                <img id="image" src="https://i.imgur.com/PfVClfw.png" alt="Fitness centrum Cardio Sport">
                             </td>
                         </tr>
         
                         <tr>
-                            <td id="text">
-                                Vašu rezerváciu vstupu do fitness centra Cardio Sport sme úspešne prijali na meno <?= name ?>  <?= surname ?> a na <? if(sessions.length > 1){?>termíny<?} else{?>termín<?}?>:
+                            <td id="main">
+                                <p>
+                                    Vašu rezerváciu vstupu do fitness centra Cardio Sport sme úspešne prijali na meno <?= name ?>  <?= surname ?> a na <? if(sessions.length > 1){?>termíny<?} else{?>termín<?}?>:
                                     <ul>
                                     <? for (var i = 0; i < sessions.length; i++) { ?>
                                         <li>
@@ -115,14 +105,13 @@
                                         </li>
                                         <? } ?>
                                     </ul>
-                                Ak si želáte zrušiť túto rezerváciu, odpovedzte na tento e-mail alebo kontaktujte pána Žigalu s vašou požiadavkou o zrušenie rezervácie.
-                            </td>
-                        </tr>
-                        
-                        <tr>
-                            <td id="token-container"> 
-                                <p>Váš identifikačný kluč je <span id="token"><?= user.token ?></span>.</p>
-                                <p>Pomocou neho si viete skontrolovať a pozrieť všetky vaše rezervacie spravene na e-mailovú adresu <?= user.emailAddress ?> na <a href="https://cardiosport.surge.sh/" target="_blank">stranke fitness centra Cardio Sport</a>.</p>
+                                    Ak si želáte zrušiť túto rezerváciu, odpovedzte na tento e-mail alebo kontaktujte pána Žigalu s vašou požiadavkou o zrušenie rezervácie.
+                                </p>
+                                
+                                <p id="token-container">
+                                    <p>Váš identifikačný kluč je <span id="token"><?= user.token ?></span>.</p>
+                                    <p>Pomocou neho si viete skontrolovať a pozrieť všetky vaše rezervacie spravene na e-mailovú adresu <?= user.emailAddress ?> na <a href="https://cardiosport.surge.sh/" target="_blank">stranke fitness centra Cardio Sport</a>.</p>
+                                </p>
                             </td>
                         </tr>
                         

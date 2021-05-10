@@ -2,6 +2,7 @@ enum Page
 {
     INFO = "info", 
     FORM = "form", 
+    RESERVATIONS_FORM = "reservations-form",
     RESERVATIONS = "reservations"
 }
 

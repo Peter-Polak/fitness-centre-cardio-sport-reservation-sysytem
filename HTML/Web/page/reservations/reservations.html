@@ -1,18 +1,24 @@
 <div id="reservations" class="page-content flex column">
     <h1>Rezervácie</h1>
     <p>Emailová adresa: <?= reservations[0].emailAddress ?></p>
+    <div class="reservations-header">
+        <span>Čas rezervácie</span>
+        <span>Meno</span>
+        <span>Priezvisko</span>
+        <span>Termín</span>
+    </div>
     <? 
     for(let i = 0; i < reservations.length; i++)
     {
         const reservation = reservations[i];
     ?>
-    <div>
-        <?= getTimestamp(new Date(reservation.timestamp)) ?> 
-        <?= reservation.name ?> 
-        <?= reservation.surname ?> 
-        <?= reservation.sessions[0].getDateTimeString ?> 
-        <input type="checkbox" <? if(reservation.wasCancelled) { ?> checked <? } ?> disabled> 
-        <input type="checkbox" <? if(reservation.wasntPresent) { ?> checked <? } ?> disabled> 
+    <div class="reservation">
+        <span><?= getTimestamp(new Date(reservation.timestamp)) ?> </span>
+        <span><?= reservation.name ?> </span>
+        <span><?= reservation.surname ?> </span>
+        <span><?= reservation.sessions[0].getDateTimeString ?> </span>
+        <!-- <input type="checkbox" <? if(reservation.wasCancelled) { ?> checked <? } ?> disabled> -->
+        <!-- <input type="checkbox" <? if(reservation.wasntPresent) { ?> checked <? } ?> disabled> -->
     </div>
     <? } ?>
 </div>

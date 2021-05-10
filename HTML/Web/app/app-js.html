@@ -1,34 +1,6 @@
 <script>
     $("body").on(
         "click",
-        "#renderReservations",
-        (e) =>
-        {
-            e.preventDefault();
-            renderLoadingScreen();
-            
-            google.script.run
-            .withFailureHandler(
-                (error) =>
-                {
-                    deleteLoadingScreen();
-                    console.log(JSON.stringify(error.message));
-                }
-            )
-            .withSuccessHandler(
-                (response) =>
-                {
-                    pushPageToHistory(response, "reservations");
-                    $("main").html(response);
-                    deleteLoadingScreen();
-                }
-            )
-            .getHtml("reservations-form");
-        }
-    );
-    
-    $("body").on(
-        "click",
         "#renderInfo",
         (e) =>
         {
@@ -80,6 +52,34 @@
                 }
             )
             .getReservationFormHtml();
+        }
+    );
+    
+    $("body").on(
+        "click",
+        "#renderReservations",
+        (e) =>
+        {
+            e.preventDefault();
+            renderLoadingScreen();
+            
+            google.script.run
+            .withFailureHandler(
+                (error) =>
+                {
+                    deleteLoadingScreen();
+                    console.log(JSON.stringify(error.message));
+                }
+            )
+            .withSuccessHandler(
+                (response) =>
+                {
+                    pushPageToHistory(response, "reservations-form");
+                    $("main").html(response);
+                    deleteLoadingScreen();
+                }
+            )
+            .getHtml("reservations-form");
         }
     );
     

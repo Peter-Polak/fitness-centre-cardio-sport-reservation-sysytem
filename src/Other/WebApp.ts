@@ -70,6 +70,10 @@ function getHtmlOutputFromTemplate(templateFileName : string, templateData : {[k
     return htmlOutput;
 }
 
+/**
+ * Even handler that fires after user fills out the form and sends it. Checks the validity of the reservation and processes the reservation.
+ * @param {FormResponse} formResponse Object representing the form fields.
+ */
 function onHtmlFormSubmit(formResponse : FormResponse)
 {
     let webAppResponsesSheet = getWebAppResponsesSheet();
@@ -87,7 +91,7 @@ function onHtmlFormSubmit(formResponse : FormResponse)
     //#region Process the form response.
     
     processReservation(reservation); // Add the form response to the reservations sheet.
-    updateForm(); // Update the form.
+    updateForm(); // Update the Google Form.
     if(reservation.emailAddress != "") sendConfirmationEmail(reservation); // Send a confirmation e-mail if the user specified it.
     
     //#endregion

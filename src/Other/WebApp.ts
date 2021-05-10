@@ -121,7 +121,7 @@ function getReservationsHtmlByEmail(emailAddress : string)
     
     let data = 
     {
-        reservations : reservations,
+        reservations : reservations.reverse(),
     };
     
     let htmlOutput = getHtmlOutputFromTemplate("reservations", data);
@@ -136,7 +136,7 @@ function getReservationsHtmlByToken(token : string)
     
     let data = 
     {
-        reservations : reservations,
+        reservations : reservations.reverse(),
     };
     
     let htmlOutput = getHtmlOutputFromTemplate("reservations", data);

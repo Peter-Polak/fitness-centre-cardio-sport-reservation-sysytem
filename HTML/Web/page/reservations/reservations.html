@@ -1,5 +1,6 @@
 <div id="reservations" class="page-content">
     <h1>Rezerácie</h1>
+    <p>Emailová adresa: <?= reservations[0].emailAddress ?></p>
     <? 
     for(let i = 0; i < reservations.length; i++)
     {
@@ -10,7 +11,6 @@
         <?= reservation.name ?> 
         <?= reservation.surname ?> 
         <?= reservation.sessions[0].getDateTimeString ?> 
-        <?= reservation.emailAddress ?> 
         <input type="checkbox" <? if(reservation.wasCancelled) { ?> checked <? } ?> disabled> 
         <input type="checkbox" <? if(reservation.wasntPresent) { ?> checked <? } ?> disabled> 
     </div>

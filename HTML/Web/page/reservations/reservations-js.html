@@ -27,7 +27,9 @@
         .withSuccessHandler(
             (response) =>
             {
-                console.log(response);     
+                console.log(response);
+                
+                pushPageToHistory(response, "reservations");
                 $("main").html(response);
                 deleteLoadingScreen();
             }

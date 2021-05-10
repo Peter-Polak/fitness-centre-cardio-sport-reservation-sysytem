@@ -290,7 +290,7 @@ function getReservationsByEmail(emailAddress : string = "peter.polak.mail@gmail.
 function getReservationsByToken(token : string)
 {
     const user = getUserByToken(token);
-    if(user == null) return null;
+    if(user == null) return [];
     
     const reservations = getReservationsByEmail(user.emailAddress);
     

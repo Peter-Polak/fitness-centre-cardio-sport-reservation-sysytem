@@ -1,0 +1,22 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "SASS - Watch",
+            "type": "shell",
+            "command": "sass --watch styles/scss/main.scss styles/css/styles.css"
+        },
+        {
+            "label": "TypeScript - Watch",
+            "type": "shell",
+            "command": "tsc --watch"
+        },
+        {
+            "label": "Surge",
+            "type": "shell",
+            "command": "surge"
+        }
+    ]
+}

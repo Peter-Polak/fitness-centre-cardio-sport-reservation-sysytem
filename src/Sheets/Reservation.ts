@@ -106,7 +106,8 @@ function getMockupReservation(timestamp : string = "01.01.2021 00:00:00", name :
  */
 function isReservationValid(reservation : Reservation) : ReservationValidity
 {
-    let result : ReservationValidity = { isValid : true, reasons: {}};
+    let result : ReservationValidity = { reservation : reservation, isValid : true};
+    let reasons : { [dateTime: string] : { session: Session, error: SessionError }} = {};
     
     const sessions = getAllSessionsFromSheet();
     const reservations = getAllReservations();
@@ -117,7 +118,7 @@ function isReservationValid(reservation : Reservation) : ReservationValidity
         reservation.sessions.forEach(
             session => 
             {
-                result.reasons[session.getDateTimeString] = { session: session, error: SessionError.DOES_NOT_EXIST };
+                reasons[session.getDateTimeString] = { session: session, error: SessionError.DOES_NOT_EXIST };
             }
         );
         
@@ -141,7 +142,7 @@ function isReservationValid(reservation : Reservation) : ReservationValidity
             )
             {
                 result.isValid = false;
-                result.reasons[reservationSession.getDateTimeString] = { session: reservationSession, error: SessionError.RESERVATION_EXISTS };
+                reasons[reservationSession.getDateTimeString] = { session: reservationSession, error: SessionError.RESERVATION_EXISTS };
                 
                 continue reservationLoop;
             }
@@ -156,16 +157,17 @@ function isReservationValid(reservation : Reservation) : ReservationValidity
                 if(session.getFreeSpaces <= 0)
                 {
                     result.isValid = false;
-                    result.reasons[reservationSession.getDateTimeString] = { session: reservationSession, error: SessionError.IS_FULL };
+                    reasons[reservationSession.getDateTimeString] = { session: reservationSession, error: SessionError.IS_FULL };
                 }
                 continue reservationLoop;
             }
         }
         
         result.isValid = false;
-        result.reasons[reservationSession.getDateTimeString] = { session: reservationSession, error: SessionError.DOES_NOT_EXIST };
+        reasons[reservationSession.getDateTimeString] = { session: reservationSession, error: SessionError.DOES_NOT_EXIST };
     }
     
+    if(Object.keys(reasons).length > 0) result.reasons = reasons;    
     return result;
 }
 
@@ -279,7 +281,7 @@ function addReservation(reservation : Reservation)
     reservationSheet.sort(1, true); // Sort sheet based on timestamp column
 }
 
-function getReservationsByEmail(emailAddress : string = "peter.polak.mail@gmail.com")
+function getReservationsByEmail(emailAddress : string)
 {
     const allReservations = getAllReservations();
     const filteredreservations = allReservations.filter(reservation => reservation.emailAddress == emailAddress);
@@ -301,23 +303,18 @@ function getReservationsByToken(token : string)
  * Process new reservation. Check if it is valid and if it is append it to the reservations sheet.
  * @param reservation Reservation to process.
  */
-function processReservation(reservation : Reservation)
+function processNewReservation(reservation : Reservation)
 {
-    //#region Check reservation validity
+    let webAppResponsesSheet = getWebAppResponsesSheet();
+    if(webAppResponsesSheet != null) webAppResponsesSheet.appendRow([reservation.timestamp, reservation.name, reservation.surname, reservation.sessionStrings.join(", "), reservation.emailAddress]);
     
     let reservationValidity = isReservationValid(reservation);
-    if(!reservationValidity.isValid)
-    {
-        let response = 
-        {
-            reservation : reservation,
-            validity : reservationValidity
-        };
-        
-        throw Error(JSON.stringify(response));
-    }
-    
-    //#endregion
+    if(!reservationValidity.isValid) return reservationValidity;
     
     appendReservation(reservation);
+    
+    updateForm(); // Update the Google Form.
+    if(reservation.emailAddress != "") sendConfirmationEmail(reservation); // Send a confirmation e-mail if the user specified it.
+    
+    return reservationValidity;
 }

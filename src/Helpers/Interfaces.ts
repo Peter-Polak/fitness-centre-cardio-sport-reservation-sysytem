@@ -66,8 +66,9 @@ interface AppSettings
 
 interface ReservationValidity
 {
+    reservation : Reservation
     isValid : boolean
-    reasons : 
+    reasons? : 
     {
         [dateTime : string] : 
         {
@@ -76,13 +77,30 @@ interface ReservationValidity
         }
     }
 }
+
+interface OrganizedSession
+{ 
+    start : 
+    {
+        date : Date,
+        string : string
+    }
+    end : 
+    {
+        date : Date,
+        string : string
+    }
+    capacity : number
+    reserved : number
+}
+
 interface OrganizedSessions
 { 
     [date: string]: 
     { 
         day: string, 
-        free : Array<Session>, 
-        full : Array<Session> 
+        free : Array<OrganizedSession>, 
+        full : Array<OrganizedSession> 
     } 
 }
 

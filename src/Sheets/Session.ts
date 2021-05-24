@@ -269,13 +269,31 @@ function organizeSessions(sessions : Array<Session>) : OrganizedSessions
             organizedSessions[session.getDateString] = { day: session.getStartDay , free : [], full : []}
         }
         
+        
+        const timeString = session.getTimeStrings;
+        const organizedSession : OrganizedSession = 
+        {
+            start :
+            {
+                date : session.startDate,
+                string : timeString.start
+            },
+            end :
+            {
+                date : session.endDate,
+                string : timeString.end
+            },
+            capacity : session.capacity,
+            reserved : session.reserved
+        }
+        
         if(session.getFreeSpaces > 0)
         {
-            organizedSessions[session.getDateString]["free"].push(session);
+            organizedSessions[session.getDateString]["free"].push(organizedSession);
         }
         else
         {
-            organizedSessions[session.getDateString]["full"].push(session);
+            organizedSessions[session.getDateString]["full"].push(organizedSession);
         }
     }
     
@@ -314,6 +332,14 @@ class Session
         let end = `${getNumberString(this.endDate.getHours())}:${getNumberString(this.endDate.getMinutes())}`;
         
         return `${start} - ${end}`;
+    }
+    
+    get getTimeStrings()
+    {
+        let start =`${getNumberString(this.startDate.getHours())}:${getNumberString(this.startDate.getMinutes())}`;
+        let end = `${getNumberString(this.endDate.getHours())}:${getNumberString(this.endDate.getMinutes())}`;
+        
+        return {start : start, end : end};
     }
     
     get getDateTimeString()

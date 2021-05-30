@@ -2,17 +2,26 @@ function doGet(event : any)
 {
     let parameters = event.parameter;
     
-    let sessions = organizeSessions(getAllSessionsFromSheet());
+    let response : OrganizedSessions | Reason<OrganizedSessions, SessionsError> = organizeSessions(getAllSessionsFromSheet());
     
-    return ContentService.createTextOutput(JSON.stringify(sessions));
+    if(Object.keys(response).length === 0)
+    {
+        response = 
+        {
+            value : response,
+            error : SessionsError.NO_SESSIONS
+        };
+    }
+    
+    return ContentService.createTextOutput(JSON.stringify(response));
 }
 
 function doPost(event : any)
 {
     let parameters = event.parameter;
-    let reservation = new Reservation(parameters.timestamp, parameters.name, parameters.surname, parameters.sessions, parameters.emailAddress);
+    let reservationForm = new ReservationForm(parameters.timestamp, parameters.name, parameters.surname, parameters.emailAddress, parameters.sessionsString);
     
-    let response = processNewReservation(reservation);
+    let response = processWebAppReservationForm(reservationForm);
     
     return ContentService.createTextOutput(JSON.stringify(response));
 }

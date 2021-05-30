@@ -5,55 +5,67 @@
  const numOfFrozenRows = 3;
  const sessionColumn = 4; 
  
- enum SessionError
-{
-    DOES_NOT_EXIST = "DOESNT_EXIST",
-    IS_FULL = "FULL",
-    RESERVATION_EXISTS = "RESERVATION_EXISTS"
-}
- 
- class Reservation
+ class Reservation implements IReservation
  {
-     timestamp : string;
-     name : string;
-     surname: string;
-     sessions : Array<Session>;
-     emailAddress : string;
-     wasCancelled : boolean;
-     wasntPresent : boolean;
-     sessionStrings : Array<string>
-     
-     constructor(timestamp : string, name : string, surname: string, sessions : Array<Session> | string, emailAdress : string, wasCancelled : boolean = false, wasntPresent : boolean = false)
-     {
-         this.timestamp = timestamp;
-         this.name = name;
-         this.surname = surname;
-         this.emailAddress = emailAdress;
-         this.sessions = [];
-         this.wasCancelled = wasCancelled;
-         this.wasntPresent = wasntPresent;
-         
-         if(typeof sessions == "string")
-         {
-            this.sessionStrings = sessions.split(', ');
+    timestamp : string;
+    name : string;
+    surname: string;
+    //@ts-ignore
+    session : Session;
+    sessionString : string;
+    emailAddress : string;
+    wasCancelled : boolean | undefined;
+    wasntPresent : boolean | undefined;
+    
+    constructor(
+    timestamp : string, 
+    name : string, 
+    surname: string, 
+    session : Session | string, 
+    emailAdress : string, 
+    wasCancelled? : boolean, 
+    wasntPresent? : boolean
+    )
+    {
+        this.timestamp = timestamp;
+        this.name = name;
+        this.surname = surname;
+        this.emailAddress = emailAdress;
+        this.wasCancelled = wasCancelled;
+        this.wasntPresent = wasntPresent;
+        
+        if(typeof session === "string")
+        {
+            this.sessionString = session;
+        
+            let sessionDates = Session.getDatesFromString(this.sessionString);
+            if(sessionDates == undefined) return;
             
-            this.sessionStrings.forEach(
-                (sessionString) =>
-                {
-                    let sessionDates = Session.getDatesFromString(sessionString);
-                    if(sessionDates == undefined) return;
-                    
-                    let session = new Session(sessionDates.start, sessionDates.end)
-                    this.sessions.push(session);
-                }
-             )
-         }
-         else
-         {
-             this.sessions = sessions;
-             this.sessionStrings = [];
-         } 
-     }
+            this.session = new Session(sessionDates.start, sessionDates.end);
+        }
+        else
+        {
+            this.session = session;
+            this.sessionString = session.getDateTimeString;
+        } 
+    }
+    
+    get getJson()
+    {
+        let json : ReservationJson = 
+        {
+            timestamp : this.timestamp,
+            name : this.name,
+            surname : this.surname,
+            emailAddress : this.emailAddress,
+            session : this.session.getJson,
+            sessionString : this.sessionString,
+            wasCancelled : this.wasCancelled,
+            wasntPresent : this.wasntPresent,
+        }
+        
+        return json;
+    }
  }
 
 /**
@@ -77,7 +89,7 @@ function hideOldReservations()
     for(let reservationIndex = 0; reservationIndex < reservations.length; reservationIndex++)
     {
         const reservation = reservations[reservationIndex];
-        if(reservation.sessions.length == 0 || nowTime > reservation.sessions[0].endDate.getTime())
+        if(reservation.session === undefined || nowTime > reservation.session.endDate.getTime())
         {
             reservationSheet.hideRows(numOfFrozenRows + reservationIndex + 1);
         }
@@ -94,9 +106,9 @@ function hideOldReservations()
  * @param sessions Sessions to reserve.
  * @param emailAddress Custome's e-mail address.
  */
-function getMockupReservation(timestamp : string = "01.01.2021 00:00:00", name : string = "Peter", surname : string = "Polák", sessions : Array<Session> = getMockupSessions(), emailAddress : string = "peter.polak.mail@gmail.com")
+function getMockupReservation(timestamp : string = "01.01.2021 00:00:00", name : string = "Peter", surname : string = "Polák", session : Session = getMockupSession(), emailAddress : string = "peter.polak.mail@gmail.com")
 {
-    return  new Reservation(timestamp, name, surname, sessions, emailAddress)
+    return new Reservation(timestamp, name, surname, session, emailAddress)
 }
 
 /**
@@ -104,71 +116,183 @@ function getMockupReservation(timestamp : string = "01.01.2021 00:00:00", name :
  * @param {Reservation} reservation Reservation to validate.
  * @returns {ReservationValidity} Reservation validity object.
  */
-function isReservationValid(reservation : Reservation) : ReservationValidity
+function checkReservationValid(reservation : Reservation) : ReservationValidity
 {
-    let result : ReservationValidity = { reservation : reservation, isValid : true};
-    let reasons : { [dateTime: string] : { session: Session, error: SessionError }} = {};
+    let result : ReservationValidity = {
+        object : reservation.getJson, 
+        isValid : true, 
+        reasons : []
+    };
     
     const sessions = getAllSessionsFromSheet();
     const reservations = getAllReservations();
     
     if(sessions.length == 0)
     {
+        let reason : ReservationReason = 
+        {
+            value : reservation.session.getJson,
+            error : SessionError.DOES_NOT_EXIST
+        };
+        
         result.isValid = false;
-        reservation.sessions.forEach(
-            session => 
-            {
-                reasons[session.getDateTimeString] = { session: session, error: SessionError.DOES_NOT_EXIST };
-            }
-        );
+        result.reasons.push(reason);
         
         return result;
     };
     
-    reservationLoop:
-    for (let reservationIndex = 0; reservationIndex < reservation.sessions.length; reservationIndex++)
+    for (let reservationsIndex = 0; reservationsIndex < reservations.length; reservationsIndex++)
     {
-        const reservationSession = reservation.sessions[reservationIndex];
-        
-        for (let reservationsIndex = 0; reservationsIndex < reservations.length; reservationsIndex++)
-        {
-            const currentReservation = reservations[reservationsIndex];
+        const currentReservation = reservations[reservationsIndex];
 
-            if(
-                currentReservation.name == reservation.name 
-                && currentReservation.surname == reservation.surname 
-                && currentReservation.sessions[0].startDate.getTime() == reservationSession.startDate.getTime() 
-                && currentReservation.sessions[0].endDate.getTime() == reservationSession.endDate.getTime()
-            )
-            {
-                result.isValid = false;
-                reasons[reservationSession.getDateTimeString] = { session: reservationSession, error: SessionError.RESERVATION_EXISTS };
-                
-                continue reservationLoop;
-            }
-        }
-        
-        for (let sessionsIndex = 0; sessionsIndex < sessions.length; sessionsIndex++)
+        // If reservation already exists
+        if(
+            currentReservation.name == reservation.name 
+            && currentReservation.surname == reservation.surname 
+            && currentReservation.session.startDate.getTime() == reservation.session.startDate.getTime() 
+            && currentReservation.session.endDate.getTime() == reservation.session.endDate.getTime()
+        )
         {
-            const session = sessions[sessionsIndex];
-                
-            if(session.startDate.getTime() == reservationSession.startDate.getTime())
+            let reason : ReservationReason = 
             {
-                if(session.getFreeSpaces <= 0)
-                {
-                    result.isValid = false;
-                    reasons[reservationSession.getDateTimeString] = { session: reservationSession, error: SessionError.IS_FULL };
-                }
-                continue reservationLoop;
-            }
+                value : reservation.session.getJson,
+                error : ReservationError.RESERVATION_EXISTS
+            };
+            
+            result.isValid = false;
+            result.reasons.push(reason);
+            
+            return result;
         }
-        
-        result.isValid = false;
-        reasons[reservationSession.getDateTimeString] = { session: reservationSession, error: SessionError.DOES_NOT_EXIST };
     }
     
-    if(Object.keys(reasons).length > 0) result.reasons = reasons;    
+    for (let sessionsIndex = 0; sessionsIndex < sessions.length; sessionsIndex++)
+    {
+        const session = sessions[sessionsIndex];
+        
+        // If session is valid
+        if(session.startDate.getTime() == reservation.session.startDate.getTime())
+        {
+            // If session is full
+            if(session.getFreeSpaces <= 0)
+            {
+                let reason : ReservationReason = 
+                {
+                    value : reservation.session.getJson,
+                    error : SessionError.IS_FULL
+                };
+                
+                result.isValid = false;
+                result.reasons.push(reason);
+            }
+            
+            return result;
+        }
+    }
+    
+    // If session is invalid
+    let reason : ReservationReason = 
+    {
+        value : reservation.session.getJson,
+        error : SessionError.DOES_NOT_EXIST
+    };
+    
+    result.isValid = false;
+    result.reasons.push(reason);
+    
     return result;
+}
+
+function checkReservationsValid(reservations : Array<Reservation>) : Array<ReservationValidity>
+{
+    const sessions = getAllSessionsFromSheet();
+    const existingReservations = getAllReservations();
+    
+    let validities : Array<ReservationValidity> = [];
+    
+    for(const reservation of reservations)
+    {
+        let validity : ReservationValidity = 
+        {
+            object : reservation.getJson,
+            isValid : true,
+            reasons : []
+        }
+        
+        if(sessions.length == 0)
+        {
+            let reason : ReservationReason = 
+            {
+                value : reservation.session.getJson,
+                error : SessionError.DOES_NOT_EXIST
+            };
+            
+            validity.reasons.push(reason);
+        };
+        
+        for(const existingReservation of existingReservations)
+        {
+            if(
+                existingReservation.name == reservation.name 
+                && existingReservation.surname == reservation.surname 
+                && existingReservation.session.startDate.getTime() == reservation.session.startDate.getTime() 
+                && existingReservation.session.endDate.getTime() == reservation.session.endDate.getTime()
+            )
+            {
+                let reason : ReservationReason = 
+                {
+                    value : reservation.session.getJson,
+                    error : ReservationError.RESERVATION_EXISTS
+                };
+                
+                validity.reasons.push(reason);
+                break;
+            }
+        }
+        
+        let foundSession = false;
+        
+        for(const session of sessions)
+        {
+            // If session is valid
+            if(session.startDate.getTime() == reservation.session.startDate.getTime())
+            {
+                // If session is full
+                if(session.getFreeSpaces <= 0)
+                {
+                    let reason : ReservationReason = 
+                    {
+                        value : reservation.session.getJson,
+                        error : SessionError.IS_FULL
+                    };
+                    
+                    validity.reasons.push(reason);
+                }
+                
+                foundSession = true;
+                break;
+            }
+        }
+        
+        if(!foundSession)
+        {
+            let reason : ReservationReason = 
+            {
+                value : reservation.session.getJson,
+                error : SessionError.DOES_NOT_EXIST
+            };
+            
+            validity.reasons.push(reason);
+        }
+        
+        if(validity.reasons.length > 0) 
+        {
+            validity.isValid = false;
+            validities.push(validity);
+        }
+    }
+    
+    return validities;
 }
 
 /**
@@ -221,13 +345,38 @@ function appendReservation(reservation : Reservation)
     let reservationSheet = getReservationSheet();
     if(reservationSheet == null) return;
     
+    //#region
+    
+    let reservationRow = 
+    [
+        reservation.timestamp, reservation.name, reservation.surname, reservation.session.getDateTimeString, reservation.emailAddress, 'FALSE',  'FALSE'
+    ];
+        
+    reservationSheet.appendRow(reservationRow);
+    
+    //#endregion
+        
+    reservationSheet.sort(1, true); // Sort sheet based on timestamp column
+}
+
+function appendReservations(reservations : Array<Reservation>)
+{
+    let reservationSheet = getReservationSheet();
+    if(reservationSheet == null) return;
+    
     //#region Loop through reservations and append each session reservation
     
-    for(var index = 0; index < reservation.sessions.length; index++)
+    for(const reservation of reservations)
     {
         let reservationRow = 
         [
-            reservation.timestamp, reservation.name, reservation.surname, reservation.sessionStrings[index], reservation.emailAddress, 'FALSE',  'FALSE'
+            reservation.timestamp, 
+            reservation.name, 
+            reservation.surname, 
+            reservation.session.getDateTimeString, 
+            reservation.emailAddress, 
+            'FALSE',  
+            'FALSE'
         ];
         
         reservationSheet.appendRow(reservationRow);
@@ -253,30 +402,24 @@ function addReservation(reservation : Reservation)
     const lastRow = reservationSheet.getLastRow();
     
     const reservationTemplateCells = reservationSheet.getRange(2, 1, 1, lastColumn); // Select reservation template cells to copy (second row in reservations sheet)
-    const emptyRows = reservationSheet.getRange(lastRow + 1, 1, reservation.sessions.length, lastColumn); // Last row of reservations sheet + rows after that based on number of reservations made
+    const emptyRows = reservationSheet.getRange(lastRow + 1, 1, 1, lastColumn); // Last row of reservations sheet + rows after that based on number of reservations made
 
     reservationTemplateCells.copyTo(emptyRows);
     
     //#endregion
+
+    let reservationRow = 
+    [[
+        reservation.timestamp, 
+        reservation.name, 
+        reservation.surname, 
+        reservation.session.getDateTimeString, 
+        reservation.emailAddress, 
+        'FALSE',  
+        'FALSE'
+    ]];
     
-    //#region Loop through reservations and fill the copy pasted template with each reservation
-    
-    let reservations = [];
-    
-    // Prepare reservation sessions data in 2D array to set into sheet
-    for(var index = 0; index < reservation.sessions.length; index++)
-    {
-        let reservationRow = 
-        [
-            reservation.timestamp, reservation.name, reservation.surname, reservation.sessionStrings[index], reservation.emailAddress, 'FALSE',  'FALSE'
-        ];
-        
-        reservations.push(reservationRow);
-    }
-    
-    emptyRows.setValues(reservations);
-    
-    //#endregion
+    emptyRows.setValues(reservationRow);
     
     reservationSheet.sort(1, true); // Sort sheet based on timestamp column
 }
@@ -297,24 +440,4 @@ function getReservationsByToken(token : string)
     const reservations = getReservationsByEmail(user.emailAddress);
     
     return reservations;
-}
-
-/**
- * Process new reservation. Check if it is valid and if it is append it to the reservations sheet.
- * @param reservation Reservation to process.
- */
-function processNewReservation(reservation : Reservation)
-{
-    let webAppResponsesSheet = getWebAppResponsesSheet();
-    if(webAppResponsesSheet != null) webAppResponsesSheet.appendRow([reservation.timestamp, reservation.name, reservation.surname, reservation.sessionStrings.join(", "), reservation.emailAddress]);
-    
-    let reservationValidity = isReservationValid(reservation);
-    if(!reservationValidity.isValid) return reservationValidity;
-    
-    appendReservation(reservation);
-    
-    updateForm(); // Update the Google Form.
-    if(reservation.emailAddress != "") sendConfirmationEmail(reservation); // Send a confirmation e-mail if the user specified it.
-    
-    return reservationValidity;
 }

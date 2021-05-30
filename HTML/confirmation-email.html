@@ -97,11 +97,11 @@
                         <tr>
                             <td id="main">
                                 <p>
-                                    Vašu rezerváciu vstupu do fitness centra Cardio Sport sme úspešne prijali na meno <?= name ?>  <?= surname ?> a na <? if(sessions.length > 1){?>termíny<?} else{?>termín<?}?>:
+                                    Vašu rezerváciu vstupu do fitness centra Cardio Sport sme úspešne prijali na meno <?= name ?>  <?= surname ?> a na <? if(reservations.length > 1){?>termíny<?} else{?>termín<?}?>:
                                     <ul>
-                                    <? for (var i = 0; i < sessions.length; i++) { ?>
+                                    <? for (var i = 0; i < reservations.length; i++) { ?>
                                         <li>
-                                            <?= sessionDays[i] ?>, <?= sessions[i].getDateString ?> <?= sessions[i].getTimeString ?>
+                                            <?= sessionDays[i] ?>, <?= reservations[i].session.getDateString ?> <?= reservations[i].session.getTimeString ?>
                                         </li>
                                         <? } ?>
                                     </ul>

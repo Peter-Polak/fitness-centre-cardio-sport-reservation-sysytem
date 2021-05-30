@@ -271,29 +271,15 @@ function organizeSessions(sessions : Array<Session>) : OrganizedSessions
         
         
         const timeString = session.getTimeStrings;
-        const organizedSession : OrganizedSession = 
-        {
-            start :
-            {
-                date : session.startDate,
-                string : timeString.start
-            },
-            end :
-            {
-                date : session.endDate,
-                string : timeString.end
-            },
-            capacity : session.capacity,
-            reserved : session.reserved
-        }
+        const sessionObject : SessionJson = session.getJson;
         
         if(session.getFreeSpaces > 0)
         {
-            organizedSessions[session.getDateString]["free"].push(organizedSession);
+            organizedSessions[session.getDateString]["free"].push(sessionObject);
         }
         else
         {
-            organizedSessions[session.getDateString]["full"].push(organizedSession);
+            organizedSessions[session.getDateString]["full"].push(sessionObject);
         }
     }
     
@@ -301,7 +287,7 @@ function organizeSessions(sessions : Array<Session>) : OrganizedSessions
 }
  
 //@ts-ignore // Complains because it is declared in Google Apps Script types file
-class Session
+class Session implements ISession
 {
     startDate : Date;
     endDate : Date;
@@ -350,6 +336,37 @@ class Session
     get getStartDay()
     {
         return  getDayOfWeekString(getEuropeDay(this.startDate));
+    }
+    
+    get getJson()
+    {
+        const sessionObject : SessionJson = 
+        {
+            start : 
+            {
+                date : this.startDate,
+                string : 
+                {
+                    date : this.getDateString,
+                    time : this.getTimeStrings.start
+                }
+            },
+            end : 
+            {
+                date : this.endDate,
+                string : 
+                {
+                    date : this.getDateString,
+                    time : this.getTimeStrings.end
+                }
+            },
+            date : this.getDateString,
+            time : this.getTimeString,
+            capacity : this.capacity,
+            reserved : this.reserved
+        }
+        
+        return sessionObject;
     }
     
     static getDatesFromString(string : string) : { start : Date, end : Date} | undefined
@@ -412,16 +429,10 @@ class Session
     }
 }
 
-function getMockupSessions(sessionStrings : Array<string> = ["26.11.2020 16:30 - 18:30", "27.11.2020 20:00 - 22:00"])
+function getMockupSession(sessionString : string = "26.11.2020 16:30 - 18:30")
 {
-    let sessions : Array<Session> = [];
+    const date = Session.getDatesFromString(sessionString);
+    if(date != undefined) return new Session(date.start, date.end);
     
-    for (let index = 0; index < sessionStrings.length; index++)
-    {
-        const element = sessionStrings[index];
-        const date = Session.getDatesFromString(element);
-        if(date != undefined) sessions.push(new Session(date.start, date.end));
-    }
-    
-    return sessions;
+    return new Session(new Date(), new Date());
 }

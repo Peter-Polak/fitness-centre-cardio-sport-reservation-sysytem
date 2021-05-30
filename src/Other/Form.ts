@@ -2,6 +2,40 @@
  * Scripts for form handling.
  */
 
+class ReservationForm
+{
+    timestamp : string;
+    name : string;
+    surname : string;
+    emailAddress : string;
+    sessionsString : string ;
+    
+    reservations : Array<Reservation>;
+    
+    constructor(timestamp : string, name : string, surname : string, emailAddress : string, sessionsString : string)
+    {
+        this.timestamp = timestamp;
+        this.name = name;
+        this.surname = surname;
+        this.emailAddress = emailAddress;
+        this.sessionsString = sessionsString;
+        
+        this.reservations = [];
+        
+        let sessionStrings = this.sessionsString.split(", ");
+        
+        for(const sessionString of sessionStrings)
+        {
+            const dates = Session.getDatesFromString(sessionString);
+            if(dates === undefined) continue;
+            
+            const session = new Session(dates.start, dates.end);
+            const reservation = new Reservation(this.timestamp, this.name, this.surname, session, this.emailAddress);
+            this.reservations.push(reservation);
+        }
+    }
+}
+
 /**
  * Even handler for event on form submit.
  * @param formResponseEvent Form submit event arguments.
@@ -12,83 +46,48 @@ function onFormSubmitInstallable(formResponseEvent : GoogleAppsScript.Events.She
     
     if(formResponseEvent === undefined) return;
     
-    let data = formResponseEvent.values; // Form data in array, ordered as in sheet of responses
+    const data = formResponseEvent.values; // Form data in array, ordered as in sheet of responses
     
     if(data[0] === undefined || data[1] === undefined || data[2] === undefined || data[3] === undefined) return;
     
+    const timestamp = data[0];
+    const name = data[1];
+    const surname = data[2];
+    const sessions = data[3];
+    const emailAddress = data[4];
+    
     //#endregion
-    
-    //#region Create form response object
-    
-    let reservation : Reservation = new Reservation(
-        data[0], 
-        data[1],
-        data[2],
-        data[3],
-        data[4]
+
+    let reservationForm = new ReservationForm(
+        timestamp, name, surname, emailAddress, sessions
     );
     
-    //#endregion
-    
-    //#region Process the form response.
-    
-    appendReservation(reservation); // Add the form response to the reservations sheet.
-    updateForm(); // Update the form.
-    if(reservation.emailAddress != "") sendConfirmationEmail(reservation); // Send a confirmation e-mail if the user specified it.
-    
-    //#endregion
+    processReservationForm(reservationForm);
 }
 
-/**
- * Process form response and add it to reservations sheet.
- * @param {Reservation} formResponse Form object.
- */
-function processFormResponse(formResponse : Reservation)
+function processWebAppReservationForm(reservationForm : ReservationForm)
 {
-    //#region Reservation sheet variables
+    appendReservationForm(reservationForm);
     
-    if(!formResponse) return;
+    let reservationValidity = checkReservationFormValidity(reservationForm);
+    if(!reservationValidity.isValid) return reservationValidity;
+    
+    processReservationForm(reservationForm);
+    
+    return reservationValidity;
+}
 
-    let reservationSheet = getReservationSheet(); 
-    if(reservationSheet == null) return;
-    
-    let lastColumn = reservationSheet.getLastColumn();
-    let lastRow = reservationSheet.getLastRow();
-
-    //#endregion
-    
-    //#region Copy and paste the template
-    
-    const reservationTemplateCells = reservationSheet.getRange(2, 1, 1, lastColumn); // Select reservation template cells to copy (second row in reservations sheet)
-    const emptyRows = reservationSheet.getRange(lastRow + 1, 1, formResponse.sessions.length, lastColumn); // Last row of reservations sheet + rows after that based on number of reservations made
-
-    reservationTemplateCells.copyTo(emptyRows);
-    
-    //#endregion
-    
-    //#region Loop through reservations and fill the copy pasted template with each reservation
-    
-    // Prepare reservations data in 2D array to set into sheet
-    let reservations = [];
-    for(var index = 0; index < formResponse.sessions.length; index++)
-    {
-        reservations[index] = 
-        [
-            formResponse.timestamp, formResponse.name, formResponse.surname, formResponse.sessionStrings[index], formResponse.emailAddress, 'FALSE',  'FALSE'
-        ];
-    }
-
-    emptyRows.setValues(reservations);
-    
-    //#endregion
-
-    reservationSheet.sort(1, true); // Sort sheet based on timestamp column
+function processReservationForm(reservationForm : ReservationForm)
+{
+    appendReservations(reservationForm.reservations);
+    updateGoogleForm();
+    if(reservationForm.emailAddress != "" && reservationForm.emailAddress) sendConfirmationEmail(reservationForm); // Send a confirmation e-mail if the user specified it.
 }
 
 /**
  * Update form, more specifically free sessions with the current state.
  */
-function updateForm()
+function updateGoogleForm()
 {
     //#region Session Sheet
     
@@ -133,26 +132,88 @@ function updateForm()
     //#endregion
 }
 
-/**
- * Sends a confirmation e-mail about the reservation to the customer.
- * @param {Reservation} formResponse Normalized form response from a user in object.
- */
-function sendConfirmationEmail(formResponse : Reservation)
+function appendReservationForm(reservationForm : ReservationForm)
 {
-    let user = addUser(formResponse.emailAddress);
-    let htmlBody = getEmailBodyReservations(formResponse, user); // Get HTML content
+    let webAppResponsesSheet = getWebAppResponsesSheet();
+    if(webAppResponsesSheet == null) return;
     
-    //#region Prepare e-mail object and send it
+    const row = 
+    [
+        reservationForm.timestamp, 
+        reservationForm.name, 
+        reservationForm.surname, 
+        reservationForm.sessionsString,
+        reservationForm.emailAddress
+    ];
     
-    let mail = 
+    webAppResponsesSheet.appendRow(row);
+}
+
+function checkReservationFormValidity(reservationForm : ReservationForm)
+{
+    let reservationFormValidity : ReservationFormValidity = 
     {
-        name: "Fitness centrum Cardio Sport", // Name shown as an author of the e-mail
-        to: formResponse.emailAddress, // Recipient from form
-        subject: getEmailSubject(formResponse.sessions),
-        htmlBody: htmlBody
+        object : reservationForm,
+        isValid : true,
+        reasons : []
     };
     
-    MailApp.sendEmail(mail);
+    const { name, surname, emailAddress, reservations } = reservationForm;
     
-    //#endregion
+    const nameValidity = checkTextFieldValidity("name", name, true);
+    const surnameValidity = checkTextFieldValidity("surname", surname, true);
+    const reservationValidities = checkReservationsValid(reservations);
+    
+    if(!nameValidity.isValid)
+    {
+        reservationFormValidity.isValid = false;
+        reservationFormValidity.reasons.push(nameValidity)
+    };
+    
+    if(!surnameValidity.isValid)
+    {
+        reservationFormValidity.isValid = false;
+        reservationFormValidity.reasons.push(surnameValidity);
+    }
+    
+    if(reservationValidities.length > 0)
+    {
+        reservationFormValidity.isValid = false;
+        reservationFormValidity.reasons.push(...reservationValidities);
+    }
+    
+    return reservationFormValidity;
+}
+
+function checkTextFieldValidity(name : string, value : string, isRequired : boolean, pattern? : RegExp)
+{
+    let textFieldValidity : TextFieldValidity= 
+    { 
+        object: 
+        {
+            name : name,
+            value : value
+        }, 
+        isValid : true,
+        reasons : []
+    }
+    
+    if(isRequired && (value === null || value === undefined || value === ""))
+    {
+        let reason : TextFieldReason = 
+        {
+            value : value,
+            error : TextFieldError.IS_REQUIRED
+        }
+        
+        textFieldValidity.isValid = false;
+        textFieldValidity.reasons.push(reason);
+    }
+    
+    return textFieldValidity;
+}
+
+function getMockupReservationForm(timestamp : string = "01.01.2021 00:00:00", name : string = "Peter", surname : string = "Polák", sessions : string = "24.12.2021 10:00 - 12:00", emailAddress : string = "peter.polak.mail@gmail.com")
+{
+    return new ReservationForm(timestamp, name, surname, emailAddress, sessions);
 }

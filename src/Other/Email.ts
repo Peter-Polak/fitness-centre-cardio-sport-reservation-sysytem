@@ -2,48 +2,63 @@
  * Scripts for e-mails.
  */
 
-/**
- * Get HTML body for confirmation e-mail for reservations.
- * @param {string} name Name of the recipient.
- * @param {string} surname Surname of the recipient.
- * @param {Array<string>} sessions Array of sessions in string form.
- * @param {Array<string>} sessionDays Array of string name of the days in the week for each sesion.
- * @returns {string} HTML body of the e-mail.
- * @example getReservationEmailBody("Peter", "Polák", ["01.01.1970 08:00 - 09:00", ...], ["Pondelok", ...])
- */
- function getEmailBodyReservations(reservation : Reservation, user : User) : string
- {
-    var template = HtmlService.createTemplateFromFile('form-confirmation-email'); // Create template
-     
-    let sessionDays = [];
+
+function sendConfirmationEmail(reservationForm : ReservationForm)
+{
+    let user = addUser(reservationForm.emailAddress);
+    let htmlBody = getEmailBodyReservations(reservationForm, user); // Get HTML content
     
-    for(var index = 0; index < reservation.sessions.length; index++)
+    //#region Prepare e-mail object and send it
+    
+    let mail = 
     {
-        sessionDays.push(getDayOfWeekString(getEuropeDay(reservation.sessions[index].startDate)));
-    }
+        name: "Fitness centrum Cardio Sport", // Name shown as an author of the e-mail
+        to: reservationForm.emailAddress, // Recipient from form
+        subject: getEmailSubject(reservationForm.reservations),
+        htmlBody: htmlBody
+    };
     
+    MailApp.sendEmail(mail);
+    
+    //#endregion
+}
+
+function getEmailSubject(reservations : Array<Reservation>)
+{
+    let subject = "Potvrdenie rezervácie - ";
+    let sessionsString = "";
+    
+    for(const reservation of reservations)
+    {
+        const session = reservation.session;
+        
+        if(sessionsString !== "") sessionsString += ", ";
+        sessionsString += session.getDateTimeString;
+    }
+
+    return subject + sessionsString;
+}
+ 
+
+function getEmailBodyReservations(reservationForm : ReservationForm, user : User) : string
+{
+    var template = HtmlService.createTemplateFromFile('form-confirmation-email'); // Create template
+        
+    let sessionDays = [];
+
+    for(const reservation of reservationForm.reservations)
+    {
+        sessionDays.push(getDayOfWeekString(getEuropeDay(reservation.session.startDate)));
+    }
+
     // Fill the template with the information from the form
-    template.name = reservation.name;
-    template.surname = reservation.surname;
-    template.sessions = reservation.sessions;
+    template.name = reservationForm.name;
+    template.surname = reservationForm.surname;
+    template.reservations = reservationForm.reservations;
     template.sessionDays = sessionDays;
     template.user = user;
-    
+
     let htmlBody = template.evaluate().getContent(); // Evaluate template and get HTML content
-    
+
     return htmlBody;
- }
- 
- function getEmailSubject(sessions : Array<Session>)
- {
-    let subject = "Potvrdenie rezervácie - ";
-    
-    for(var index = 0; index < sessions.length; index++)
-    {
-        const session = sessions[index];
-        if(index > 0) subject += ", ";
-        subject += session.getDateString + " " + session.getTimeString;
-    }
-    
-    return subject;
- }
+}

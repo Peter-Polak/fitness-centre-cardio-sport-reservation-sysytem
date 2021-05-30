@@ -22,7 +22,7 @@ function renderUI()
     let reservationSystemMenu = ui.createMenu("Rezervačný systém");
     let reservationsMenu = ui.createMenu("Rezervácie").addItem("Skryť staré rezervácie", "hideOldReservations");
     let sessionsMenu = ui.createMenu("Termíny").addItem("Vypísať termíny podľa rozvrhu", "addNewSessions").addItem("Archívovať staré termíny", "archiveOldSessions");
-    let formMenu = ui.createMenu("Formulár").addItem("Aktualizovať formúlar", "updateForm").addItem("Zobraziť formulár", "showFormDialog");
+    let formMenu = ui.createMenu("Formulár").addItem("Aktualizovať formúlar", "updateGoogleForm").addItem("Zobraziť formulár", "showFormDialog");
     let emailMenu = ui.createMenu("E-mail").addItem("Ukázať príklad e-mailu", "showEmailExample").addItem("Poslať príklad e-mailu", "sendTestEmail");
     let settingsMenu = ui.createMenu("Nastavenia").addItem("Časy", "showTimesSettings").addItem("Timetable", "showTimetableSettings").addItem("Schedule", "showTimesSettings");
     let developerMenu = ui.createMenu("Developer").addItem("Debug code", "debug").addItem("Delete all properties", "showDeletePropertiesDialog").addItem("Delete all triggers", "showDeleteTriggersDialog");
@@ -53,14 +53,14 @@ function showFormDialog()
  */
 function showEmailExample()
 {
-    let reservation = getMockupReservation();
+    let reservationForm = getMockupReservationForm();
     let user : User = 
     {
-        emailAddress : reservation.emailAddress,
+        emailAddress : reservationForm.emailAddress,
         token : getToken()
     };
     
-    let htmlBody = getEmailBodyReservations(reservation, user); // Get HTML content
+    let htmlBody = getEmailBodyReservations(reservationForm, user); // Get HTML content
     if(htmlBody == undefined) return;
     
     //#region Show example e-mail
@@ -87,20 +87,20 @@ function sendTestEmail()
     
     if (selectedButton == ui.Button.OK) // User clicked "OK".
     {
-        let reservation = getMockupReservation(undefined, undefined, undefined, undefined, emailAdress);
+        let reservationForm = getMockupReservationForm(undefined, undefined, undefined, undefined, emailAdress);
         let user : User = 
         {
-            emailAddress : reservation.emailAddress,
+            emailAddress : reservationForm.emailAddress,
             token : getToken()
         };
         
-        let htmlBody = getEmailBodyReservations(reservation, user); // Get HTML content
+        let htmlBody = getEmailBodyReservations(reservationForm, user); // Get HTML content
         
         let mail = 
         {
             name: "Fitness centrum Cardio Sport", // Name shown as an author of the e-mail
             to: emailAdress, // Recipient from dialog text
-            subject: getEmailSubject(reservation.sessions),
+            subject: getEmailSubject(reservationForm.reservations),
             htmlBody: htmlBody
         };
     

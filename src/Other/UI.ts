@@ -7,7 +7,6 @@
  */
 enum HtmlFiles
 {
-    FORM = "form-html",
     TIME =  "times",
     TIMETABLE =  "timetable"
 };
@@ -22,7 +21,7 @@ function renderUI()
     let reservationSystemMenu = ui.createMenu("Rezervačný systém");
     let reservationsMenu = ui.createMenu("Rezervácie").addItem("Skryť staré rezervácie", "hideOldReservations");
     let sessionsMenu = ui.createMenu("Termíny").addItem("Vypísať termíny podľa rozvrhu", "addNewSessions").addItem("Archívovať staré termíny", "archiveOldSessions");
-    let formMenu = ui.createMenu("Formulár").addItem("Aktualizovať formúlar", "updateGoogleForm").addItem("Zobraziť formulár", "showFormDialog");
+    let formMenu = ui.createMenu("Formulár").addItem("Aktualizovať formúlar", "updateGoogleForm");
     let emailMenu = ui.createMenu("E-mail").addItem("Ukázať príklad e-mailu", "showEmailExample").addItem("Poslať príklad e-mailu", "sendTestEmail");
     let settingsMenu = ui.createMenu("Nastavenia").addItem("Časy", "showTimesSettings").addItem("Timetable", "showTimetableSettings").addItem("Schedule", "showTimesSettings");
     let developerMenu = ui.createMenu("Developer").addItem("Debug code", "debug").addItem("Delete all properties", "showDeletePropertiesDialog").addItem("Delete all triggers", "showDeleteTriggersDialog");
@@ -36,16 +35,6 @@ function renderUI()
     .addSubMenu(developerMenu);
     
     reservationSystemMenu.addToUi();
-}
-
-/**
- * Show reservation form in a dialog.
- */
-function showFormDialog()
-{
-    var html = HtmlService.createHtmlOutputFromFile(HtmlFiles.FORM).setWidth(1280).setHeight(720);
-    SpreadsheetApp.getUi() // Or DocumentApp or SlidesApp or FormApp.
-        .showModalDialog(html, 'Formulár na rezervovanie vstupu do fitness centra');
 }
 
 /**

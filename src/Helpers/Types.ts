@@ -8,14 +8,14 @@ enum TextFieldError
 
 enum ReservationError
 {
-    
     RESERVATION_EXISTS = "RESERVATION_EXISTS"
 }
 
 enum SessionError
 {
-    DOES_NOT_EXIST = "DOESNT_EXIST",
-    IS_FULL = "FULL"
+    NOT_FOUND = "NOT_FOUND",
+    FULL = "FULL",
+    ENDED = "ENDED"
 }
 
 enum SessionsError
@@ -26,31 +26,35 @@ enum SessionsError
 
 //#endregion
 
+
 //#region Validity
 
-interface Validity<Object, Reason>
+interface Validity<Object, InvalidityReason>
 {
     object : Object
     isValid : boolean
-    reasons : Array<Reason>
+    invalidityReasons : Array<InvalidityReason>
 }
 interface ReservationFormValidity extends Validity<IReservationForm, TextFieldValidity | ReservationValidity>{}
-interface TextFieldValidity extends Validity<{ name : string, value : string }, TextFieldReason>{}
-interface ReservationValidity extends Validity<ReservationJson, ReservationReason>{}
+interface ReservationValidity extends Validity<ReservationJson, ReservationInvalidityReason | SessionInvalidityReason>{}
+interface TextFieldValidity extends Validity<{ name : string, value : string }, TextFieldIvalidityReason>{}
 
 //#endregion
 
-//#region Reason
 
-interface Reason<Value, Error>
+//#region Invalidity Reason
+
+interface InvalidityReason<Value, Error>
 {
     value : Value
     error : Error
 }
-interface TextFieldReason extends Reason<string, TextFieldError>{}
-interface ReservationReason extends Reason<SessionJson, ReservationError | SessionError>{}
+interface TextFieldIvalidityReason extends InvalidityReason<string, TextFieldError>{}
+interface ReservationInvalidityReason extends InvalidityReason<ReservationJson, ReservationError>{}
+interface SessionInvalidityReason extends InvalidityReason<SessionJson, SessionError>{}
 
 //#endregion
+
 
 interface IReservationForm
 { 

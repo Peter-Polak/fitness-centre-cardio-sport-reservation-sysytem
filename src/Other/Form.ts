@@ -70,9 +70,7 @@ function processWebAppReservationForm(reservationForm : ReservationForm)
     appendReservationForm(reservationForm);
     
     let reservationValidity = checkReservationFormValidity(reservationForm);
-    if(!reservationValidity.isValid) return reservationValidity;
-    
-    processReservationForm(reservationForm);
+    if(reservationValidity.isValid) processReservationForm(reservationForm);
     
     return reservationValidity;
 }
@@ -147,73 +145,4 @@ function appendReservationForm(reservationForm : ReservationForm)
     ];
     
     webAppResponsesSheet.appendRow(row);
-}
-
-function checkReservationFormValidity(reservationForm : ReservationForm)
-{
-    let reservationFormValidity : ReservationFormValidity = 
-    {
-        object : reservationForm,
-        isValid : true,
-        reasons : []
-    };
-    
-    const { name, surname, emailAddress, reservations } = reservationForm;
-    
-    const nameValidity = checkTextFieldValidity("name", name, true);
-    const surnameValidity = checkTextFieldValidity("surname", surname, true);
-    const reservationValidities = checkReservationsValid(reservations);
-    
-    if(!nameValidity.isValid)
-    {
-        reservationFormValidity.isValid = false;
-        reservationFormValidity.reasons.push(nameValidity)
-    };
-    
-    if(!surnameValidity.isValid)
-    {
-        reservationFormValidity.isValid = false;
-        reservationFormValidity.reasons.push(surnameValidity);
-    }
-    
-    if(reservationValidities.length > 0)
-    {
-        reservationFormValidity.isValid = false;
-        reservationFormValidity.reasons.push(...reservationValidities);
-    }
-    
-    return reservationFormValidity;
-}
-
-function checkTextFieldValidity(name : string, value : string, isRequired : boolean, pattern? : RegExp)
-{
-    let textFieldValidity : TextFieldValidity= 
-    { 
-        object: 
-        {
-            name : name,
-            value : value
-        }, 
-        isValid : true,
-        reasons : []
-    }
-    
-    if(isRequired && (value === null || value === undefined || value === ""))
-    {
-        let reason : TextFieldReason = 
-        {
-            value : value,
-            error : TextFieldError.IS_REQUIRED
-        }
-        
-        textFieldValidity.isValid = false;
-        textFieldValidity.reasons.push(reason);
-    }
-    
-    return textFieldValidity;
-}
-
-function getMockupReservationForm(timestamp : string = "01.01.2021 00:00:00", name : string = "Peter", surname : string = "Polák", sessions : string = "24.12.2021 10:00 - 12:00", emailAddress : string = "peter.polak.mail@gmail.com")
-{
-    return new ReservationForm(timestamp, name, surname, emailAddress, sessions);
 }

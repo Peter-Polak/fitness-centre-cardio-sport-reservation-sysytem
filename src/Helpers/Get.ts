@@ -37,20 +37,22 @@ const Sheets =
 //#region Google service getters
 
 /**
- * Get spreadsheet associated with this script.
+ * Get active spreadsheet associated with this script.\
+ * @returns { GoogleAppsScript.Spreadsheet.Spreadsheet} Spreadsheet object.
  */
-function getSpreadsheet()
+function getSpreadsheet() : GoogleAppsScript.Spreadsheet.Spreadsheet
 {
     return SpreadsheetApp.getActive();
 }
 
 /**
- * Get form associated with this script.
+ * Get Google Form associated with this script.
+ * @returns { GoogleAppsScript.Forms.Form | null} Form object or null if not found.
  */
-function getForm()
+function getForm() : GoogleAppsScript.Forms.Form | null
 {
     let formURL = getSpreadsheet().getFormUrl();
-    if(formURL == null) return;
+    if(formURL == null) return null;
     
     let form = FormApp.openByUrl(formURL);
     
@@ -62,49 +64,55 @@ function getForm()
 //#region Sheet getters.
 
 /**
- * Get reservations sheet.
+ * Get `Reservation` sheet object.
+ * @returns {GoogleAppsScript.Spreadsheet.Sheet | null} `Reservation` sheet object or null if not found.
  */
-function getReservationSheet()
+function getReservationSheet() : GoogleAppsScript.Spreadsheet.Sheet | null
 {
     return getSpreadsheet().getSheetByName(Sheets.Reservations.Name);
 }
 
 /**
- * Get sessions sheet.
+ * Get `Session` sheet object.
+ * @returns {GoogleAppsScript.Spreadsheet.Sheet | null} `Session` sheet object or null if not found.
  */
-function getSessionSheet()
+function getSessionSheet() : GoogleAppsScript.Spreadsheet.Sheet | null
 {
     return getSpreadsheet().getSheetByName(Sheets.Session.Name);
 }
 
 /**
- * Get settings sheet.
+ * Get `Settings` sheet object.
+ * @returns {GoogleAppsScript.Spreadsheet.Sheet | null} `Settings` sheet object or null if not found.
  */
-function getSettingsSheet()
+function getSettingsSheet() : GoogleAppsScript.Spreadsheet.Sheet | null
 {
     return getSpreadsheet().getSheetByName(Sheets.Settings.Name);
 }
 
 /**
- * Get archive sheet.
+ * Get `Archive` sheet object.
+ * @returns {GoogleAppsScript.Spreadsheet.Sheet | null} `Archive` sheet object or null if not found.
  */
-function getArchiveSheet()
+function getArchiveSheet() : GoogleAppsScript.Spreadsheet.Sheet | null
 {
     return getSpreadsheet().getSheetByName(Sheets.Archive.Name);
 }
 
 /**
- * Get Web App Responses sheet.
+ * Get `Web App Responses` sheet object.
+ * @returns {GoogleAppsScript.Spreadsheet.Sheet | null} `Web App Responses` sheet object or null if not found.
  */
- function getWebAppResponsesSheet()
+ function getWebAppResponsesSheet() : GoogleAppsScript.Spreadsheet.Sheet | null
  {
      return getSpreadsheet().getSheetByName(Sheets.WebAppResponses.Name);
  }
  
- /**
- * Get "Users" sheet.
+/**
+ * Get `Users` sheet object.
+ * @returns {GoogleAppsScript.Spreadsheet.Sheet | null} `Users` sheet object or null if not found.
  */
-  function getUsersSheet()
+  function getUsersSheet() : GoogleAppsScript.Spreadsheet.Sheet | null
   {
       return getSpreadsheet().getSheetByName(Sheets.Users.Name);
   }
@@ -116,30 +124,19 @@ function getArchiveSheet()
 /**
  * Get day in week that starts with Monday(change 1 -> 0) instead of Sunday (change 0 -> 6)
  * @param date Date of the day.
+ * @returns Index of the day in week starting with monday. ex. 0 -> Monday, ..., 6 -> Sunday
  */
-function getEuropeDay(date : Date)
+function getEuropeDay(date : Date) : number
 {
     return (date.getDay() + 6) % 7;
 }
 
 /**
- * I think this is copy-pasted code from StackOverflow.
- * @param x 
- */
-function getNextDay(x : number)
-{
-    var now = new Date();    
-    now.setDate(now.getDate() + (x+(7-now.getDay())) % 7);
-  
-    let dateFormated = Utilities.formatDate(now, "GMT+1", "dd.MM.yyyy");
-    return dateFormated;
-}
-
-/**
- * Get string representation of the day in the week based on number index.
+ * Get a string representation of the day in the week based on number index.
  * @param day Number index of the day in the week.
+ * @returns String representation of the day in the week.
  */
-function getDayOfWeekString(day : number)
+function getDayOfWeekString(day : number) : string
 {
     const dayOfWeek = 
     [
@@ -152,6 +149,7 @@ function getDayOfWeekString(day : number)
 /**
  * Get a string representation of a number.
  * @param number Number to convert.
+ * @returns String representation of number.
  */
 function getNumberString(number : number) : string
 {
@@ -159,10 +157,11 @@ function getNumberString(number : number) : string
 }
 
 /**
- * Get a string representation of a date in the format "dd.mm.yyyy".
+ * Get a string representation of a date in the format `dd.mm.yyyy`.
  * @param date Date to convert.
+ * @returns String representation of date.
  */
-function getDateString(date : Date)
+function getDateString(date : Date) : string
 {
     let day = `${getNumberString(date.getDate())}`;
     let month = `${getNumberString(date.getMonth() + 1)}`;
@@ -171,7 +170,12 @@ function getDateString(date : Date)
     return `${day}.${month}.${year}`;
 }
 
-function getTimeString(date : Date)
+/**
+ * Get a string representation of time in the format `hh:mm:ss`.
+ * @param date Date object to convert.
+ * @returns String representation of time.
+ */
+function getTimeString(date : Date) : string
 {
     let hours = `${getNumberString(date.getHours())}`;
     let minutes = `${getNumberString(date.getMinutes())}`;
@@ -180,7 +184,12 @@ function getTimeString(date : Date)
     return `${hours}:${minutes}:${seconds}`;
 }
 
-function getTimestamp(date : Date)
+/**
+ * Get timestamp of the date in the format `dd.mm.yyyy hh:mm:ss`.
+ * @param date Date object.
+ * @returns Timestamp as a string.
+ */
+function getTimestamp(date : Date) : string
 {
     const dateString = getDateString(date);
     const timeString = getTimeString(date);
@@ -188,7 +197,12 @@ function getTimestamp(date : Date)
     return `${dateString} ${timeString}`;
 }
 
-function getToken(length : number = 6)
+/**
+ * Generate random string of varied length. Possible characters are `[A_Z0-9]`.
+ * @param length Length of the string. Default is 6.
+ * @returns Random string of varied length
+ */
+function getToken(length : number = 6) : string
 {
     let result = [];
     let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';

@@ -1,17 +1,32 @@
-function doGet(event : any)
+/**
+ * Handler for all GET requests.
+ * @param event Event object with query parameters.
+ * @returns {GoogleAppsScript.Content.TextOutput}
+ */
+function doGet(event : any) : GoogleAppsScript.Content.TextOutput
 {
     let response = processGetRequest(event.parameter);
     
     return ContentService.createTextOutput(JSON.stringify(response));
 }
 
-function doPost(event : any)
+/**
+ * Handler for all POST requests.
+ * @param event Event object with query parameters.
+ * @returns {GoogleAppsScript.Content.TextOutput}
+ */
+function doPost(event : any) : GoogleAppsScript.Content.TextOutput
 {
     let response = processPostRequest(event.parameter);
 
     return ContentService.createTextOutput(JSON.stringify(response));
 }
 
+/**
+ * Function that processes GET requests based on parameters.
+ * @param parameters URL parameters.
+ * @returns Response.
+ */
 function processGetRequest(parameters : any)
 {
     let response : any;
@@ -50,7 +65,12 @@ function processGetRequest(parameters : any)
     return response;
 }
 
-function processPostRequest(parameters : any)
+/**
+ * Function that processes POST requests based on parameters.
+ * @param parameters URL parameters.
+ * @returns {ReservationFormValidity} Response.
+ */
+function processPostRequest(parameters : any) : ReservationFormValidity
 {
     let reservationForm = new ReservationForm(parameters.timestamp, parameters.name, parameters.surname, parameters.emailAddress, parameters.sessionsString);
     

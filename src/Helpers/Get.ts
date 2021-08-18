@@ -12,7 +12,7 @@ const Sheets =
     {
       Name : "Rezervácie"
     },
-    Session : 
+    Sessions : 
     {
       Name : "Termíny"
     },
@@ -78,7 +78,7 @@ function getReservationSheet() : GoogleAppsScript.Spreadsheet.Sheet | null
  */
 function getSessionSheet() : GoogleAppsScript.Spreadsheet.Sheet | null
 {
-    return getSpreadsheet().getSheetByName(Sheets.Session.Name);
+    return getSpreadsheet().getSheetByName(Sheets.Sessions.Name);
 }
 
 /**

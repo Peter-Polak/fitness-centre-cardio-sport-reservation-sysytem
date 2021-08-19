@@ -2,9 +2,8 @@
  * Helper scripts.
  */
 
-/**
- * Names of all sheets.
- */
+//#region Sheets
+
 //@ts-ignore
 const Sheets = 
 {
@@ -33,6 +32,8 @@ const Sheets =
       Name : "Users"
     }
 };
+
+//#endregion
 
 //#region Google service getters
 
@@ -64,7 +65,7 @@ function getForm() : GoogleAppsScript.Forms.Form | null
 //#region Sheet getters.
 
 /**
- * Get `Reservation` sheet object.
+ * Get `Reservations` sheet object.
  * @returns {GoogleAppsScript.Spreadsheet.Sheet | null} `Reservation` sheet object or null if not found.
  */
 function getReservationSheet() : GoogleAppsScript.Spreadsheet.Sheet | null
@@ -73,7 +74,7 @@ function getReservationSheet() : GoogleAppsScript.Spreadsheet.Sheet | null
 }
 
 /**
- * Get `Session` sheet object.
+ * Get `Sessions` sheet object.
  * @returns {GoogleAppsScript.Spreadsheet.Sheet | null} `Session` sheet object or null if not found.
  */
 function getSessionSheet() : GoogleAppsScript.Spreadsheet.Sheet | null

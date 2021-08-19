@@ -1,7 +1,6 @@
-/**
- * Scripts for Session sheet.
- */
-
+// --------------------------------
+// Scripts for Sessions sheet.
+// --------------------------------
 
 /**
  * Adds new session to sessions sheet.
@@ -17,7 +16,6 @@ function addNewSession(date : Date, time : string, capacity : string)
     if(sessionSheet == null) return;
     
     const lastRow = sessionSheet.getLastRow();
-    const lastColumn = 5;
     
     //#endregion
     
@@ -31,7 +29,7 @@ function addNewSession(date : Date, time : string, capacity : string)
     //#region Copy new session template at the end of the session sheet
     
     const sourceRange = settingsSheet.getRange("A19:E19"); // Select new session template to copy paste
-    const targetRange = sessionSheet.getRange(lastRow + 1, 1, 1, lastColumn);  // Select next (empty) row after last one in session sheet
+    const targetRange = sessionSheet.getRange(lastRow + 1, 1, 1, SessionsSheet.numberOfColumns);  // Select next (empty) row after last one in session sheet
     
     sourceRange.copyTo(targetRange); // Paste new session template
     
@@ -39,9 +37,9 @@ function addNewSession(date : Date, time : string, capacity : string)
     
     //#region Select new session cells
     
-    const dateRange = sessionSheet.getRange(lastRow + 1, 1, 1, 1); // Select new session date cell
-    const timeRange = sessionSheet.getRange(lastRow + 1, 2, 1, 1); // Select new session time cell
-    const capacityRange = sessionSheet.getRange(lastRow + 1, 3, 1, 1); // Select new session capacity cell
+    const dateRange = sessionSheet.getRange(lastRow + 1, SessionsSheet.columns.Date, 1, 1); // Select new session date cell
+    const timeRange = sessionSheet.getRange(lastRow + 1, SessionsSheet.columns.Time, 1, 1); // Select new session time cell
+    const capacityRange = sessionSheet.getRange(lastRow + 1, SessionsSheet.columns.Capacity, 1, 1); // Select new session capacity cell
     
     //#endregion
     
@@ -95,7 +93,6 @@ function addNewSessions()
     //#region Day variables
     
     let today = new Date();
-    // today.setDate(today.getDate());
     let todayDay = getEuropeDay(today);
     
     //#endregion
@@ -163,11 +160,10 @@ function archiveOldSessions()
     
     //#region Loop through all session rows (skip first 4 rows because they are headers) and archive all old sessions
     
-    //  for(var n = rowCount - 1; n >= 4; n--)
-    for(var n = 4; n < rowCount; n++)
+    for(var rowIndex = SessionsSheet.startingRow - 1; rowIndex < rowCount; rowIndex++)
     {
         let currentDate = new Date(); // Used for comparison if the session is older than right now
-        let session = getSessionFromSheet(cells, n);
+        let session = getSessionFromSheet(cells, rowIndex);
         if(session == undefined) return;
         
         //#region If the session has already finished, archive it
@@ -175,7 +171,7 @@ function archiveOldSessions()
         if(currentDate.getTime() >= session.endDate.getTime())
         {
             let archiveLastRow = archiveSheet.getLastRow();
-            let rowToArchive = n - numOfArchivedRows + 1; // 1 is for index offset
+            let rowToArchive = rowIndex - numOfArchivedRows + 1; // 1 is for index offset
             
             let sessionRowToArchive = sessionSheet.getRange(rowToArchive, 1, 1, sessionSheet.getLastColumn()); // Select finished session to archive from session sheet
             let emptyRowInArchive = archiveSheet.getRange(archiveLastRow + 1, 1, 1, archiveSheet.getLastColumn()); // Select next (empty) row after last one in archive sheet
@@ -205,11 +201,10 @@ function archiveOldSessions()
  */
 function getSessionFromSheet(cells : any, index : number) : Session | undefined
 {
-    let date = new Date(cells[index][0]);
-    let time = cells[index][1];
-    let capacity = cells[index][2];
-    let reserved = cells[index][3];
-    let free = cells[index][4];
+    let date = new Date(cells[index][SessionsSheet.columns.Date - 1]);
+    let time = cells[index][SessionsSheet.columns.Time - 1];
+    let capacity = cells[index][SessionsSheet.columns.Capacity - 1];
+    let reserved = cells[index][SessionsSheet.columns.Reserved - 1];
 
     let dateString : string = "";
 

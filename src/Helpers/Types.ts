@@ -195,3 +195,20 @@ interface Time
 }
 
 //#endregion
+
+//#region Sheets
+
+interface Sheet<Collumns>
+{
+    name : string,
+    startingRow : number,
+    columns : Collumns,
+    numberOfColumns : number
+}
+
+interface Spreadsheet
+{
+    sheets : Array<Sheet<any>>
+}
+
+//#endregion

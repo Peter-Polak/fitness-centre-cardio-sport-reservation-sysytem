@@ -1,9 +1,6 @@
-/**
- * Scripts for Reservations sheet.
- */
-
- const numOfFrozenRows = 3;
- const sessionColumn = 4; 
+// --------------------------------
+// Scripts for Reservations sheet.
+// --------------------------------
 
 /**
  * Hides all rows with old reservations in it.
@@ -28,7 +25,7 @@ function hideOldReservations()
         const reservation = reservations[reservationIndex];
         if(reservation.session === undefined || nowTime > reservation.session.endDate.getTime())
         {
-            reservationSheet.hideRows(numOfFrozenRows + reservationIndex + 1);
+            reservationSheet.hideRows(ReservationsSheet.startingRow + reservationIndex);
         }
     }
     
@@ -37,17 +34,16 @@ function hideOldReservations()
 
 /**
  * Gets all reservations from Reservations sheet.
- * @return {Array<Reservation>} All reseravtions in an array.
+ * @return {Array<Reservation>} All reservations in an array.
  */
 function getAllReservations() : Array<Reservation>
 {
     const reservationSheet = getReservationSheet();
     if(reservationSheet == null) return [];
     
-    const startingRow = numOfFrozenRows;
     const lastRow = reservationSheet.getLastRow();
-    const numOfRows = lastRow - numOfFrozenRows;
-    const reservationRows = reservationSheet.getRange(startingRow + 1, 1, numOfRows, 7).getValues();
+    const numOfRows = lastRow - ReservationsSheet.startingRow - 1;
+    const reservationRows = reservationSheet.getRange(ReservationsSheet.startingRow, 1, numOfRows, ReservationsSheet.numberOfColumns).getValues();
     
     //#endregion
     
@@ -59,13 +55,13 @@ function getAllReservations() : Array<Reservation>
     {
         let reservationRow = reservationRows[row];
         
-        const timestamp = reservationRow[0];
-        const name = reservationRow[1];
-        const surname = reservationRow[2];
-        const sessionString = reservationRow[3];
-        const emailAddress = reservationRow[4];
-        const wasCancelled = reservationRow[5];
-        const wasntPresent = reservationRow[6];
+        const timestamp = reservationRow[ReservationsSheet.columns.Timestamp - 1];
+        const name = reservationRow[ReservationsSheet.columns.Name - 1];
+        const surname = reservationRow[ReservationsSheet.columns.Surname - 1];
+        const sessionString = reservationRow[ReservationsSheet.columns.Session - 1];
+        const emailAddress = reservationRow[ReservationsSheet.columns.EmailAddress - 1];
+        const wasCancelled = reservationRow[ReservationsSheet.columns.WasCancelled - 1];
+        const wasntPresent = reservationRow[ReservationsSheet.columns.WasntPresent - 1];
         
         const reservation = new Reservation(timestamp, name, surname, sessionString, emailAddress, wasCancelled, wasntPresent);
         reservations.push(reservation);
@@ -85,16 +81,11 @@ function appendReservation(reservation : Reservation)
     let reservationSheet = getReservationSheet();
     if(reservationSheet == null) return;
     
-    //#region
-    
     let reservationRow = 
     [
         reservation.timestamp, reservation.name, reservation.surname, reservation.session.getDateTimeString, reservation.emailAddress, 'FALSE',  'FALSE'
-    ];
-        
+    ]; 
     reservationSheet.appendRow(reservationRow);
-    
-    //#endregion
         
     reservationSheet.sort(1, true); // Sort sheet based on timestamp column
 }

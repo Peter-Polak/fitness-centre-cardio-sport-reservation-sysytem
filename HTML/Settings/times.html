@@ -68,8 +68,9 @@
     
     <ul id="times">
         <? for (var i = 0; i < times.length; i++) { ?>
+            <? var time = `${times[i].start.hours}:${times[i].start.minutes} - ${times[i].end.hours}:${times[i].end.minutes}`;?>
             <li>
-                <?= times[i].start.hours ?>:<?= times[i].start.minutes ?> - <?= times[i].end.hours ?>:<?= times[i].end.minutes ?><button class="delete" onclick="removeSessionTime(<?= i ?>)"> X </button>
+                <?= time ?><button class="delete" onclick="removeSessionTime(<?= time ?>)"> X </button>
             </li>
         <? } ?>
     </ul>
@@ -101,41 +102,23 @@
             google.script.run.withSuccessHandler(
                 (sessions) =>
                 {
-                    google.script.run.withSuccessHandler(
-                        (sessions) =>
-                        {
-                            updateList(sessions);
-                        }
-                    )
-                    .withFailureHandler(console.log)
-                    .sortSessionTimes(sessions);
+                    updateList(sessions);
                 }
             )
             .withFailureHandler(console.log)
-            .addToArrayProperty("times", session);
-            
-            
+            .addTimeSetting(session);
         }
         
-        function removeSessionTime(index)
+        function removeSessionTime(time)
         {  
-            let indexNum = parseInt(index);
-            
             google.script.run.withSuccessHandler(
                 (sessions) =>
                 {
-                    google.script.run.withSuccessHandler(
-                        (sessions) =>
-                        {
-                            updateList(sessions);
-                        }
-                    )
-                    .withFailureHandler(console.log)
-                    .sortSessionTimes(sessions);
+                    updateList(sessions);
                 }
             )
             .withFailureHandler(console.log)
-            .removeFromArrayProperty("times", indexNum);
+            .removeTimeSetting(time);
         }
         
         function getSessionsAsHtml(items)

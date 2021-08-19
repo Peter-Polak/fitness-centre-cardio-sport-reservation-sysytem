@@ -109,14 +109,10 @@ function sendTestEmail()
 
 function showTimesSettings()
 {
-    let property = getPropertyScript("times");
-    if(property == null) property = getEmptyProperty("times");
+    let timeSettings = new TimeSettings();
     
-    let times : Array<SessionTime> = propertyToJson(property);
-    
-    var template = HtmlService.createTemplateFromFile(HtmlFiles.TIME); // Create template
-     
-    template.times = times;
+    var template = HtmlService.createTemplateFromFile(TimeSettings.key); // Create template
+    template.times = timeSettings.times;
      
     let htmlBody = template.evaluate().getContent(); // Evaluate template and get HTML content
     
@@ -126,18 +122,16 @@ function showTimesSettings()
 
 function showTimetableSettings()
 {
+    let timeSettings = new TimeSettings();
+
     let propertyTimetable = getPropertyScript("timetable");
-    let propertyTimes = getPropertyScript("times");
-    
     if(propertyTimetable == null) propertyTimetable = getEmptyProperty("timetable");
-    if(propertyTimes == null) propertyTimes = getEmptyProperty("times");
     let timetable : Timetable = propertyToJson(propertyTimetable);
-    let times : Array<SessionTime> = propertyToJson(propertyTimes);
     
     var template = HtmlService.createTemplateFromFile(HtmlFiles.TIMETABLE); // Create template
      
     template.timetable = timetable;
-    template.times = times;
+    template.times = timeSettings.times;
     
     let htmlBody = template.evaluate().getContent(); // Evaluate template and get HTML content
     

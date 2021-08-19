@@ -61,76 +61,64 @@
             flex-direction: column;
             align-items: center;
             
-            width: 200px;
+            width: 170px;
         }
     </style>
 </head>
 <body>
     <div id="timetable">
-        <div class="collumn">
-            <h1>Pondelok</h1>
-            <div id="monday" class="collumn">
-                <? for (var i = 0; i < timetable["monday"].length; i++) { ?>
-                    <span>
-                        <?= timetable.monday.start.hours ?>:<?= timetable.monday.start.minutes ?> - <?= timetable.monday.end.hours ?>:<?= timetable.monday.end.minutes ?>
-                        <button class="icon">X</button>
-                    </span>
-                <? } ?>
+        <? var headers = { monday: "Pondelok", tuesday: "Utorok", wednesday: "Streda", thursday: "Štvrtok", friday: "Piatok", saturday: "Sobota", sunday: "Nedeľa" }; ?>
+        <? for(const property in timetable) { ?>
+            <div class="collumn">
+                <h1><?= headers[property] ?></h1>
+                <div id="<?= property ?>>" class="collumn">
+                    <? for (var i = 0; i < timetable[property].length; i++) { ?>
+                        <span>
+                            <?= timetable[property][i].string ?>
+                            <button class="icon" onclick="removeSession('<?= property ?>', <?= timetable[property][i].string ?>)">X</button>
+                        </span>
+                    <? } ?>
+                </div>
+                <select id="<?= property ?>Select">
+                    <? for (var i = 0; i < times.length; i++) { ?>
+                        <option>
+                            <?= times[i].string ?>
+                        </option>
+                    <? } ?>
+                </select>
+                <button class="success" onclick="addSession('<?= property ?>')">Add</button>
             </div>
-            <select id="mondaySelect">
-                <? for (var i = 0; i < times.length; i++) { ?>
-                    <option>
-                        <?= times[i].start.hours ?>:<?= times[i].start.minutes ?> - <?= times[i].end.hours ?>:<?= times[i].end.minutes ?>
-                    </option>
-                <? } ?>
-            </select>
-            <button class="success" onclick="addSession('monday')">Add</button>
-        </div>
-        <div class="collumn">
-            <h1>Utorok</h1>
-        </div>
-        <div class="collumn">
-            <h1>Streda</h1>
-        </div>
-        <div class="collumn">
-            <h1>Štvrtok</h1>
-        </div>
-        <div class="collumn">
-            <h1>Piatok</h1>
-        </div>
-        <div class="collumn">
-            <h1>Sobota</h1>
-        </div>
-        <div class="collumn">
-            <h1>Nedeľa</h1>
-        </div>
+        <? } ?>
     </div>
     
     <script>
         function addSession(day)
         {
-            let time = document.getElementById(day + "Select").value;
-            console.log(time);
+            let sessionTime = document.getElementById(day + "Select").value;
+            console.log(day, sessionTime);
 
             google.script.run.withSuccessHandler(
                 (result) =>
                 {
-                    let timetable = result;
-                    console.log(timetable);
-                    timetable[day].push(time);
-                    
-                    google.script.run.withSuccessHandler(
-                    (timetable) =>
-                    {
-                        console.log(timetable);
-                    }
-                    )
-                    .withFailureHandler(console.log)
-                    .setPropertyScript("timetable", timetable);
+                    console.log(result);
                 }
             )
             .withFailureHandler(console.log)
-            .getPropertyScript("timetable");
+            .addTimeToTimetable(day, sessionTime);
+        }
+
+        function removeSession(day, sessionTime)
+        {
+            console.log(day, sessionTime)
+
+            google.script.run.withSuccessHandler(
+                (result) =>
+                {
+                    console.log(result);
+                }
+            )
+            .withFailureHandler(console.log)
+            .removeTimeFromTimetable(day, sessionTime);
         }
     </script>
 </body>

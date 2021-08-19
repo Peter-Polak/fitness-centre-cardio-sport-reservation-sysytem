@@ -68,9 +68,8 @@
     
     <ul id="times">
         <? for (var i = 0; i < times.length; i++) { ?>
-            <? var time = `${times[i].start.hours}:${times[i].start.minutes} - ${times[i].end.hours}:${times[i].end.minutes}`;?>
             <li>
-                <?= time ?><button class="delete" onclick="removeSessionTime(<?= time ?>)"> X </button>
+                <?= times[i].string ?><button class="delete" onclick="removeSessionTime(<?= times[i].string ?>)"> X </button>
             </li>
         <? } ?>
     </ul>
@@ -84,29 +83,18 @@
             let sessionStartMinutes = document.getElementById("sessionStartMinutes");
             let sessionEndHours = document.getElementById("sessionEndHours");
             let sessionEndMinutes = document.getElementById("sessionEndMinutes");
-            
-            let session = 
-            {
-                start :
-                {
-                    hours: sessionStartHours.value,
-                    minutes: sessionStartMinutes.value
-                },
-                end : 
-                {
-                    hours: sessionEndHours.value,
-                    minutes: sessionEndMinutes.value
-                }
-            }
+
+            let sessionTimeString = `${sessionStartHours.value}:${sessionStartMinutes.value} - ${sessionEndHours.value}:${sessionEndMinutes.value}`;
                      
             google.script.run.withSuccessHandler(
                 (sessions) =>
                 {
+                    console.log(sessions);
                     updateList(sessions);
                 }
             )
             .withFailureHandler(console.log)
-            .addTimeSetting(session);
+            .addTimeSetting(sessionTimeString);
         }
         
         function removeSessionTime(time)
@@ -129,11 +117,11 @@
                 (session, index) => 
                 {
                     let child = document.createElement("li");
-                    let text = document.createTextNode(`${session.start.hours}:${session.start.minutes} - ${session.end.hours}:${session.end.minutes}`)
+                    let text = document.createTextNode(session.string);
                     let button = document.createElement("button");
                     
                     button.className = "delete";
-                    button.onclick = () => removeSessionTime(index);
+                    button.onclick = () => removeSessionTime(session.string);
                     button.innerText = "X";
                     
                     child.appendChild(text);
@@ -148,11 +136,11 @@
         
         function updateList(sessions)
         {
-            let list = document.getElementById("times");
+            let elements = document.getElementById("times");
                     
-            while (list.firstChild)
+            while (elements.firstChild)
             {
-                list.removeChild(list.lastChild);
+                elements.removeChild(elements.lastChild);
             }
             
             let children = getSessionsAsHtml(sessions);
@@ -160,7 +148,7 @@
             children.forEach(
                 (child) =>
                 {
-                    list.appendChild(child);
+                    elements.appendChild(child);
                 }
             )
         }

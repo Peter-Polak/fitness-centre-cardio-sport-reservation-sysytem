@@ -116,27 +116,24 @@ function showTimesSettings()
      
     let htmlBody = template.evaluate().getContent(); // Evaluate template and get HTML content
     
-    var html = HtmlService.createHtmlOutput(htmlBody).setTitle('Settings').setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
+    var html = HtmlService.createHtmlOutput(htmlBody).setTitle("Settings - Times").setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
     SpreadsheetApp.getUi().showSidebar(html);
 }
 
 function showTimetableSettings()
 {
     let timeSettings = new TimeSettings();
-
-    let propertyTimetable = getPropertyScript("timetable");
-    if(propertyTimetable == null) propertyTimetable = getEmptyProperty("timetable");
-    let timetable : Timetable = propertyToJson(propertyTimetable);
+    let timetableSettings = new TimetableSettings();
     
-    var template = HtmlService.createTemplateFromFile(HtmlFiles.TIMETABLE); // Create template
+    var template = HtmlService.createTemplateFromFile(TimetableSettings.key); // Create template
      
-    template.timetable = timetable;
+    template.timetable = timetableSettings.timetable;
     template.times = timeSettings.times;
     
     let htmlBody = template.evaluate().getContent(); // Evaluate template and get HTML content
     
     var html = HtmlService.createHtmlOutput(htmlBody).setWidth(1280).setHeight(720).setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
-    SpreadsheetApp.getUi().showModalDialog(html, "Settings");
+    SpreadsheetApp.getUi().showModalDialog(html, "Settings - Timetable");
 }
 
 function showDeletePropertiesDialog()

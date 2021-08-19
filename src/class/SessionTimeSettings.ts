@@ -1,7 +1,7 @@
-class TimeSettings
+class SessionTimeSettings
 {
-    static key : string = "times";
-    times!: Array<SessionTime>;
+    static key : string = "sessionTimes";
+    sessionTimes!: Array<SessionTime>;
 
     constructor()
     {
@@ -10,21 +10,21 @@ class TimeSettings
 
     Load()
     {
-        let propertyValue = getPropertyScript(TimeSettings.key);
-        this.times = propertyToJson(propertyValue);
+        let propertyValue = getPropertyScript(SessionTimeSettings.key);
+        this.sessionTimes = propertyToJson(propertyValue);
     }
 
     Save()
     {
-        let propertyValue = propertyToString(this.times);
-        setPropertyScript(TimeSettings.key, propertyValue);
+        let propertyValue = propertyToString(this.sessionTimes);
+        setPropertyScript(SessionTimeSettings.key, propertyValue);
     }
 
     AddTime(sessionTime : SessionTime)
     {
-        this.times.push(sessionTime);
+        this.sessionTimes.push(sessionTime);
 
-        this.times.sort(
+        this.sessionTimes.sort(
             (a, b) =>
             {
                 let date1 : Date = new Date(2000, 1, 1, a.start.hours, a.start.minutes);
@@ -43,7 +43,7 @@ class TimeSettings
 
     RemoveTime(sessionTime : SessionTime)
     {
-        this.times.forEach(
+        this.sessionTimes.forEach(
             (time, index) =>
             {
                 if(
@@ -53,7 +53,7 @@ class TimeSettings
                     sessionTime.end.minutes === time.end.minutes
                 )
                 {
-                    this.times.splice(index, 1);
+                    this.sessionTimes.splice(index, 1);
                 }
             }
         );

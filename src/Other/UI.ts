@@ -1,15 +1,7 @@
-/**
- * Scripts for the UI (menu, sidebar, dialog).
- */
+// -------------------------------------------
+// Scripts for the UI (menu, sidebar, dialog).
+// -------------------------------------------
 
-/**
- * HTML file names.
- */
-enum HtmlFiles
-{
-    TIME =  "times",
-    TIMETABLE =  "timetable"
-};
 
 /**
  * Create menu for the reservation system.
@@ -23,7 +15,7 @@ function renderUI()
     let sessionsMenu = ui.createMenu("Termíny").addItem("Vypísať termíny podľa rozvrhu", "addNewSessions").addItem("Archívovať staré termíny", "archiveOldSessions");
     let formMenu = ui.createMenu("Formulár").addItem("Aktualizovať formúlar", "updateGoogleForm");
     let emailMenu = ui.createMenu("E-mail").addItem("Ukázať príklad e-mailu", "showEmailExample").addItem("Poslať príklad e-mailu", "sendTestEmail");
-    let settingsMenu = ui.createMenu("Nastavenia").addItem("Časy", "showTimesSettings").addItem("Timetable", "showTimetableSettings").addItem("Schedule", "showTimesSettings");
+    let settingsMenu = ui.createMenu("Nastavenia").addItem("Časy termínov", "showSessionTimeSettings").addItem("Otváracie hodiny", "showTimetableSettings");
     let developerMenu = ui.createMenu("Developer").addItem("Debug code", "debug").addItem("Delete all properties", "showDeletePropertiesDialog").addItem("Delete all triggers", "showDeleteTriggersDialog");
     
     reservationSystemMenu
@@ -107,28 +99,28 @@ function sendTestEmail()
     }
 }
 
-function showTimesSettings()
+function showSessionTimeSettings()
 {
-    let timeSettings = new TimeSettings();
+    let sessionTimeSettings = new SessionTimeSettings();
     
-    var template = HtmlService.createTemplateFromFile(TimeSettings.key); // Create template
-    template.times = timeSettings.times;
+    var template = HtmlService.createTemplateFromFile(SessionTimeSettings.key); // Create template
+    template.sessionTimes = sessionTimeSettings.sessionTimes;
      
     let htmlBody = template.evaluate().getContent(); // Evaluate template and get HTML content
     
-    var html = HtmlService.createHtmlOutput(htmlBody).setTitle("Settings - Times").setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
+    var html = HtmlService.createHtmlOutput(htmlBody).setTitle("Settings - Session Times").setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
     SpreadsheetApp.getUi().showSidebar(html);
 }
 
 function showTimetableSettings()
 {
-    let timeSettings = new TimeSettings();
+    let sessionTimeSettings = new SessionTimeSettings();
     let timetableSettings = new TimetableSettings();
     
     var template = HtmlService.createTemplateFromFile(TimetableSettings.key); // Create template
      
     template.timetable = timetableSettings.timetable;
-    template.times = timeSettings.times;
+    template.sessionTimes = sessionTimeSettings.sessionTimes;
     
     let htmlBody = template.evaluate().getContent(); // Evaluate template and get HTML content
     

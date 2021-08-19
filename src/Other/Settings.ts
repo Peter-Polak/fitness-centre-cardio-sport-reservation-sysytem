@@ -243,7 +243,7 @@ function getEmptyProperty(key : string)
 {
     switch(key)
     {
-        case "times":
+        case "sessionTimes":
             return "[]";
         case "timetable":
             return '{"monday" : [], "tuesday" : [], "wednesday" : [], "thursday" : [], "friday" : [], "saturday" : [], "sunday" : []}';

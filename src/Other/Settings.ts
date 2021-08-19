@@ -210,59 +210,6 @@ function getPropertyScript(key : string)
 
 //#endregion
 
-function addToArrayProperty(key : string, value : object)
-{
-    let property = getPropertyScript(key);
-    if(property == null) property = getEmptyProperty(key);
-    
-    let currentValues : Array<object> = propertyToJson(property);
-    
-    currentValues.push(value);
-    
-    let newValuesString : string = propertyToString(currentValues);
-    
-    setPropertyScript(key, newValuesString);
-    
-    return currentValues;
-}
-
-function removeFromArrayProperty(key : string, index : number)
-{
-    let property = getPropertyScript(key);
-    if(property == null) return;
-    
-    let currentValues : Array<object> = propertyToJson(property);
-    
-    currentValues.splice(index, 1);
-    
-    let newValuesString : string = propertyToString(currentValues);
-    
-    setPropertyScript(key, newValuesString);
-    
-    return currentValues;
-}
-
-function sortSessionTimes(sessionTimes : Array<SessionTime>)
-{
-    if(sessionTimes == null || sessionTimes == undefined || sessionTimes.length == 0) return sessionTimes;
-    
-    let sortedSessionTimes = sessionTimes.sort(
-        (a, b) =>
-        {
-            let date1 : Date = new Date(2000, 1, 1, a.start.hours, a.start.minutes);
-            let date2 : Date = new Date(2000, 1, 1, b.start.hours, b.start.minutes);
-            
-            if(date1 < date2) return -1;
-            else if(date1 == date2) return 0;
-            else if(date1 > date2) return 1;
-            
-            return 0;
-        }
-    );
-    
-    return sortedSessionTimes;
-}
-
 function addTimeToTimetable(day : string, value : string)
 {
     let timetable : Timetable = propertyToJson(getPropertyScript("timetable"));

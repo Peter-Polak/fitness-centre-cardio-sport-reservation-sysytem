@@ -181,19 +181,6 @@ interface Timetable
     sunday : Array<SessionTime>
 }
 
-interface SessionTime
-{
-    start : Time
-    end : Time
-}
-
-
-interface Time
-{
-    hours : number,
-    minutes : number
-}
-
 //#endregion
 
 //#region Sheets

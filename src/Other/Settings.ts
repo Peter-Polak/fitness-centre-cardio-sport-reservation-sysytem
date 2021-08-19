@@ -210,14 +210,6 @@ function getPropertyScript(key : string)
 
 //#endregion
 
-function addTimeToTimetable(day : string, value : string)
-{
-    let timetable : Timetable = propertyToJson(getPropertyScript("timetable"));
-    if(timetable == null) timetable = propertyToJson(getEmptyProperty("timetable"));
-
-    // timetable[day].push(value);
-}
-
 //#region Object settings helpers
 
 /**

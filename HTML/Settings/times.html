@@ -69,7 +69,7 @@
     <ul id="times">
         <? for (var i = 0; i < times.length; i++) { ?>
             <li>
-                <?= times[i].string ?><button class="delete" onclick="removeSessionTime(<?= times[i].string ?>)"> X </button>
+                <?= times[i].string ?><button class="delete" onclick="removeSessionTime('<?= times[i].string ?>')"> X </button>
             </li>
         <? } ?>
     </ul>

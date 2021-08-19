@@ -75,7 +75,7 @@
                     <? for (var i = 0; i < timetable[property].length; i++) { ?>
                         <span>
                             <?= timetable[property][i].string ?>
-                            <button class="icon" onclick="removeSession('<?= property ?>', <?= timetable[property][i].string ?>)">X</button>
+                            <button class="icon" onclick="removeSession('<?= property ?>', '<?= timetable[property][i].string ?>')">X</button>
                         </span>
                     <? } ?>
                 </div>

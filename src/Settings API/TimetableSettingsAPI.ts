@@ -15,10 +15,6 @@ function removeTimeFromTimetable(day : keyof Timetable, sessionTimeString : stri
     let timetableSettings = new TimetableSettings();
     let sessionTime = new SessionTime(sessionTimeString);
 
-    Logger.log(day);
-    Logger.log(sessionTimeString);
-    Logger.log(sessionTime);
-
     timetableSettings.RemoveTime(day, sessionTime);
 
     return timetableSettings.timetable;

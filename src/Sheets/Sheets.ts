@@ -30,7 +30,7 @@ const ReservationsSheet : Sheet<typeof ReservationsSheetColumns> =
     name : "Rezervácie",
     startingRow : 4,
     columns : ReservationsSheetColumns,
-    numberOfColumns : Object.keys(ReservationsSheetColumns).length
+    numberOfColumns : Object.keys(ReservationsSheetColumns).length / 2
 };
 
 const SessionsSheet : Sheet<typeof SessionsSheetColumns> = 
@@ -38,7 +38,7 @@ const SessionsSheet : Sheet<typeof SessionsSheetColumns> =
     name : "Termíny",
     startingRow : 5,
     columns : SessionsSheetColumns,
-    numberOfColumns : Object.keys(SessionsSheetColumns).length
+    numberOfColumns : Object.keys(SessionsSheetColumns).length / 2
 };
 
 //#endregion

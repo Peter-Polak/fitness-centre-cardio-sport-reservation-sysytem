@@ -21,6 +21,12 @@ enum SessionsSheetColumns
     Free
 }
 
+enum UsersSheetColumns
+{
+    EmailAddress = 1,
+    Token,
+}
+
 //#endregion
 
 //#region Sheets
@@ -39,6 +45,14 @@ const SessionsSheet : Sheet<typeof SessionsSheetColumns> =
     startingRow : 5,
     columns : SessionsSheetColumns,
     numberOfColumns : Object.keys(SessionsSheetColumns).length / 2
+};
+
+const UsersSheet : Sheet<typeof UsersSheetColumns> = 
+{
+    name : "Users",
+    startingRow : 1,
+    columns : UsersSheetColumns,
+    numberOfColumns : Object.keys(UsersSheetColumns).length / 2
 };
 
 //#endregion

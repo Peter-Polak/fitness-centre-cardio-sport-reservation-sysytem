@@ -1,5 +1,9 @@
-
-function addTimeSetting(sessionTimeString : string)
+/**
+ * Adds specified session time to the session time settings.
+ * @param sessionTimeString Session time as a string.
+ * @returns {Array<SessionTime>} Array of all session times.
+ */
+function addTimeSetting(sessionTimeString : string) : Array<SessionTime>
 {
     let sessionTimeSettings = new SessionTimeSettings();
     let sessionTime = new SessionTime(sessionTimeString);
@@ -10,7 +14,12 @@ function addTimeSetting(sessionTimeString : string)
 }
 
 
-function removeTimeSetting(sessionTimeString : string)
+/**
+ * Removes specified session time from the session time settings.
+ * @param sessionTimeString Session time as a string.
+ * @returns {Array<SessionTime>} Array of all session times.
+ */
+function removeTimeSetting(sessionTimeString : string) : Array<SessionTime>
 {
     let sessionTimeSettings = new SessionTimeSettings();
     let sessionTime = new SessionTime(sessionTimeString);

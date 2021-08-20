@@ -232,6 +232,9 @@ function propertyToJson(settings : string)
 
 //#endregion
 
+/**
+ * Deletes all properties from the project.
+ */
 function deleteAllProperties()
 {
     getPropertiesDocument().deleteAllProperties();

@@ -43,7 +43,7 @@
             background-color: #4a8a3a;
         }
         
-        button.icon
+        button.delete
         {
             margin: 5px;
             padding: unset;
@@ -71,11 +71,11 @@
         <? for(const property in timetable) { ?>
             <div class="collumn">
                 <h1><?= headers[property] ?></h1>
-                <div id="<?= property ?>>" class="collumn">
+                <div id="<?= property ?>" class="collumn">
                     <? for (var i = 0; i < timetable[property].length; i++) { ?>
                         <span>
                             <?= timetable[property][i].string ?>
-                            <button class="icon" onclick="removeSession('<?= property ?>', '<?= timetable[property][i].string ?>')">X</button>
+                            <button class="delete" onclick="removeSession('<?= property ?>', '<?= timetable[property][i].string ?>')">X</button>
                         </span>
                     <? } ?>
                 </div>
@@ -98,9 +98,10 @@
             console.log(day, sessionTime);
 
             google.script.run.withSuccessHandler(
-                (result) =>
+                (newTimetable) =>
                 {
-                    console.log(result);
+                    console.log(newTimetable);
+                    updateTimetable(newTimetable);
                 }
             )
             .withFailureHandler(console.log)
@@ -112,14 +113,51 @@
             console.log(day, sessionTime)
 
             google.script.run.withSuccessHandler(
-                (result) =>
+                (newTimetable) =>
                 {
-                    console.log(result);
+                    console.log(newTimetable);
+                    updateTimetable(newTimetable);
                 }
             )
             .withFailureHandler(console.log)
             .removeTimeFromTimetable(day, sessionTime);
         }
+
+        function updateTimetable(timetable)
+        {
+            for(const day in timetable)
+            {
+                let parentElement = document.getElementById(day);
+                while (parentElement.firstChild)
+                {
+                    parentElement.removeChild(parentElement.lastChild);
+                }
+                
+                for(const sessionTime of timetable[day])
+                {
+                    let child = getSessionTimeHtml(day, sessionTime);
+                    parentElement.appendChild(child);
+                }
+            }
+        }
+
+        function getSessionTimeHtml(day, sessionTime)
+        {
+            let span = document.createElement("span");
+            let text = document.createTextNode(sessionTime.string);
+            let button = document.createElement("button");
+            
+            button.className = "delete";
+            button.onclick = () => removeSession(day, sessionTime.string);
+            button.innerText = "X";
+            
+            span.appendChild(text);
+            span.appendChild(button);
+            
+            return span;
+        }
+
+
     </script>
 </body>
 </html>

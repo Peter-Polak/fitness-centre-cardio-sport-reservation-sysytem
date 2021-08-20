@@ -33,7 +33,7 @@ function hideOldReservations()
 }
 
 /**
- * Gets all reservations from Reservations sheet.
+ * Returns all reservations from `Reservations` sheet.
  * @return {Array<Reservation>} All reservations in an array.
  */
 function getAllReservations() : Array<Reservation>
@@ -73,8 +73,8 @@ function getAllReservations() : Array<Reservation>
 }
 
 /**
- * 
- * @param {Reservation} reservation Reservation to process.
+ * Appends the new reservation to the `Reservations` sheet.
+ * @param {Reservation} reservation Reservation to append.
  */
 function appendReservation(reservation : Reservation)
 {
@@ -90,6 +90,10 @@ function appendReservation(reservation : Reservation)
     reservationSheet.sort(1, true); // Sort sheet based on timestamp column
 }
 
+/**
+ * Appends array of reservations to the `Reservations` sheet.
+ * @param reservations Array of reservations to append.
+ */
 function appendReservations(reservations : Array<Reservation>)
 {
     let reservationSheet = getReservationSheet();
@@ -119,8 +123,8 @@ function appendReservations(reservations : Array<Reservation>)
 }
 
 /**
- * Copies template reservation, pastes it and sets tha values of it with actual reservation values.
- * @param {Reservation} reservation Reservation to process.
+ * Copies template reservation, pastes it and sets tha values of it with actual reservation values to the `Reservations` sheet.
+ * @param {Reservation} reservation Reservation to add.
  */
 function addReservation(reservation : Reservation)
 {
@@ -155,6 +159,11 @@ function addReservation(reservation : Reservation)
     reservationSheet.sort(1, true); // Sort sheet based on timestamp column
 }
 
+/**
+ * Returns reservations from `Reservations` sheet based on the e-mail address.
+ * @param emailAddress E-mail address of the reservations.
+ * @returns {Array<Reservation>} Array of reservations made with specified e-mail address.
+ */
 function getReservationsByEmail(emailAddress : string) : Array<Reservation>
 {
     const allReservations = getAllReservations();
@@ -163,6 +172,11 @@ function getReservationsByEmail(emailAddress : string) : Array<Reservation>
     return filteredreservations;
 }
 
+/**
+ * Returns reservations from `Reservations` sheet based on the user's token.
+ * @param token Token of the user.
+ * @returns {Array<Reservation>} Array of reservations made with specified e-mail address.
+ */
 function getReservationsByToken(token : string) : Array<Reservation>
 {
     const user = getUserByToken(token);

@@ -15,7 +15,7 @@ function renderUI()
     let sessionsMenu = ui.createMenu("Termíny").addItem("Vypísať termíny podľa rozvrhu", "addNewSessions").addItem("Archívovať staré termíny", "archiveOldSessions");
     let formMenu = ui.createMenu("Formulár").addItem("Aktualizovať formúlar", "updateGoogleForm");
     let emailMenu = ui.createMenu("E-mail").addItem("Ukázať príklad e-mailu", "showEmailExample").addItem("Poslať príklad e-mailu", "sendTestEmail");
-    let settingsMenu = ui.createMenu("Nastavenia").addItem("Časy termínov", "showSessionTimeSettings").addItem("Otváracie hodiny", "showTimetableSettings");
+    let settingsMenu = ui.createMenu("Nastavenia").addItem("Časy termínov", "showSessionTimeSettings").addItem("Otváracie hodiny", "showTimetableSettings").addItem("Schedule", "showScheduleSettings");
     let developerMenu = ui.createMenu("Developer").addItem("Debug code", "debug").addItem("Delete all properties", "showDeletePropertiesDialog").addItem("Delete all triggers", "showDeleteTriggersDialog");
     
     reservationSystemMenu
@@ -126,6 +126,18 @@ function showTimetableSettings()
     
     var html = HtmlService.createHtmlOutput(htmlBody).setWidth(1280).setHeight(720).setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
     SpreadsheetApp.getUi().showModalDialog(html, "Settings - Timetable");
+}
+
+function showScheduleSettings()
+{
+    var template = HtmlService.createTemplateFromFile("schedule"); // Create template
+     
+    // template.timetable = timetableSettings.timetable;
+    
+    let htmlBody = template.evaluate().getContent(); // Evaluate template and get HTML content
+    
+    var html = HtmlService.createHtmlOutput(htmlBody).setWidth(1280).setHeight(720).setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
+    SpreadsheetApp.getUi().showModalDialog(html, "Settings - Schedule");
 }
 
 function showDeletePropertiesDialog()

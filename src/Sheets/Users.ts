@@ -1,3 +1,7 @@
+// ----------------------------------------
+// Scrips for handling user releated stuff.
+// ----------------------------------------
+
 /**
  * Generate a new random verification token for the new user and add the new user to `Users` sheet.
  * @returns {User} Newly added user object.

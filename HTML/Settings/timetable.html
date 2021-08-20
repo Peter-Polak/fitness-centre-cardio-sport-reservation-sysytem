@@ -75,7 +75,7 @@
                     <? for (var i = 0; i < timetable[property].length; i++) { ?>
                         <span>
                             <?= timetable[property][i].string ?>
-                            <button class="delete" onclick="removeSession('<?= property ?>', '<?= timetable[property][i].string ?>')">X</button>
+                            <button class="delete" onclick="removeSessionTime('<?= property ?>', '<?= timetable[property][i].string ?>')">X</button>
                         </span>
                     <? } ?>
                 </div>
@@ -86,13 +86,13 @@
                         </option>
                     <? } ?>
                 </select>
-                <button class="success" onclick="addSession('<?= property ?>')">Add</button>
+                <button class="success" onclick="addSessionTime('<?= property ?>')">Add</button>
             </div>
         <? } ?>
     </div>
     
     <script>
-        function addSession(day)
+        function addSessionTime(day)
         {
             let sessionTime = document.getElementById(day + "Select").value;
             console.log(day, sessionTime);
@@ -108,7 +108,7 @@
             .addTimeToTimetable(day, sessionTime);
         }
 
-        function removeSession(day, sessionTime)
+        function removeSessionTime(day, sessionTime)
         {
             console.log(day, sessionTime)
 
@@ -148,7 +148,7 @@
             let button = document.createElement("button");
             
             button.className = "delete";
-            button.onclick = () => removeSession(day, sessionTime.string);
+            button.onclick = () => removeSessionTime(day, sessionTime.string);
             button.innerText = "X";
             
             span.appendChild(text);
@@ -156,8 +156,6 @@
             
             return span;
         }
-
-
     </script>
 </body>
 </html>

@@ -87,10 +87,10 @@
             let sessionTimeString = `${sessionStartHours.value}:${sessionStartMinutes.value} - ${sessionEndHours.value}:${sessionEndMinutes.value}`;
                      
             google.script.run.withSuccessHandler(
-                (sessions) =>
+                (sessionTimes) =>
                 {
-                    console.log(sessions);
-                    updateList(sessions);
+                    console.log(sessionTimes);
+                    updateSessionTimes(sessionTimes);
                 }
             )
             .withFailureHandler(console.log)
@@ -100,9 +100,10 @@
         function removeSessionTime(time)
         {  
             google.script.run.withSuccessHandler(
-                (sessions) =>
+                (sessionTimes) =>
                 {
-                    updateList(sessions);
+                    console.log(sessionTimes);
+                    updateSessionTimes(sessionTimes);
                 }
             )
             .withFailureHandler(console.log)
@@ -134,21 +135,21 @@
             return sessions;
         }
         
-        function updateList(sessions)
+        function updateSessionTimes(sessionTimes)
         {
-            let elements = document.getElementById("sessionTimes");
+            let parentElement = document.getElementById("sessionTimes");
                     
-            while (elements.firstChild)
+            while (parentElement.firstChild)
             {
-                elements.removeChild(elements.lastChild);
+                parentElement.removeChild(parentElement.lastChild);
             }
             
-            let children = getSessionsAsHtml(sessions);
+            let children = getSessionsAsHtml(sessionTimes);
             
             children.forEach(
                 (child) =>
                 {
-                    elements.appendChild(child);
+                    parentElement.appendChild(child);
                 }
             )
         }

@@ -5,6 +5,7 @@ This is a simple small-scale reservation system made for fitness center Cardio S
  - Google Sheets - Used for changing app settings, storing, showing, archiving and processing reservarions with scripts. (database)
  - Google Forms (OBSOLETE) - Used for making reservations. User interface. (frontend)
  - Google Apps Script - Used to manipulate sheets that store reservation data and send e-mails. (backend)
+ - TypeScript - Programming language.
  - Visual Studio Code - Used for coding.
  - Git - Used for version control of the code.
 
